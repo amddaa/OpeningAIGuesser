@@ -116,7 +116,7 @@ class ChessVisualizer:
 
         self.__pieces_black = [self.__pawns_black, self.__rooks_black, self.__knights_black, self.__bishops_black,
                                self.__queen_black, self.__king_black]
-        
+
     def __loadImagesExceptPieces(self):
         self.__square_black = pygame.image.load(os.path.join('static', '128px', SQUARE_BLACK_FILENAME))
         self.__square_white = pygame.image.load(os.path.join('static', '128px', SQUARE_WHITE_FILENAME))
@@ -137,6 +137,7 @@ class ChessVisualizer:
                 self.is_running = False
             elif event.type == pygame.VIDEORESIZE:
                 self.__resize_images()
+                self.__render()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     self.__simulate_next_move()
@@ -145,20 +146,17 @@ class ChessVisualizer:
 
     def __resize_images(self):
         width, height = self.__screen.get_size()
-        self.__square_black = pygame.transform.scale(self.__square_black,
-                                                     (ceil(width / TILES_IN_ROW), ceil(height / TILES_IN_ROW)))
-        self.__square_white = pygame.transform.scale(self.__square_white,
-                                                     (ceil(width / TILES_IN_ROW), ceil(height / TILES_IN_ROW)))
+        self.__square_black = pygame.transform.scale(self.__square_black, (ceil(width / TILES_IN_ROW), ceil(height / TILES_IN_ROW)))
+        self.__square_white = pygame.transform.scale(self.__square_white, (ceil(width / TILES_IN_ROW), ceil(height / TILES_IN_ROW)))
+
         for arr_w, arr_b in zip_longest(self.__pieces_white, self.__pieces_black, fillvalue=None):
             if arr_w is not None:
                 for piece in arr_w:
-                    piece.image = pygame.transform.smoothscale(piece.image,
-                                                               (width // TILES_IN_ROW, height // TILES_IN_ROW))
+                    piece.image = pygame.transform.smoothscale(piece.image, (width / TILES_IN_ROW, height / TILES_IN_ROW))
 
             if arr_b is not None:
                 for piece in arr_b:
-                    piece.image = pygame.transform.smoothscale(piece.image,
-                                                               (width // TILES_IN_ROW, height // TILES_IN_ROW))
+                    piece.image = pygame.transform.smoothscale(piece.image, (width / TILES_IN_ROW, height / TILES_IN_ROW))
 
     def __refresh_screen(self):
         self.__screen.fill("yellow")
@@ -190,7 +188,7 @@ class ChessVisualizer:
                         square_img.set_alpha(self.__last_move_mark_alpha)
 
                 self.__screen.blit(square_img,
-                                   ((column - 1) * (width // TILES_IN_ROW), (row - 1) * (height // TILES_IN_ROW)))
+                                   ((column - 1) * (width / TILES_IN_ROW), (row - 1) * (height / TILES_IN_ROW)))
 
         # Pieces
         width_offset_ratio = width / SCREEN_WIDTH
@@ -353,7 +351,6 @@ class ChessVisualizer:
                 self.__move_piece_from_to(rooks, rook_pos.position_notation, new_rook_pos)
                 return
 
-
         self.__move_piece_from_to(pieces_arr, move_from, move_to)
         if is_taking:
             self.__delete_opposite_player_piece(move_to)
@@ -388,6 +385,7 @@ class ChessVisualizer:
             if p.position_notation == move_from:
                 p.position_notation = move_to
                 return
+
     def __delete_opposite_player_piece(self, move_to):
         pieces_deleted = self.__pieces_white
         if self.__is_white_moving:
@@ -604,12 +602,14 @@ class ChessVisualizer:
                     if row == r_to and column == c_to:
                         continue
                     if diag_move:
-                        diag_pos = c_from+r_from
-                        diff_c = (ord(c_to)-ord(c_from))//abs(ord(c_to)-ord(c_from)) if ord(c_to)-ord(c_from) != 0 else 0
-                        diff_r = (ord(r_to)-ord(r_from))//abs(ord(c_to)-ord(c_from)) if ord(c_to)-ord(c_from) != 0 else 0
+                        diag_pos = c_from + r_from
+                        diff_c = (ord(c_to) - ord(c_from)) // abs(ord(c_to) - ord(c_from)) if ord(c_to) - ord(
+                            c_from) != 0 else 0
+                        diff_r = (ord(r_to) - ord(r_from)) // abs(ord(c_to) - ord(c_from)) if ord(c_to) - ord(
+                            c_from) != 0 else 0
 
-                        while diag_pos != c_to+r_to:
-                            diag_pos = chr(ord(diag_pos[0])+diff_c) + chr(ord(diag_pos[1])+diff_r)
+                        while diag_pos != c_to + r_to:
+                            diag_pos = chr(ord(diag_pos[0]) + diff_c) + chr(ord(diag_pos[1]) + diff_r)
                             if diag_pos == piece.position_notation:
                                 return True
                     else:
