@@ -94,6 +94,7 @@ class ChessVisualizer:
         self.__black_moves = black_moves
 
         # self.__simulated_game_idx = random.randint(0, len(self.__opening_names) - 1)
+        # self.__simulated_game_idx = 27
 
     def __createPieces(self):
         self.__last_move_from_to = None
@@ -115,25 +116,7 @@ class ChessVisualizer:
 
         self.__pieces_black = [self.__pawns_black, self.__rooks_black, self.__knights_black, self.__bishops_black,
                                self.__queen_black, self.__king_black]
-
-        # self.__board = [[None for _ in range(8)] for _ in range(8)]
-        # for arr_w, arr_b in zip(self.__pieces_white, self.__pieces_black):
-        #     for piece_w, piece_b in zip(arr_w, arr_b):
-        #         row, column = piece_w.convert_position_notation_to_image_position_indices()
-        #         self.__board[row][column] = piece_w
-        #
-        #         row, column = piece_b.convert_position_notation_to_image_position_indices()
-        #         self.__board[row][column] = piece_b
-
-    # def __printBoard(self):
-    #     for row in range(8):
-    #         for column in range(8):
-    #             if self.__board[column][row] is None:
-    #                 print(" ", end="")
-    #             else:
-    #                 print(self.__board[column][row], end="")
-    #         print()
-
+        
     def __loadImagesExceptPieces(self):
         self.__square_black = pygame.image.load(os.path.join('static', '128px', SQUARE_BLACK_FILENAME))
         self.__square_white = pygame.image.load(os.path.join('static', '128px', SQUARE_WHITE_FILENAME))
@@ -262,9 +245,8 @@ class ChessVisualizer:
         self.__is_white_moving = not self.__is_white_moving
 
     def __make_move(self, move):
-        # print(f'Original move: {move} ', end="")
         pieces_arr = None
-        is_taking = True if move[1] == 'x' else False
+        is_taking = True if 'x' in move else False
         move_from = None
         promoting_to = None
 
@@ -371,12 +353,6 @@ class ChessVisualizer:
                 self.__move_piece_from_to(rooks, rook_pos.position_notation, new_rook_pos)
                 return
 
-        if move_from is None:
-            print(f"Move not found: {move} to {move_to}")
-            return
-        else:
-            #print(f'{move}: z {move_from} do {move_to}')
-            pass
 
         self.__move_piece_from_to(pieces_arr, move_from, move_to)
         if is_taking:
@@ -412,10 +388,6 @@ class ChessVisualizer:
             if p.position_notation == move_from:
                 p.position_notation = move_to
                 return
-
-        if __name__ == '__main__':
-            print(f'Piece from: {move_from} to: {move_to} not found.')
-
     def __delete_opposite_player_piece(self, move_to):
         pieces_deleted = self.__pieces_white
         if self.__is_white_moving:
@@ -622,8 +594,6 @@ class ChessVisualizer:
         if c_second < c_first:
             c_first, c_second = c_second, c_first
 
-        #print(f'{chr(c_first)+chr(r_first)}, {chr(c_second)+chr(r_second)} ||| {c_from+r_from}, {c_to + r_to}')
-
         if pieces_arr is not None:
             for piece in pieces_arr:
                 row, column = piece.position_notation[1], piece.position_notation[0]
@@ -637,12 +607,10 @@ class ChessVisualizer:
                         diag_pos = c_from+r_from
                         diff_c = (ord(c_to)-ord(c_from))//abs(ord(c_to)-ord(c_from)) if ord(c_to)-ord(c_from) != 0 else 0
                         diff_r = (ord(r_to)-ord(r_from))//abs(ord(c_to)-ord(c_from)) if ord(c_to)-ord(c_from) != 0 else 0
-                        #print(f'{diff_c} i {diff_r}')
 
                         while diag_pos != c_to+r_to:
                             diag_pos = chr(ord(diag_pos[0])+diff_c) + chr(ord(diag_pos[1])+diff_r)
                             if diag_pos == piece.position_notation:
-                                print(f'from: {c_from + r_from}, to: {c_to + r_to}, pos: {piece.position_notation}')
                                 return True
                     else:
                         return True
