@@ -4,6 +4,8 @@ from string import ascii_lowercase
 from itertools import zip_longest
 from math import ceil
 import random
+from piece import Piece
+import positionWriterReader
 
 SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 1024
@@ -12,64 +14,9 @@ SQUARE_WHITE_FILENAME = 'square gray light _png_shadow_128px.png'
 TILES_IN_ROW = 8
 
 
-class Piece:
-    filename_dict = {
-        'ROOK_BLACK': 'b_rook_png_shadow_128px.png',
-        'BISHOP_BLACK': 'b_bishop_png_shadow_128px.png',
-        'KNIGHT_BLACK': 'b_knight_png_shadow_128px.png',
-        'QUEEN_BLACK': 'b_queen_png_shadow_128px.png',
-        'KING_BLACK': 'b_king_png_shadow_128px.png',
-        'PAWN_BLACK': 'b_pawn_png_shadow_128px.png',
-
-        'ROOK_WHITE': 'w_rook_png_shadow_128px.png',
-        'BISHOP_WHITE': 'w_bishop_png_shadow_128px.png',
-        'KNIGHT_WHITE': 'w_knight_png_shadow_128px.png',
-        'QUEEN_WHITE': 'w_queen_png_shadow_128px.png',
-        'KING_WHITE': 'w_king_png_shadow_128px.png',
-        'PAWN_WHITE': 'w_pawn_png_shadow_128px.png'
-    }
-
-    character_dict = {
-        'ROOK_BLACK': '♜',
-        'BISHOP_BLACK': '♝',
-        'KNIGHT_BLACK': '♞',
-        'QUEEN_BLACK': '♛',
-        'KING_BLACK': '♚',
-        'PAWN_BLACK': '♟',
-
-        'ROOK_WHITE': '♖',
-        'BISHOP_WHITE': '♗',
-        'KNIGHT_WHITE': '♘',
-        'QUEEN_WHITE': '♕',
-        'KING_WHITE': '♔',
-        'PAWN_WHITE': '♙'
-    }
-
-    def __init__(self, position_notation, piece_name):
-        self.position_notation = position_notation
-        self.image = pygame.image.load(os.path.join('static', '128px', self.filename_dict[piece_name]))
-        self.character_representation = self.character_dict[piece_name]
-
-    def __str__(self):
-        return self.character_representation
-
-    def convert_position_notation_to_image_position_indices(self):
-        if self.position_notation is None:
-            return None, None
-
-        row = ord(self.position_notation[0]) - ord('a')
-        column = ord('8') - ord(self.position_notation[1])
-        return row, column
-
-    @staticmethod
-    def convert_position_notation_to_image_position_indices_using_args(args):
-        row = ord(args[0]) - ord('a')
-        column = ord('8') - ord(args[1])
-        return row, column
-
-
 class ChessVisualizer:
     def __init__(self):
+        self.__position_writer = None
         self.__white_moves = None
         self.__black_moves = None
         self.__opening_names = None
@@ -87,14 +34,12 @@ class ChessVisualizer:
         self.__createPieces()
         self.__loadImagesExceptPieces()
         self.is_running = True
+        self.__is_saving_positions_to_database = False
 
     def set_database(self, opening_names, white_moves, black_moves):
         self.__opening_names = opening_names
         self.__white_moves = white_moves
         self.__black_moves = black_moves
-
-        # self.__simulated_game_idx = random.randint(0, len(self.__opening_names) - 1)
-        # self.__simulated_game_idx = 27
 
     def __createPieces(self):
         self.__last_move_from_to = None
@@ -126,10 +71,17 @@ class ChessVisualizer:
             self.__handle_events()
             if self.__auto_visualization:
                 self.__simulate_next_move()
+            if self.__is_saving_positions_to_database:
+                if self.__position_writer.game_can_be_saved(self.__simulated_move_idx, len(self.__white_moves[self.__simulated_game_idx])):
+                    self.__position_writer.save_position(self.__opening_names[self.__simulated_game_idx], self.__pieces_white, self.__pieces_black)
+                    self.__reset_game()
+
             self.__refresh_screen()
             self.__render()
             self.__clock.tick(60)
         pygame.quit()
+        if self.__is_saving_positions_to_database:
+            self.__position_writer.save_to_file()
 
     def __handle_events(self):
         for event in pygame.event.get():
@@ -146,17 +98,21 @@ class ChessVisualizer:
 
     def __resize_images(self):
         width, height = self.__screen.get_size()
-        self.__square_black = pygame.transform.scale(self.__square_black, (ceil(width / TILES_IN_ROW), ceil(height / TILES_IN_ROW)))
-        self.__square_white = pygame.transform.scale(self.__square_white, (ceil(width / TILES_IN_ROW), ceil(height / TILES_IN_ROW)))
+        self.__square_black = pygame.transform.scale(self.__square_black,
+                                                     (ceil(width / TILES_IN_ROW), ceil(height / TILES_IN_ROW)))
+        self.__square_white = pygame.transform.scale(self.__square_white,
+                                                     (ceil(width / TILES_IN_ROW), ceil(height / TILES_IN_ROW)))
 
         for arr_w, arr_b in zip_longest(self.__pieces_white, self.__pieces_black, fillvalue=None):
             if arr_w is not None:
                 for piece in arr_w:
-                    piece.image = pygame.transform.smoothscale(piece.image, (width / TILES_IN_ROW, height / TILES_IN_ROW))
+                    piece.image = pygame.transform.smoothscale(piece.image,
+                                                               (width / TILES_IN_ROW, height / TILES_IN_ROW))
 
             if arr_b is not None:
                 for piece in arr_b:
-                    piece.image = pygame.transform.smoothscale(piece.image, (width / TILES_IN_ROW, height / TILES_IN_ROW))
+                    piece.image = pygame.transform.smoothscale(piece.image,
+                                                               (width / TILES_IN_ROW, height / TILES_IN_ROW))
 
     def __refresh_screen(self):
         self.__screen.fill("yellow")
@@ -230,17 +186,20 @@ class ChessVisualizer:
             self.__simulated_move_idx += 1
 
         if new_move in ['1-0', '1/2-1/2', '0-1']:
-            self.__is_white_moving = True
-            self.__simulated_move_idx = 0
-            self.__simulated_game_idx += 1
-            if self.__simulated_game_idx > len(self.__opening_names):
-                self.__simulated_game_idx = 0
-            self.__createPieces()
-            self.__resize_images()
+            self.__reset_game()
             return
 
         self.__make_move(new_move)
         self.__is_white_moving = not self.__is_white_moving
+
+    def __reset_game(self):
+        self.__is_white_moving = True
+        self.__simulated_move_idx = 0
+        self.__simulated_game_idx += 1
+        if self.__simulated_game_idx > len(self.__opening_names):
+            self.__simulated_game_idx = 0
+        self.__createPieces()
+        self.__resize_images()
 
     def __make_move(self, move):
         pieces_arr = None
@@ -640,3 +599,8 @@ class ChessVisualizer:
             if self.__is_notation_in_board(n):
                 return True
         return False
+
+    def save_openings_to_file(self, filename):
+        self.__is_saving_positions_to_database = True
+        self.__position_writer = positionWriterReader.PositionWriter(filename)
+
