@@ -76,9 +76,9 @@ class ChessVisualizer:
                     self.__position_writer.save_position(self.__opening_names[self.__simulated_game_idx], self.__pieces_white, self.__pieces_black)
                     self.__reset_game()
 
-            self.__refresh_screen()
-            self.__render()
-            self.__clock.tick(60)
+            # self.__refresh_screen()
+            # self.__render()
+            # self.__clock.tick(60)
         pygame.quit()
         if self.__is_saving_positions_to_database:
             self.__position_writer.save_to_file()

@@ -1,5 +1,6 @@
 import pickle
 
+
 class PositionWriter:
     def __init__(self, filename):
         self.__database = []
@@ -34,7 +35,7 @@ class PositionWriter:
                     board[column][row] = piece.character_representation
 
     def game_can_be_saved(self, move_idx, game_len):
-        if move_idx/game_len > self.__required_game_percentage_to_save:
+        if move_idx / game_len > self.__required_game_percentage_to_save:
             return True
         return False
 
@@ -65,3 +66,5 @@ class PositionReader:
     def read_from_file(self):
         with open(f'static/database/{self.__filename}', 'rb') as file:
             self.__database = pickle.load(file)
+
+        return self.__database

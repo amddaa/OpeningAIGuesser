@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="46027a93-b386-4707-bf0d-380f65c2cc94" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/piece.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/positionWriterReader.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/openingGuesser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/positionWriterReader.py" beforeDir="false" afterPath="$PROJECT_DIR$/positionWriterReader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/database/learning_set.chess" beforeDir="false" afterPath="$PROJECT_DIR$/static/database/learning_set.chess" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/visualizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualizer.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
