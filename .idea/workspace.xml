@@ -2,12 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="46027a93-b386-4707-bf0d-380f65c2cc94" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/openingGuesser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/positionWriterReader.py" beforeDir="false" afterPath="$PROJECT_DIR$/positionWriterReader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/database/learning_set.chess" beforeDir="false" afterPath="$PROJECT_DIR$/static/database/learning_set.chess" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visualizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualizer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/openingGuesser.py" beforeDir="false" afterPath="$PROJECT_DIR$/openingGuesser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgnreader.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgnreader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/database/learning_set.chess" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +42,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\OpeningAIGuesser\static" />
       <recent name="D:\OpeningAIGuesser" />
     </key>
   </component>
@@ -96,5 +96,16 @@
       <path value="$PROJECT_DIR$/OpeningAIGuesser" />
       <path value="$PROJECT_DIR$/opening-ai-guesser" />
     </ignored-roots>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

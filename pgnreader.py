@@ -1,5 +1,5 @@
 class Reader:
-    def getOpeningsWithMoves(self, filepath):
+    def get_opening_with_moves(self, filepath):
         opening_name = []
         black_moves = []
         white_moves = []
@@ -41,3 +41,13 @@ class Reader:
                     white_moves.append(w)
 
         return opening_name, white_moves, black_moves
+
+    def get_openings(self, filepath):
+        opening_name = []
+
+        with open(filepath, 'r') as f:
+            for line in f:
+                if line.startswith('[Opening'):
+                    opening_name.append(line[len('[Opening "'):-3])
+
+        return opening_name
