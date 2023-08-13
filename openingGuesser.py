@@ -113,12 +113,11 @@ class Guesser:
         model = Sequential()
         model.add(Input(shape=(self.__BOARD_SIZE, self.__BOARD_SIZE), name='input_layer'))
         model.add(BatchNormalization())
-        model.add(Dense(256, activation='relu'))
-        model.add(Dense(128, activation='relu'))
         model.add(Flatten())
-        model.add(Dense(128, activation='relu'))
         model.add(Dense(64, activation='relu'))
-        model.add(Dense(32, activation='relu'))
+        model.add(Dense(256, activation='relu'))
+        model.add(Dense(1024, activation='relu'))
+        model.add(Dense(2048, activation='relu'))
         model.add(Dense(self.__unique_opening_names_encoded.shape[1], activation='softmax'))
         model.compile(optimizer=Adam(learning_rate=0.001),
                       loss='categorical_crossentropy',
@@ -131,6 +130,11 @@ class Guesser:
     def evaluate(self):
         loss, accuracy = self.__model.evaluate(self.__x_test, self.__y_test_encoded, verbose=0)
         print(f"Test loss: {loss:.4f}, Test accuracy: {accuracy:.4f}")
+
+    def predict_given(self, x):
+        prediction = self.__model.predict(x)
+        idx = np.argmax(prediction)
+        print(f'{self.__unique_opening_names[idx]}')
 
     def save_model(self, path):
         self.__model.save(path)

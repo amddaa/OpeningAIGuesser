@@ -17,8 +17,9 @@ names_and_encoded = Guesser.load_openings_name_and_encoded('5GBopenings')
 #################
 # reading games #
 #################
-# reader = pgnreader.Reader()
-# opening_name, white_moves, black_moves = reader.get_opening_with_moves('static/database/lichess_db_standard_rated_2013-01.pgn')
+reader = pgnreader.Reader()
+opening_name, white_moves, black_moves = reader.get_opening_with_moves(
+    'static/database/lichess_db_standard_rated_2013-01.pgn')
 
 ###################
 # simulating PGNs #
@@ -31,11 +32,11 @@ names_and_encoded = Guesser.load_openings_name_and_encoded('5GBopenings')
 ###############################
 # model creating and training #
 ###############################
-# reader = PositionReader('learning_set_medium.chess')
+# reader = PositionReader('learning_set_high.chess')
 # guesser = Guesser()
 # guesser.input_database(reader.read_from_file(), names_and_encoded)
 # guesser.create_model()
-# guesser.train(64, 200)
+# guesser.train(2048, 30)
 # guesser.evaluate()
 # guesser.save_model('static/models/test.keras')
 
@@ -48,6 +49,17 @@ names_and_encoded = Guesser.load_openings_name_and_encoded('5GBopenings')
 # guesser.load_model('static/models/test.keras')
 # guesser.evaluate()
 
+##################################
+# model usage with visualization #
+##################################
+guesser = Guesser()
+reader = PositionReader('learning_set_high.chess')
+guesser.input_database(reader.read_from_file(), names_and_encoded)
+guesser.load_model('static/models/test.keras')
 
+v = visualizer.ChessVisualizer()
+v.add_guesser_init_writer(guesser)
+v.set_database(opening_name, white_moves, black_moves)
+v.visualize()
 
 

@@ -5,8 +5,9 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/openingGuesser.py" beforeDir="false" afterPath="$PROJECT_DIR$/openingGuesser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgnreader.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgnreader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/database/learning_set.chess" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/positionWriterReader.py" beforeDir="false" afterPath="$PROJECT_DIR$/positionWriterReader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/models/test.keras" beforeDir="false" afterPath="$PROJECT_DIR$/static/models/test.keras" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/visualizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualizer.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

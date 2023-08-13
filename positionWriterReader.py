@@ -27,12 +27,25 @@ class PositionWriter:
         self.__save_pieces(pieces_black, position)
         self.__database.append((opening_name, position))
 
+    def get_position_after_ord(self, pieces_white, pieces_black):
+        position = [list(ord(' ') for _ in range(self.__BOARD_SIZE)) for _ in range(self.__BOARD_SIZE)]
+        self.__save_pieces_to_int(pieces_white, position)
+        self.__save_pieces_to_int(pieces_black, position)
+        return position
+
     def __save_pieces(self, pieces_array, board):
         for arr in pieces_array:
             if arr is not None:
                 for piece in arr:
                     row, column = piece.convert_position_notation_to_image_position_indices()
                     board[column][row] = piece.character_representation
+
+    def __save_pieces_to_int(self, pieces_array, board):
+        for arr in pieces_array:
+            if arr is not None:
+                for piece in arr:
+                    row, column = piece.convert_position_notation_to_image_position_indices()
+                    board[column][row] = ord(piece.character_representation)
 
     def game_can_be_saved(self, move_idx, game_len):
         if move_idx / game_len > self.__required_game_percentage_to_save:

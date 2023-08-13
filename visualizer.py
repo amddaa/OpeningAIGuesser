@@ -1,9 +1,14 @@
+import sys
+
 import pygame
 import os
 from string import ascii_lowercase
 from itertools import zip_longest
 from math import ceil
 import random
+import numpy as np
+
+import openingGuesser
 from piece import Piece
 import positionWriterReader
 
@@ -16,6 +21,7 @@ TILES_IN_ROW = 8
 
 class ChessVisualizer:
     def __init__(self):
+        self.__guesser = None
         self.__position_writer = None
         self.__white_moves = None
         self.__black_moves = None
@@ -76,9 +82,9 @@ class ChessVisualizer:
                     self.__position_writer.save_position(self.__opening_names[self.__simulated_game_idx], self.__pieces_white, self.__pieces_black)
                     self.__reset_game()
 
-            # self.__refresh_screen()
-            # self.__render()
-            # self.__clock.tick(60)
+            self.__refresh_screen()
+            self.__render()
+            self.__clock.tick(60)
         pygame.quit()
         if self.__is_saving_positions_to_database:
             self.__position_writer.save_to_file()
@@ -95,6 +101,14 @@ class ChessVisualizer:
                     self.__simulate_next_move()
                 if event.key == pygame.K_DOWN:
                     self.__auto_visualization = not self.__auto_visualization
+                if event.key == pygame.K_UP:
+                    if self.__guesser is None:
+                        continue
+                    pos = self.__position_writer.get_position_after_ord(self.__pieces_white, self.__pieces_black)
+                    pos = np.array(pos).astype(int)
+                    pos = np.expand_dims(pos, axis=0)
+                    print(f'{self.__opening_names[self.__simulated_game_idx]}')
+                    self.__guesser.predict_given(pos)
 
     def __resize_images(self):
         width, height = self.__screen.get_size()
@@ -603,4 +617,9 @@ class ChessVisualizer:
     def save_openings_to_file(self, filename):
         self.__is_saving_positions_to_database = True
         self.__position_writer = positionWriterReader.PositionWriter(filename)
+
+    def add_guesser_init_writer(self, guesser: openingGuesser.Guesser):
+        self.__guesser = guesser
+        self.__position_writer = positionWriterReader.PositionWriter("")
+
 
