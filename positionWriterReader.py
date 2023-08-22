@@ -47,11 +47,6 @@ class PositionWriter:
                     row, column = piece.convert_position_notation_to_image_position_indices()
                     board[column][row] = ord(piece.character_representation)
 
-    def game_can_be_saved(self, move_idx, game_len):
-        if move_idx / game_len > self.__required_game_percentage_to_save:
-            return True
-        return False
-
     def save_to_file(self):
         with open(f'static/database/{self.__filename}', 'wb') as file:
             pickle.dump(self.__database, file)
