@@ -21,6 +21,7 @@ TILES_IN_ROW = 8
 
 class ChessVisualizer:
     def __init__(self):
+        self.__game_saving_idx = None
         self.__guesser = None
         self.__position_writer = None
         self.__white_moves = None
@@ -78,13 +79,14 @@ class ChessVisualizer:
             if self.__auto_visualization:
                 self.__simulate_next_move()
             if self.__is_saving_positions_to_database:
-                if self.__position_writer.game_can_be_saved(self.__simulated_move_idx, len(self.__white_moves[self.__simulated_game_idx])):
+                if self.__game_saving_idx == self.__simulated_move_idx:
                     self.__position_writer.save_position(self.__opening_names[self.__simulated_game_idx], self.__pieces_white, self.__pieces_black)
                     self.__reset_game()
+                    self.__game_saving_idx = np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]))
 
-            self.__refresh_screen()
-            self.__render()
-            self.__clock.tick(60)
+            # self.__refresh_screen()
+            # self.__render()
+            # self.__clock.tick(60)
         pygame.quit()
         if self.__is_saving_positions_to_database:
             self.__position_writer.save_to_file()
@@ -214,6 +216,8 @@ class ChessVisualizer:
             self.__simulated_game_idx = 0
         self.__createPieces()
         self.__resize_images()
+        if self.__simulated_game_idx % 1000 == 0:
+            print(self.__simulated_game_idx)
 
     def __make_move(self, move):
         pieces_arr = None
@@ -617,6 +621,7 @@ class ChessVisualizer:
     def save_openings_to_file(self, filename):
         self.__is_saving_positions_to_database = True
         self.__position_writer = positionWriterReader.PositionWriter(filename)
+        self.__game_saving_idx = np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]))
 
     def add_guesser_init_writer(self, guesser: openingGuesser.Guesser):
         self.__guesser = guesser

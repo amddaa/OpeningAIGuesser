@@ -6,6 +6,10 @@
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/openingGuesser.py" beforeDir="false" afterPath="$PROJECT_DIR$/openingGuesser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/positionWriterReader.py" beforeDir="false" afterPath="$PROJECT_DIR$/positionWriterReader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/database/learning_set — kopia.chess" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/database/learning_set_high.chess" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/database/learning_set_low.chess" beforeDir="false" afterPath="$PROJECT_DIR$/static/database/learning_set_low.chess" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/database/learning_set_medium.chess" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/static/models/test.keras" beforeDir="false" afterPath="$PROJECT_DIR$/static/models/test.keras" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/visualizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualizer.py" afterDir="false" />
     </list>
@@ -100,6 +104,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/openingGuesser.py</url>
+          <line>68</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">

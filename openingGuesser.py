@@ -3,6 +3,7 @@ import sys
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Flatten
+from keras.layers import Embedding
 from keras.layers import Input
 from keras.layers import BatchNormalization
 from keras.utils import to_categorical
@@ -103,10 +104,7 @@ class Guesser:
         label_encoder = LabelEncoder()
         unique_numeric = label_encoder.fit_transform(unique_names)
 
-        # converting numeric values to one-hot encoding
-        unique_one_hot = to_categorical(unique_numeric)
-
-        name_encode = [(unique_names[idx], unique_one_hot[idx]) for idx in range(len(unique_names))]
+        name_encode = [(unique_names[idx], unique_numeric[idx]) for idx in range(len(unique_names))]
         return name_encode
 
     def __build_model(self):
@@ -118,9 +116,9 @@ class Guesser:
         model.add(Dense(256, activation='relu'))
         model.add(Dense(1024, activation='relu'))
         model.add(Dense(2048, activation='relu'))
-        model.add(Dense(self.__unique_opening_names_encoded.shape[1], activation='softmax'))
+        model.add(Dense(max(self.__unique_opening_names_encoded)+1, activation='softmax'))
         model.compile(optimizer=Adam(learning_rate=0.001),
-                      loss='categorical_crossentropy',
+                      loss='sparse_categorical_crossentropy',
                       metrics=['accuracy'])
         return model
 
