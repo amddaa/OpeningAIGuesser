@@ -1,26 +1,29 @@
 import visualizer
-import pgnreader
-from positionWriterReader import PositionReader
-from openingGuesser import Guesser
+from pgn_reader import PGNReader
+from position_writer_reader import PositionReader
+from opening_guesser import Guesser
 
-# saving all openings
-# reader = pgnreader.Reader()
-# openings_name = reader.get_openings('static/database/lichess_db_standard_rated_2016-03.pgn')
+######################################################
+# reading openings names and moves from lichess data #
+######################################################
+reader = PGNReader()
+reader.load_pngs_from_file_and_process('static/database/lichess_pgns/lichess_db_standard_rated_2013-01.pgn')
+openings_names = reader.get_openings_names()
 # opening_encoded = Guesser().encode_opening_names_not_unique_input(openings_name)
 # Guesser.save_openings_name_and_encoded('5GBopenings_LabelEncode', opening_encoded)
 
 ########################
 # loading all openings #
 ########################
-names_and_encoded = Guesser.load_openings_name_and_encoded('5GBopenings_LabelEncode')
+# names_and_encoded = Guesser.load_openings_name_and_encoded('5GBopenings_LabelEncode')
 
 #################
 # reading games #
 ################
-reader = pgnreader.Reader()
-opening_name, white_moves, black_moves = reader.get_opening_with_moves(
-    'static/database/lichess_db_standard_rated_2016-03.pgn')
-print(len(opening_name))
+# reader = pgnreader.Reader()
+# opening_name, white_moves, black_moves = reader.get_opening_with_moves(
+#     'static/database/lichess_db_standard_rated_2016-03.pgn')
+# print(len(opening_name))
 
 ###################
 # simulating PGNs #
@@ -53,14 +56,14 @@ print(len(opening_name))
 ##################################
 # model usage with visualization #
 ##################################
-guesser = Guesser()
-reader = PositionReader('learning_set_random_low.chess')
-guesser.input_database(reader.read_from_file(), names_and_encoded)
-guesser.load_model('static/models/test.keras')
-
-v = visualizer.ChessVisualizer()
-v.add_guesser_init_writer(guesser)
-v.set_database(opening_name, white_moves, black_moves)
-v.visualize()
+# guesser = Guesser()
+# reader = PositionReader('learning_set_random_low.chess')
+# guesser.input_database(reader.read_from_file(), names_and_encoded)
+# guesser.load_model('static/models/test.keras')
+#
+# v = visualizer.ChessVisualizer()
+# v.add_guesser_init_writer(guesser)
+# v.set_database(opening_name, white_moves, black_moves)
+# v.visualize()
 
 

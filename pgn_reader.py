@@ -1,18 +1,23 @@
-class Reader:
-    def get_opening_with_moves(self, filepath):
-        opening_name = []
-        black_moves = []
-        white_moves = []
+class PGNReader:
+    __openings_names = []
+    __black_moves = []
+    __white_moves = []
+
+    def load_pngs_from_file_and_process(self, filepath):
+        self.__openings_names = []
+        self.__black_moves = []
+        self.__white_moves = []
         possible_outcomes = ['1-0', '1/2-1/2', '0-1']
 
         with open(filepath, 'r') as f:
             for line in f:
                 if line.startswith('[Opening'):
-                    opening_name.append(line[len('[Opening "'):-3])
+                    self.__openings_names.append(line[len('[Opening "'):-3])
                 elif line.startswith('1. '):
                     if line.find('eval') != -1:
-                        # not using pgns with evaluation
-                        opening_name.pop()
+                        # Database is large enough.
+                        # I don't need to bother reading evaluated games.
+                        self.__openings_names.pop()
                         continue
 
                     w = []
@@ -37,17 +42,11 @@ class Reader:
 
                         line = line[space + 1:]
 
-                    black_moves.append(b)
-                    white_moves.append(w)
+                    self.__black_moves.append(b)
+                    self.__white_moves.append(w)
 
-        return opening_name, white_moves, black_moves
+    def get_openings_names(self):
+        return self.__openings_names
 
-    def get_openings(self, filepath):
-        opening_name = []
-
-        with open(filepath, 'r') as f:
-            for line in f:
-                if line.startswith('[Opening'):
-                    opening_name.append(line[len('[Opening "'):-3])
-
-        return opening_name
+    def get_openings_names_and_moves(self):
+        return self.__openings_names, self.__white_moves, self.__black_moves
