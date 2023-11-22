@@ -1,4 +1,5 @@
 import pickle
+import sys
 
 
 def get_encoded_unique_openings_names(opening_names):
@@ -21,13 +22,26 @@ def get_decoded_openings_names_and_moves(openings_names_encoded):
 
 
 def dump_to_file(filepath, data):
-    with open(filepath, 'wb') as file:
-        pickle.dump(data, file)
+    try:
+        with open(filepath, 'wb') as file:
+            pickle.dump(data, file)
+    except FileNotFoundError:
+        print(f"Error: File '{filepath}' not found.")
+        return sys.exit(1)
+    except Exception as e:
+        print(f"Error in load_from_file: {e}")
+        return sys.exit(1)
 
 
-def load_from_file(filename):
-    data = None
-    with open(filename, 'rb') as file:
-        data = pickle.load(file)
-
-    return data
+def load_from_file(filepath):
+    try:
+        data = None
+        with open(filepath, 'rb') as file:
+            data = pickle.load(file)
+            return data
+    except FileNotFoundError:
+        print(f"Error: File '{filepath}' not found.")
+        return sys.exit(1)
+    except Exception as e:
+        print(f"Error in load_from_file: {e}")
+        return sys.exit(1)
