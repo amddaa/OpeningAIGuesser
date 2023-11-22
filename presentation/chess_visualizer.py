@@ -9,7 +9,7 @@ import random
 import numpy as np
 
 import opening_guesser
-from piece import Piece
+from presentation.piece import Piece
 import position_writer_reader
 
 SCREEN_WIDTH = 1024
@@ -48,6 +48,34 @@ class ChessVisualizer:
         self.__white_moves = white_moves
         self.__black_moves = black_moves
 
+    def save_openings_to_file(self, filename):
+        self.__is_saving_positions_to_database = True
+        self.__position_writer = position_writer_reader.PositionWriter(filename)
+        self.__game_saving_idx = np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]))
+
+    def add_guesser_init_writer(self, guesser: opening_guesser.Guesser):
+        self.__guesser = guesser
+        self.__position_writer = position_writer_reader.PositionWriter("")
+
+    def visualize(self):
+        while self.is_running:
+            self.__handle_events()
+            if self.__auto_visualization:
+                self.__simulate_next_move()
+            if self.__is_saving_positions_to_database:
+                if self.__game_saving_idx == self.__simulated_move_idx:
+                    self.__position_writer.save_position(self.__opening_names[self.__simulated_game_idx], self.__pieces_white, self.__pieces_black)
+                    self.__reset_game()
+                    self.__game_saving_idx = np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]))
+
+            self.__refresh_screen()
+            self.__render()
+            self.__clock.tick(60)
+        pygame.quit()
+        if self.__is_saving_positions_to_database:
+            self.__position_writer.save_to_file()
+
+
     def __createPieces(self):
         self.__last_move_from_to = None
         self.__pawns_white = [Piece((str(ascii_lowercase[idx - 1]) + '2'), 'PAWN_WHITE') for idx in range(1, 9)]
@@ -72,24 +100,6 @@ class ChessVisualizer:
     def __loadImagesExceptPieces(self):
         self.__square_black = pygame.image.load(os.path.join('static', '128px', SQUARE_BLACK_FILENAME))
         self.__square_white = pygame.image.load(os.path.join('static', '128px', SQUARE_WHITE_FILENAME))
-
-    def visualize(self):
-        while self.is_running:
-            self.__handle_events()
-            if self.__auto_visualization:
-                self.__simulate_next_move()
-            if self.__is_saving_positions_to_database:
-                if self.__game_saving_idx == self.__simulated_move_idx:
-                    self.__position_writer.save_position(self.__opening_names[self.__simulated_game_idx], self.__pieces_white, self.__pieces_black)
-                    self.__reset_game()
-                    self.__game_saving_idx = np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]))
-
-            # self.__refresh_screen()
-            # self.__render()
-            # self.__clock.tick(60)
-        pygame.quit()
-        if self.__is_saving_positions_to_database:
-            self.__position_writer.save_to_file()
 
     def __handle_events(self):
         for event in pygame.event.get():
@@ -618,13 +628,6 @@ class ChessVisualizer:
                 return True
         return False
 
-    def save_openings_to_file(self, filename):
-        self.__is_saving_positions_to_database = True
-        self.__position_writer = positionWriterReader.PositionWriter(filename)
-        self.__game_saving_idx = np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]))
 
-    def add_guesser_init_writer(self, guesser: openingGuesser.Guesser):
-        self.__guesser = guesser
-        self.__position_writer = positionWriterReader.PositionWriter("")
 
 

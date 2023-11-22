@@ -38,10 +38,10 @@ openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_
 ###################################
 # simulating read games from PGNS #
 ###################################
-# v = ChessVisualizer()
-# v.set_database(openings_names, white_moves, black_moves)
-# # v.save_openings_to_file('learning_set_high2.chess')
-# v.visualize()
+v = ChessVisualizer()
+v.set_database(openings_names, white_moves, black_moves)
+# v.save_openings_to_file('learning_set_high2.chess')
+v.visualize()
 
 ###############################
 # model creating and training #
