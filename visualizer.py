@@ -8,9 +8,9 @@ from math import ceil
 import random
 import numpy as np
 
-import openingGuesser
+import opening_guesser
 from piece import Piece
-import positionWriterReader
+import position_writer_reader
 
 SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 1024
