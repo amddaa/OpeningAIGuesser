@@ -1,21 +1,25 @@
-import visualizer
 from pgn_reader import PGNReader
 from position_writer_reader import PositionReader
 from opening_guesser import Guesser
+import opening_encoder
 
 ######################################################
 # reading openings names and moves from lichess data #
 ######################################################
-reader = PGNReader()
-reader.load_pngs_from_file_and_process('static/database/lichess_pgns/lichess_db_standard_rated_2013-01.pgn')
-openings_names = reader.get_openings_names()
-# opening_encoded = Guesser().encode_opening_names_not_unique_input(openings_name)
-# Guesser.save_openings_name_and_encoded('5GBopenings_LabelEncode', opening_encoded)
+# reader = PGNReader()
+# reader.load_pngs_from_file_and_process('static/database/lichess_pgns/lichess_db_standard_rated_2013-01.pgn')
 
-########################
-# loading all openings #
-########################
-# names_and_encoded = Guesser.load_openings_name_and_encoded('5GBopenings_LabelEncode')
+################################################
+# encode unique opening_names and save to file #
+################################################
+# openings_names = reader.get_openings_names()
+# openings_names_encoded = opening_encoder.get_encoded_unique_openings_names(openings_names)
+# opening_encoder.dump_to_file('openings_label_encoded', openings_names_encoded)
+
+##################################################
+# loading encoded unique opening names from file #
+##################################################
+# openings_names_encoded = opening_encoder.load_from_file('openings_label_encoded')
 
 #################
 # reading games #
