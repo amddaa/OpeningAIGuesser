@@ -1,7 +1,8 @@
 class PGNReader:
-    __openings_names = []
-    __black_moves = []
-    __white_moves = []
+    def __init__(self):
+        self.__openings_names = []
+        self.__black_moves = []
+        self.__white_moves = []
 
     def load_pngs_from_file_and_process(self, filepath):
         self.__openings_names = []
