@@ -2,39 +2,45 @@ from pgn_reader import PGNReader
 from position_writer_reader import PositionReader
 from opening_guesser import Guesser
 import opening_encoder
+from presentation.chess_visualizer import ChessVisualizer
 
 ######################################################
 # reading openings names and moves from lichess data #
 ######################################################
-# reader = PGNReader()
-# reader.load_pngs_from_file_and_process('static/database/lichess_pgns/lichess_db_standard_rated_2013-01.pgn')
+reader = PGNReader()
+reader.load_pngs_from_file_and_process('static/database/lichess_pgns/lichess_db_standard_rated_2013-01.pgn')
 
-################################################
-# encode unique opening_names and save to file #
-################################################
+#####################################################
+# encoding unique opening names and saving to file  #
+# it is used to make database of every used opening #
+# #####################################################
 # openings_names = reader.get_openings_names()
 # openings_names_encoded = opening_encoder.get_encoded_unique_openings_names(openings_names)
-# opening_encoder.dump_to_file('openings_label_encoded', openings_names_encoded)
+# opening_encoder.dump_to_file('static/database/openings/openings_label_encoded_lichess_db_standard_rated_2013-01', openings_names_encoded)
 
 ##################################################
 # loading encoded unique opening names from file #
 ##################################################
-# openings_names_encoded = opening_encoder.load_from_file('openings_label_encoded')
+# openings_names_encoded = opening_encoder.load_from_file('static/database/openings/openings_label_encoded_lichess_db_standard_rated_2013-01')
 
-#################
-# reading games #
-################
-# reader = pgnreader.Reader()
-# opening_name, white_moves, black_moves = reader.get_opening_with_moves(
-#     'static/database/lichess_db_standard_rated_2016-03.pgn')
-# print(len(opening_name))
+#########################################################
+# encoding opening names and moves then saving to file  #
+#########################################################
+# encoded = opening_encoder.get_encoded_openings_names_and_moves(*reader.get_openings_names_and_moves())
+# opening_encoder.dump_to_file('static/database/openings/openings_and_moves_lichess_db_standard_rated_2013-01', encoded)
 
-###################
-# simulating PGNs #
-###################
-# v = visualizer.ChessVisualizer()
-# v.set_database(opening_name, white_moves, black_moves)
-# v.save_openings_to_file('learning_set_high2.chess')
+#####################################################
+# loading encoded opening names and moves from file #
+#####################################################
+openings_and_moves_encoded = opening_encoder.load_from_file('static/database/openings/openings_and_moves_lichess_db_standard_rated_2013-01')
+openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(openings_and_moves_encoded)
+
+###################################
+# simulating read games from PGNS #
+###################################
+# v = ChessVisualizer()
+# v.set_database(openings_names, white_moves, black_moves)
+# # v.save_openings_to_file('learning_set_high2.chess')
 # v.visualize()
 
 ###############################
