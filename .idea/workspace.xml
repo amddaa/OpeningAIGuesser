@@ -2,10 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="46027a93-b386-4707-bf0d-380f65c2cc94" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/presentation/chess_board.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/presentation/pieces/bishop.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/presentation/pieces/king.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/presentation/pieces/knight.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/presentation/pieces/pawn.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/presentation/pieces/queen.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/presentation/pieces/rook.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/openingGuesser.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/positionWriterReader.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/visualizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualizer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/presentation/chess_visualizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/chess_visualizer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/presentation/piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/pieces/piece.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +48,8 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\OpeningAIGuesser\presentation\pieces" />
+      <recent name="D:\OpeningAIGuesser\presentation" />
       <recent name="D:\OpeningAIGuesser\static" />
       <recent name="D:\OpeningAIGuesser" />
     </key>

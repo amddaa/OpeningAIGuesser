@@ -37,8 +37,8 @@ class Piece:
 
     def __init__(self, position_notation, piece_name):
         self.position_notation = position_notation
-        self.image = pygame.image.load(os.path.join('static', '128px', self.filename_dict[piece_name]))
         self.character_representation = self.character_dict[piece_name]
+        self.image = pygame.image.load(os.path.join('static', '128px', self.filename_dict[piece_name]))
 
     def __str__(self):
         return self.character_representation
