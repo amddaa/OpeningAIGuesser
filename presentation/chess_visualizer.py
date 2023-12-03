@@ -1,5 +1,4 @@
 import pygame
-import os
 from itertools import zip_longest
 from math import ceil
 import numpy as np
@@ -12,9 +11,6 @@ from presentation.pieces.piece import Piece
 
 DEFAULT_SCREEN_WIDTH = 1024
 DEFAULT_SCREEN_HEIGHT = 1024
-SQUARE_BLACK_FILENAME = 'square gray dark _png_shadow_128px.png'
-SQUARE_WHITE_FILENAME = 'square gray light _png_shadow_128px.png'
-TILES_IN_ROW = 8
 
 
 class ChessVisualizer:
@@ -34,7 +30,6 @@ class ChessVisualizer:
         pygame.init()
         self.__screen = pygame.display.set_mode((DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT), pygame.RESIZABLE)
         self.__clock = pygame.time.Clock()
-        self.__loadImagesExceptPieces()
         self.is_running = True
         self.__is_saving_positions_to_database = False
 
@@ -60,7 +55,8 @@ class ChessVisualizer:
             if self.__is_saving_positions_to_database:
                 if self.__game_saving_idx == self.__simulated_move_idx:
                     self.__position_writer.save_position(self.__opening_names[self.__simulated_game_idx],
-                                                         self.__chess_board.pieces_white, self.__chess_board.pieces_black)
+                                                         self.__chess_board.pieces_white,
+                                                         self.__chess_board.pieces_black)
                     self.__reset_game()
                     self.__game_saving_idx = np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]))
 
@@ -70,10 +66,6 @@ class ChessVisualizer:
         pygame.quit()
         if self.__is_saving_positions_to_database:
             self.__position_writer.save_to_file()
-
-    def __loadImagesExceptPieces(self):
-        self.__square_black = pygame.image.load(os.path.join('static', '128px', SQUARE_BLACK_FILENAME))
-        self.__square_white = pygame.image.load(os.path.join('static', '128px', SQUARE_WHITE_FILENAME))
 
     def __handle_events(self):
         for event in pygame.event.get():
@@ -91,31 +83,33 @@ class ChessVisualizer:
                 if event.key == pygame.K_UP:
                     if self.__guesser is None:
                         continue
-                    pos = self.__position_writer.get_position_after_ord(self.__chess_board.pieces_white, self.__chess_board.pieces_black)
+                    pos = self.__position_writer.get_position_after_ord(self.__chess_board.pieces_white,
+                                                                        self.__chess_board.pieces_black)
                     pos = np.array(pos).astype(int)
                     pos = np.expand_dims(pos, axis=0)
                     print(f'{self.__opening_names[self.__simulated_game_idx]}')
                     self.__guesser.predict_given(pos)
 
+    # TODO wywolac po promocji
     def __resize_images(self):
         width, height = self.__screen.get_size()
-        self.__square_black = pygame.transform.scale(self.__square_black,
-                                                     (ceil(width / TILES_IN_ROW), ceil(height / TILES_IN_ROW)))
-        self.__square_white = pygame.transform.scale(self.__square_white,
-                                                     (ceil(width / TILES_IN_ROW), ceil(height / TILES_IN_ROW)))
+        tile_width_ratio = ceil(width / self.__chess_board.TILES_IN_ROW)
+        tile_height_ratio = ceil(height / self.__chess_board.TILES_IN_ROW)
 
-        for arr_w, arr_b in zip_longest(self.__chess_board.pieces_white, self.__chess_board.pieces_black, fillvalue=None):
+        self.__chess_board.square_black_image = pygame.transform.scale(self.__chess_board.square_black_image,
+                                                                       (tile_width_ratio, tile_height_ratio))
+        self.__chess_board.square_white_image = pygame.transform.scale(self.__chess_board.square_white_image,
+                                                                       (tile_width_ratio, tile_height_ratio))
+
+        for arr_w, arr_b in zip_longest(self.__chess_board.pieces_white, self.__chess_board.pieces_black,
+                                        fillvalue=None):
             if arr_w is not None:
                 for piece in arr_w:
-                    piece.image = pygame.transform.smoothscale(piece.image,
-                                                               (ceil(width / TILES_IN_ROW),
-                                                                ceil(height / TILES_IN_ROW)))
+                    piece.image = pygame.transform.smoothscale(piece.image, (tile_width_ratio, tile_height_ratio))
 
             if arr_b is not None:
                 for piece in arr_b:
-                    piece.image = pygame.transform.smoothscale(piece.image,
-                                                               (ceil(width / TILES_IN_ROW),
-                                                                ceil(height / TILES_IN_ROW)))
+                    piece.image = pygame.transform.smoothscale(piece.image, (tile_width_ratio, tile_height_ratio))
 
     def __refresh_screen(self):
         self.__screen.fill("yellow")
@@ -126,13 +120,13 @@ class ChessVisualizer:
         # Board
         for row in range(1, 9):
             for column in range(1, 9):
-                square_img = self.__square_white
+                square_img = self.__chess_board.square_white_image
                 if column % 2 == 0:
                     if row % 2 == 1:
-                        square_img = self.__square_black
+                        square_img = self.__chess_board.square_black_image
                 else:
                     if row % 2 == 0:
-                        square_img = self.__square_black
+                        square_img = self.__chess_board.square_black_image
 
                 # last move mark
                 square_img.set_alpha(255)
@@ -147,22 +141,32 @@ class ChessVisualizer:
                         square_img.set_alpha(self.__last_move_mark_alpha)
 
                 self.__screen.blit(square_img,
-                                   ((column - 1) * (width / TILES_IN_ROW), (row - 1) * (height / TILES_IN_ROW)))
+                                   ((column - 1) * (width / self.__chess_board.TILES_IN_ROW),
+                                    (row - 1) * (height / self.__chess_board.TILES_IN_ROW)))
 
         # Pieces
         width_offset_ratio = width / DEFAULT_SCREEN_WIDTH
-        pawn_offset_px = 23/2 * width_offset_ratio
-        self.__render_pieces(zip_longest(self.__chess_board.pawns_white, self.__chess_board.pawns_black, fillvalue=None), pawn_offset_px)
+        pawn_offset_px = 23 / 2 * width_offset_ratio
+        self.__render_pieces(
+            zip_longest(self.__chess_board.pawns_white, self.__chess_board.pawns_black, fillvalue=None), pawn_offset_px)
         knight_offset_px = 6 * width_offset_ratio
-        self.__render_pieces(zip_longest(self.__chess_board.knights_white, self.__chess_board.knights_black, fillvalue=None), knight_offset_px)
+        self.__render_pieces(
+            zip_longest(self.__chess_board.knights_white, self.__chess_board.knights_black, fillvalue=None),
+            knight_offset_px)
         bishop_offset_px = 0.5 * width_offset_ratio
-        self.__render_pieces(zip_longest(self.__chess_board.bishops_white, self.__chess_board.bishops_black, fillvalue=None), bishop_offset_px)
+        self.__render_pieces(
+            zip_longest(self.__chess_board.bishops_white, self.__chess_board.bishops_black, fillvalue=None),
+            bishop_offset_px)
         rook_offset_px = 5 * width_offset_ratio
-        self.__render_pieces(zip_longest(self.__chess_board.rooks_white, self.__chess_board.rooks_black, fillvalue=None), rook_offset_px)
+        self.__render_pieces(
+            zip_longest(self.__chess_board.rooks_white, self.__chess_board.rooks_black, fillvalue=None), rook_offset_px)
         queen_offset_px = 0
-        self.__render_pieces(zip_longest(self.__chess_board.queen_white, self.__chess_board.queen_black, fillvalue=None), queen_offset_px)
+        self.__render_pieces(
+            zip_longest(self.__chess_board.queen_white, self.__chess_board.queen_black, fillvalue=None),
+            queen_offset_px)
         king_offset_px = 0
-        self.__render_pieces(zip_longest(self.__chess_board.king_white, self.__chess_board.king_black, fillvalue=None), king_offset_px)
+        self.__render_pieces(zip_longest(self.__chess_board.king_white, self.__chess_board.king_black, fillvalue=None),
+                             king_offset_px)
 
         pygame.display.flip()
 
@@ -172,12 +176,14 @@ class ChessVisualizer:
             if w is not None:
                 idx_w, idx_h = w.convert_position_notation_to_image_position_indices()
                 self.__screen.blit(w.image,
-                                   (idx_w * width // TILES_IN_ROW + width_offset, idx_h * height // TILES_IN_ROW))
+                                   (idx_w * width // self.__chess_board.TILES_IN_ROW + width_offset,
+                                    idx_h * height // self.__chess_board.TILES_IN_ROW))
 
             if b is not None:
                 idx_w, idx_h = b.convert_position_notation_to_image_position_indices()
                 self.__screen.blit(b.image,
-                                   (idx_w * width // TILES_IN_ROW + width_offset, idx_h * height // TILES_IN_ROW))
+                                   (idx_w * width // self.__chess_board.TILES_IN_ROW + width_offset,
+                                    idx_h * height // self.__chess_board.TILES_IN_ROW))
 
     def __simulate_next_move(self):
         if self.__chess_board.is_white_moving:

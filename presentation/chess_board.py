@@ -1,5 +1,8 @@
+import os
 from itertools import zip_longest
 from string import ascii_lowercase
+
+import pygame
 
 from presentation.pieces.knight import Knight
 from presentation.pieces.king import King
@@ -8,8 +11,13 @@ from presentation.pieces.pawn import Pawn
 from presentation.pieces.queen import Queen
 from presentation.pieces.rook import Rook
 
+SQUARE_BLACK_FILENAME = 'square gray dark _png_shadow_128px.png'
+SQUARE_WHITE_FILENAME = 'square gray light _png_shadow_128px.png'
+
 
 class Board:
+    TILES_IN_ROW = 8
+
     def __init__(self):
         self.__where_enpassant_possible = False
         self.__last_move_from_to = None
@@ -30,6 +38,26 @@ class Board:
         self.__pieces_white = None
         self.__pieces_black = None
         self.__createPieces()
+
+        self.__square_black_image = None
+        self.__square_white_image = None
+        self.__loadBoardTilesImages()
+
+    @property
+    def square_white_image(self):
+        return self.__square_white_image
+
+    @square_white_image.setter
+    def square_white_image(self, value):
+        self.__square_white_image = value
+
+    @property
+    def square_black_image(self):
+        return self.__square_black_image
+
+    @square_black_image.setter
+    def square_black_image(self, value):
+        self.__square_black_image = value
 
     @property
     def last_move_from_to(self):
@@ -94,6 +122,10 @@ class Board:
     @property
     def pieces_black(self):
         return self.__pieces_black
+
+    def __loadBoardTilesImages(self):
+        self.__square_black_image = pygame.image.load(os.path.join('static', '128px', SQUARE_BLACK_FILENAME))
+        self.__square_white_image = pygame.image.load(os.path.join('static', '128px', SQUARE_WHITE_FILENAME))
 
     def __createPieces(self):
         self.__last_move_from_to = None
@@ -252,27 +284,29 @@ class Board:
         Board.move_piece_from_to(rooks, rook_pos.position_notation, new_rook_pos)
 
     def __add_promoted_piece(self, promoting_to, move_to):
-        if promoting_to is not None:
-            if promoting_to == 'Q':
-                if self.__is_white_moving:
-                    self.__queen_white.append(Queen(move_to, True))
-                else:
-                    self.__queen_black.append(Queen(move_to, False))
-            elif promoting_to == 'R':
-                if self.__is_white_moving:
-                    self.__rooks_white.append(Rook(move_to, True))
-                else:
-                    self.__rooks_black.append(Rook(move_to, False))
-            elif promoting_to == 'N':
-                if self.__is_white_moving:
-                    self.__knights_white.append(Knight(move_to, True))
-                else:
-                    self.__knights_black.append(Knight(move_to, False))
-            elif promoting_to == 'B':
-                if self.__is_white_moving:
-                    self.__bishops_white.append(Bishop(move_to, True))
-                else:
-                    self.__bishops_black.append(Bishop(move_to, False))
+        if promoting_to is None:
+            return
+
+        if promoting_to == 'Q':
+            if self.__is_white_moving:
+                self.__queen_white.append(Queen(move_to, True))
+            else:
+                self.__queen_black.append(Queen(move_to, False))
+        elif promoting_to == 'R':
+            if self.__is_white_moving:
+                self.__rooks_white.append(Rook(move_to, True))
+            else:
+                self.__rooks_black.append(Rook(move_to, False))
+        elif promoting_to == 'N':
+            if self.__is_white_moving:
+                self.__knights_white.append(Knight(move_to, True))
+            else:
+                self.__knights_black.append(Knight(move_to, False))
+        elif promoting_to == 'B':
+            if self.__is_white_moving:
+                self.__bishops_white.append(Bishop(move_to, True))
+            else:
+                self.__bishops_black.append(Bishop(move_to, False))
 
     def __delete_opposite_player_piece(self, move_to):
         pieces_deleted = self.__pieces_white
