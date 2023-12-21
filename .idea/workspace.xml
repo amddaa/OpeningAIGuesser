@@ -5,6 +5,12 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/presentation/chess_board.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/chess_board.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/presentation/chess_visualizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/chess_visualizer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/presentation/pieces/bishop.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/pieces/bishop.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/presentation/pieces/king.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/pieces/king.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/presentation/pieces/knight.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/pieces/knight.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/presentation/pieces/pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/pieces/pawn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/presentation/pieces/piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/pieces/piece.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/presentation/pieces/rook.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/pieces/rook.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +23,9 @@
         <option value="Python Script" />
       </list>
     </option>
+  </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -35,7 +44,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/OpeningAIGuesser/pgnreader.py&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;actions.on.save&quot;
   }
 }</component>
   <component name="RecentsManager">

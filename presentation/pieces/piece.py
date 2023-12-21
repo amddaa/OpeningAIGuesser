@@ -39,6 +39,7 @@ class Piece:
         self.position_notation = position_notation
         self.character_representation = self.character_dict[piece_name]
         self.image = pygame.image.load(os.path.join('static', '128px', self.filename_dict[piece_name]))
+        self.width_offset_px = 0  # images are not centered, this is used while drawing pieces
 
     def __str__(self):
         return self.character_representation

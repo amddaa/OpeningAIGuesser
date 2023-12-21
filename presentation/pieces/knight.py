@@ -5,6 +5,7 @@ class Knight(Piece):
     def __init__(self, position_notation, is_white):
         __name = "KNIGHT_WHITE" if is_white else "KNIGHT_BLACK"
         super().__init__(position_notation, __name)
+        self.width_offset_px = 6
 
     @staticmethod
     def find_possible_move(pieces_arr, move_to, ambiguity_help):

@@ -5,6 +5,7 @@ class Rook(Piece):
     def __init__(self, position_notation, is_white):
         __name = "ROOK_WHITE" if is_white else "ROOK_BLACK"
         super().__init__(position_notation, __name)
+        self.width_offset_px = 5
 
     @staticmethod
     def find_possible_move(pieces_arr, move_to, ambiguity_help, pieces_white, pieces_black):
@@ -23,10 +24,12 @@ class Rook(Piece):
                     if ambiguity_help is not None:
                         if p.position_notation[0] == ambiguity_help or p.position_notation[1] == ambiguity_help \
                                 or p.position_notation == ambiguity_help:
-                            if Board.is_collision_found_with_any_piece_from_given(p.position_notation, move_to, pieces_white, pieces_black) is False:
+                            if Board.is_collision_found_with_any_piece_from_given(p.position_notation, move_to,
+                                                                                  pieces_white, pieces_black) is False:
                                 return p.position_notation
                     else:
-                        if Board.is_collision_found_with_any_piece_from_given(p.position_notation, move_to, pieces_white, pieces_black) is False:
+                        if Board.is_collision_found_with_any_piece_from_given(p.position_notation, move_to,
+                                                                              pieces_white, pieces_black) is False:
                             return p.position_notation
 
                 left = chr(ord(left[0]) - 1) + chr(ord(left[1]))

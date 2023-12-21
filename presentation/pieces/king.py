@@ -19,4 +19,3 @@ class King(Piece):
                         return p.position_notation
 
         return None
-

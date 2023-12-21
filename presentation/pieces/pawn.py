@@ -5,6 +5,7 @@ class Pawn(Piece):
     def __init__(self, position_notation, is_white):
         __name = "PAWN_WHITE" if is_white else "PAWN_BLACK"
         super().__init__(position_notation, __name)
+        self.width_offset_px = 10
 
     @staticmethod
     def find_possible_move(pieces_arr, is_taking, move_to, ambiguity_help, is_white_moving):

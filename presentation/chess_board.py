@@ -153,13 +153,15 @@ class Board:
         self.__createPieces()
 
     def make_move(self, move):
+        is_new_piece_added = False
         pieces_arr = None
         is_taking = True if 'x' in move else False
         move_from = None
         move, move_to, ambiguity_help, promoting_to = self.__parse_move_notation(move)
 
         if move[0] in ascii_lowercase:
-            pieces_arr, move_from = self.__handle_pawn_move(is_taking, move_to, ambiguity_help, promoting_to)
+            is_new_piece_added, pieces_arr, move_from = self.__handle_pawn_move(is_taking, move_to, ambiguity_help,
+                                                                                promoting_to)
         else:
             # any other piece
             self.__where_enpassant_possible = None
@@ -189,13 +191,14 @@ class Board:
             elif move == 'O-O' or move == 'O-O-O':
                 self.__handle_castle_move(move)
                 self.__is_white_moving = not self.__is_white_moving
-                return
+                return is_new_piece_added
 
         Board.move_piece_from_to(pieces_arr, move_from, move_to)
         if is_taking:
             self.__delete_opposite_player_piece(move_to)
         self.__last_move_from_to = (move_from, move_to)
         self.__is_white_moving = not self.__is_white_moving
+        return is_new_piece_added
 
     @staticmethod
     def __parse_move_notation(move):
@@ -236,6 +239,7 @@ class Board:
         return move, move_to, ambiguity_help, promoting_to
 
     def __handle_pawn_move(self, is_taking, move_to, ambiguity_help, promoting_to):
+        is_new_piece_added = False
         pieces_arr = self.__pawns_white if self.__is_white_moving else self.__pawns_black
         move_from = Pawn.find_possible_move(pieces_arr, is_taking, move_to, ambiguity_help, self.__is_white_moving)
 
@@ -253,8 +257,9 @@ class Board:
             self.__is_white_moving = not self.__is_white_moving
             self.__delete_opposite_player_piece(move_from)
             self.__is_white_moving = not self.__is_white_moving
+            is_new_piece_added = True
 
-        return pieces_arr, move_from
+        return is_new_piece_added, pieces_arr, move_from
 
     def __handle_castle_move(self, move):
         # king moves 2 squares towards rook, rook over king
