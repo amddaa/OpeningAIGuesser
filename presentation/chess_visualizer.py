@@ -15,6 +15,7 @@ DEFAULT_SCREEN_HEIGHT = 1024
 
 class ChessVisualizer:
     def __init__(self):
+        self.__is_simulating_next_move = False
         self.__game_saving_idx = None
         self.__guesser = None
         self.__position_writer = None
@@ -47,25 +48,36 @@ class ChessVisualizer:
         self.__guesser = guesser
         self.__position_writer = position_writer_reader.PositionWriter("")
 
-    def visualize(self):
+    def __save_results_to_file(self):
+        if self.__is_saving_positions_to_database:
+            self.__position_writer.save_to_file()
+
+    def __save_position_to_database(self):
+        if self.__is_saving_positions_to_database:
+            if self.__game_saving_idx == self.__simulated_move_idx:
+                self.__position_writer.save_position(self.__opening_names[self.__simulated_game_idx],
+                                                     self.__chess_board.pieces_white,
+                                                     self.__chess_board.pieces_black)
+                self.__reset_game()
+                self.__game_saving_idx = np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]))
+
+    def __handle_move_simulation(self):
+        if self.__auto_visualization:
+            self.__simulate_next_move()
+        elif self.__is_simulating_next_move:
+            self.__simulate_next_move()
+            self.__is_simulating_next_move = False
+
+    def run(self):
         while self.is_running:
             self.__handle_events()
-            if self.__auto_visualization:
-                self.__simulate_next_move()
-            if self.__is_saving_positions_to_database:
-                if self.__game_saving_idx == self.__simulated_move_idx:
-                    self.__position_writer.save_position(self.__opening_names[self.__simulated_game_idx],
-                                                         self.__chess_board.pieces_white,
-                                                         self.__chess_board.pieces_black)
-                    self.__reset_game()
-                    self.__game_saving_idx = np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]))
-
+            self.__handle_move_simulation()
+            self.__save_position_to_database()
             self.__refresh_screen()
             self.__render()
             self.__clock.tick(60)
         pygame.quit()
-        if self.__is_saving_positions_to_database:
-            self.__position_writer.save_to_file()
+        self.__save_results_to_file()
 
     def __handle_events(self):
         for event in pygame.event.get():
@@ -77,7 +89,7 @@ class ChessVisualizer:
                 self.__render()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
-                    self.__simulate_next_move()
+                    self.__is_simulating_next_move = True
                 if event.key == pygame.K_DOWN:
                     self.__auto_visualization = not self.__auto_visualization
                 if event.key == pygame.K_UP:
