@@ -6,7 +6,7 @@ import numpy as np
 import opening_guesser
 import position_writer_reader
 
-from presentation.chess_board import Board
+from presentation.chess_board import Board, GAME_ANY_ENDING_NOTATION
 from presentation.pieces.piece import Piece
 
 DEFAULT_SCREEN_WIDTH = 640
@@ -202,7 +202,7 @@ class ChessVisualizer:
             new_move = self.__black_moves[self.__simulated_game_idx][self.__simulated_move_idx]
             self.__simulated_move_idx += 1
 
-        if new_move in ['1-0', '1/2-1/2', '0-1']:
+        if new_move in GAME_ANY_ENDING_NOTATION:
             self.__reset_game()
             return
 

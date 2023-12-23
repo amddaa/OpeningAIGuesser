@@ -13,6 +13,7 @@ from presentation.pieces.rook import Rook
 
 SQUARE_BLACK_FILENAME = 'square gray dark _png_shadow_128px.png'
 SQUARE_WHITE_FILENAME = 'square gray light _png_shadow_128px.png'
+GAME_ANY_ENDING_NOTATION = ['1-0', '1/2-1/2', '0-1']
 
 
 class Board:

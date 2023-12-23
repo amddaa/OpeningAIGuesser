@@ -1,8 +1,14 @@
+import logging
+
+
 class PGNReader:
     def __init__(self):
         self.__openings_names = []
         self.__black_moves = []
         self.__white_moves = []
+
+        logging.basicConfig(level=logging.INFO)
+        self.logger = logging.getLogger(__name__)
 
     def load_pngs_from_file_and_process(self, filepath):
         self.__openings_names = []
@@ -46,8 +52,25 @@ class PGNReader:
                     self.__black_moves.append(b)
                     self.__white_moves.append(w)
 
+        self.logger.info(f'Loaded data from file: {filepath}')
+
     def get_openings_names(self):
         return self.__openings_names
 
     def get_openings_names_and_moves(self):
         return self.__openings_names, self.__white_moves, self.__black_moves
+
+    def filter_games_by_openings_names(self, filter_openings_names):
+        new_openings_names = []
+        new_white_moves = []
+        new_black_moves = []
+        for idx in range(len(self.__openings_names)):
+            if self.__openings_names[idx] in filter_openings_names:
+                new_openings_names.append(self.__openings_names[idx])
+                new_white_moves.append(self.__white_moves[idx])
+                new_black_moves.append(self.__black_moves[idx])
+
+        self.__openings_names = new_openings_names
+        self.__white_moves = new_white_moves
+        self.__black_moves = new_black_moves
+        self.logger.info(f'Filtered games using {filter_openings_names} to {len(self.__openings_names)} entries')

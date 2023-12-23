@@ -7,8 +7,8 @@ from presentation.chess_visualizer import ChessVisualizer
 ######################################################
 # reading openings names and moves from lichess data #
 ######################################################
-# reader = PGNReader()
-# reader.load_pngs_from_file_and_process('static/database/lichess_pgns/lichess_db_standard_rated_2013-01.pgn')
+reader = PGNReader()
+reader.load_pngs_from_file_and_process('static/database/lichess_pgns/lichess_db_standard_rated_2013-01.pgn')
 
 #####################################################
 # encoding unique opening names and saving to file  #
@@ -26,14 +26,19 @@ from presentation.chess_visualizer import ChessVisualizer
 #########################################################
 # encoding opening names and moves then saving to file  #
 #########################################################
-# encoded = opening_encoder.get_encoded_openings_names_and_moves(*reader.get_openings_names_and_moves())
-# opening_encoder.dump_to_file('static/database/openings/openings_and_moves_lichess_db_standard_rated_2013-01', encoded)
+reader.filter_games_by_openings_names(
+    ['Italian Game', 'Sicilian Defense'])  # filtering to specific openings only
+encoded = opening_encoder.get_encoded_openings_names_and_moves(*reader.get_openings_names_and_moves())
+opening_encoder.dump_to_file(
+    'static/database/openings/openings_and_moves_lichess_db_standard_rated_2013-01_ITALIAN+SICILIAN', encoded)
 
 #####################################################
 # loading encoded opening names and moves from file #
 #####################################################
-openings_and_moves_encoded = opening_encoder.load_from_file('static/database/openings/openings_and_moves_lichess_db_standard_rated_2013-01')
-openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(openings_and_moves_encoded)
+openings_and_moves_encoded = opening_encoder.load_from_file(
+    'static/database/openings/openings_and_moves_lichess_db_standard_rated_2013-01_ITALIAN+SICILIAN')
+openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
+    openings_and_moves_encoded)
 
 ###################################
 # simulating read games from PGNS #
@@ -75,5 +80,3 @@ v.run()
 # v.add_guesser_init_writer(guesser)
 # v.set_database(opening_name, white_moves, black_moves)
 # v.visualize()
-
-
