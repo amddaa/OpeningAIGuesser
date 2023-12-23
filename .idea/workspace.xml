@@ -8,8 +8,13 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pgn_reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgn_reader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/presentation/chess_board.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/chess_board.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/presentation/chess_visualizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/chess_visualizer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/models/87acc40loss/fingerprint.pb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/models/87acc40loss/keras_metadata.pb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/models/87acc40loss/saved_model.pb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/models/87acc40loss/variables/variables.data-00000-of-00001" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/models/87acc40loss/variables/variables.index" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/models/test.keras" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +111,7 @@
       <option name="presentableId" value="Default" />
       <updated>1690225341536</updated>
       <workItem from="1703345517444" duration="1561000" />
-      <workItem from="1703347549245" duration="4999000" />
+      <workItem from="1703347549245" duration="11445000" />
     </task>
     <servers />
   </component>
@@ -149,6 +154,6 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/OpeningAIGuesser$main.coverage" NAME="main Coverage Results" MODIFIED="1703352705024" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/OpeningAIGuesser$main.coverage" NAME="main Coverage Results" MODIFIED="1703359777062" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

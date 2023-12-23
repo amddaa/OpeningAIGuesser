@@ -1,4 +1,5 @@
 import pygame
+import logging
 from itertools import zip_longest
 from math import ceil, floor
 import numpy as np
@@ -15,6 +16,7 @@ DEFAULT_SCREEN_HEIGHT = 640
 
 class ChessVisualizer:
     def __init__(self):
+        self.__simulated_games_database_loop_counter = 0
         self.__is_simulating_next_move = False
         self.__game_saving_idx = None
         self.__guesser = None
@@ -34,14 +36,17 @@ class ChessVisualizer:
         self.is_running = True
         self.__is_saving_positions_to_database = False
 
+        logging.basicConfig(level=logging.INFO)
+        self.__logger = logging.getLogger(__name__)
+
     def set_visualization_games_database(self, opening_names, white_moves, black_moves):
         self.__opening_names = opening_names
         self.__white_moves = white_moves
         self.__black_moves = black_moves
 
-    def save_openings_to_file(self, filename):
+    def toggle_saving_positions_to_file(self, position_writer):
         self.__is_saving_positions_to_database = True
-        self.__position_writer = position_writer_reader.PositionWriter(filename)
+        self.__position_writer = position_writer
         self.__game_saving_idx = np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]))
 
     def add_guesser_init_writer(self, guesser: opening_guesser.Guesser):
@@ -52,14 +57,14 @@ class ChessVisualizer:
         if self.__is_saving_positions_to_database:
             self.__position_writer.save_to_file()
 
-    def __save_position_to_database(self):
+    def __save_position_to_database_based_on_move_index(self):
         if self.__is_saving_positions_to_database:
             if self.__game_saving_idx == self.__simulated_move_idx:
                 self.__position_writer.save_position(self.__opening_names[self.__simulated_game_idx],
                                                      self.__chess_board.pieces_white,
                                                      self.__chess_board.pieces_black)
                 self.__reset_game()
-                self.__game_saving_idx = np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]))
+                self.__game_saving_idx = np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]) - 1)
 
     def __handle_move_simulation(self):
         if self.__auto_visualization:
@@ -73,10 +78,20 @@ class ChessVisualizer:
         while self.is_running:
             self.__handle_events()
             self.__handle_move_simulation()
-            self.__save_position_to_database()
+            self.__save_position_to_database_based_on_move_index()
             self.__refresh_screen()
             self.__handle_render()
             self.__clock.tick(60)
+        pygame.quit()
+        self.__save_results_to_file()
+
+    def run_auto_simulate_no_visualization(self):
+        self.__auto_visualization = True
+        while True:
+            self.__handle_move_simulation()
+            self.__save_position_to_database_based_on_move_index()
+            if self.__simulated_games_database_loop_counter != 0:
+                break
         pygame.quit()
         self.__save_results_to_file()
 
@@ -88,7 +103,7 @@ class ChessVisualizer:
                                                             self.__chess_board.pieces_black)
         pos = np.array(pos).astype(int)
         pos = np.expand_dims(pos, axis=0)
-        print(f'{self.__opening_names[self.__simulated_game_idx]}')
+        self.__logger.info(f'{self.__opening_names[self.__simulated_game_idx]}')
         self.__guesser.predict_given(pos)
 
     def __handle_events(self):
@@ -210,12 +225,22 @@ class ChessVisualizer:
         if should_resize_images:
             self.__resize_images()
 
+    def __log_game_number(self):
+        simulated_game_percentage = int(self.__simulated_game_idx / (len(self.__opening_names) - 1) * 1000)
+        # *1000 -> limiting to 30.0*****%, not only 30.*****%
+        if simulated_game_percentage % 100 == 0:
+            simulated_game_percentage = simulated_game_percentage / 10
+            self.__logger.info(
+                f'Game number: {self.__simulated_game_idx}/{len(self.__opening_names) - 1} {simulated_game_percentage}%')
+
     def __reset_game(self):
+        self.__log_game_number()
         self.__chess_board.reset_game()
 
         self.__simulated_move_idx = 0
         self.__simulated_game_idx += 1
-        if self.__simulated_game_idx > len(self.__opening_names):
+        if self.__simulated_game_idx >= len(self.__opening_names):
             self.__simulated_game_idx = 0
+            self.__simulated_games_database_loop_counter += 1
 
         self.__resize_images()

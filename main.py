@@ -1,5 +1,5 @@
 from pgn_reader import PGNReader
-from position_writer_reader import PositionReader
+from position_writer_reader import PositionReader, PositionWriter
 from opening_guesser import Guesser
 import opening_encoder
 from presentation.chess_visualizer import ChessVisualizer
@@ -7,8 +7,8 @@ from presentation.chess_visualizer import ChessVisualizer
 ######################################################
 # reading openings names and moves from lichess data #
 ######################################################
-reader = PGNReader()
-reader.load_pngs_from_file_and_process('static/database/lichess_pgns/lichess_db_standard_rated_2013-01.pgn')
+# reader = PGNReader()
+# reader.load_pngs_from_file_and_process('static/database/lichess_pgns/lichess_db_standard_rated_2013-01.pgn')
 
 #####################################################
 # encoding unique opening names and saving to file  #
@@ -26,11 +26,11 @@ reader.load_pngs_from_file_and_process('static/database/lichess_pgns/lichess_db_
 #########################################################
 # encoding opening names and moves then saving to file  #
 #########################################################
-reader.filter_games_by_openings_names(
-    ['Italian Game', 'Sicilian Defense'])  # filtering to specific openings only
-encoded = opening_encoder.get_encoded_openings_names_and_moves(*reader.get_openings_names_and_moves())
-opening_encoder.dump_to_file(
-    'static/database/openings/openings_and_moves_lichess_db_standard_rated_2013-01_ITALIAN+SICILIAN', encoded)
+# reader.filter_games_by_openings_names(
+#     ['Italian Game', 'Sicilian Defense'])  # filtering to specific openings only
+# encoded = opening_encoder.get_encoded_openings_names_and_moves(*reader.get_openings_names_and_moves())
+# opening_encoder.dump_to_file(
+#     'static/database/openings/openings_and_moves_lichess_db_standard_rated_2013-01_ITALIAN+SICILIAN', encoded)
 
 #####################################################
 # loading encoded opening names and moves from file #
@@ -45,8 +45,10 @@ openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_
 ###################################
 v = ChessVisualizer()
 v.set_visualization_games_database(openings_names, white_moves, black_moves)
-# v.save_openings_to_file('learning_set_high2.chess')
-v.run()
+v.toggle_saving_positions_to_file(PositionWriter('italian_sicilian_games.chess'))
+v.run_auto_simulate_no_visualization()
+# v.run()
+
 
 ###############################
 # model creating and training #
