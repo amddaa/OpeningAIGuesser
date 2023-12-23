@@ -9,8 +9,8 @@ import position_writer_reader
 from presentation.chess_board import Board
 from presentation.pieces.piece import Piece
 
-DEFAULT_SCREEN_WIDTH = 1024
-DEFAULT_SCREEN_HEIGHT = 1024
+DEFAULT_SCREEN_WIDTH = 640
+DEFAULT_SCREEN_HEIGHT = 640
 
 
 class ChessVisualizer:
@@ -69,6 +69,7 @@ class ChessVisualizer:
             self.__is_simulating_next_move = False
 
     def run(self):
+        self.__resize_images()
         while self.is_running:
             self.__handle_events()
             self.__handle_move_simulation()
@@ -171,30 +172,23 @@ class ChessVisualizer:
         self.__render_pieces(
             zip_longest(self.__chess_board.king_white, self.__chess_board.king_black, fillvalue=None), 0.9)
 
+    def __blit_piece(self, piece, overall_scale, width, height):
+        idx_w, idx_h = piece.convert_position_notation_to_image_position_indices()
+        x = idx_w * width / self.__chess_board.TILES_IN_ROW
+        y = idx_h * height / self.__chess_board.TILES_IN_ROW
+        img = pygame.transform.smoothscale(piece.image,
+                                           (piece.image.get_width() * overall_scale,
+                                            piece.image.get_height() * overall_scale))
+        margin_x = (width / self.__chess_board.TILES_IN_ROW - img.get_width()) / 2.0
+        margin_y = (height / self.__chess_board.TILES_IN_ROW - img.get_height()) / 2.0
+        self.__screen.blit(img, (x + margin_x, y + margin_y))
+
     def __render_pieces(self, pieces_zipped, overall_scale):
-        width, height = self.__screen.get_size()
         for w, b in pieces_zipped:
             if w is not None:
-                idx_w, idx_h = w.convert_position_notation_to_image_position_indices()
-                x = idx_w * width / self.__chess_board.TILES_IN_ROW
-                y = idx_h * height / self.__chess_board.TILES_IN_ROW
-                img = pygame.transform.smoothscale(w.image,
-                                                   (w.image.get_width() * overall_scale,
-                                                    w.image.get_height() * overall_scale))
-                margin_x = (width / self.__chess_board.TILES_IN_ROW - img.get_width()) / 2.0
-                margin_y = (height / self.__chess_board.TILES_IN_ROW - img.get_height()) / 2.0
-                self.__screen.blit(img, (x + margin_x, y + margin_y))
-
+                self.__blit_piece(w, overall_scale, *self.__screen.get_size())
             if b is not None:
-                idx_w, idx_h = b.convert_position_notation_to_image_position_indices()
-                x = idx_w * width / self.__chess_board.TILES_IN_ROW
-                y = idx_h * height / self.__chess_board.TILES_IN_ROW
-                img = pygame.transform.smoothscale(b.image,
-                                                   (b.image.get_width() * overall_scale,
-                                                    b.image.get_height() * overall_scale))
-                margin_x = (width / self.__chess_board.TILES_IN_ROW - img.get_width()) / 2.0
-                margin_y = (height / self.__chess_board.TILES_IN_ROW - img.get_height()) / 2.0
-                self.__screen.blit(img, (x + margin_x, y + margin_y))
+                self.__blit_piece(b, overall_scale, *self.__screen.get_size())
 
     def __handle_render(self):
         self.__handle_board_render()
