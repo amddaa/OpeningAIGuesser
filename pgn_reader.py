@@ -11,6 +11,8 @@ class PGNReader:
         self.__logger = logging.getLogger(__name__)
 
     def load_pngs_from_file_and_process(self, filepath):
+        self.__logger.info(f'Starting loading data from file: {filepath}')
+
         self.__openings_names = []
         self.__black_moves = []
         self.__white_moves = []
@@ -18,7 +20,7 @@ class PGNReader:
 
         with open(filepath, 'r') as f:
             for line in f:
-                if line.startswith('[Opening'):
+                if line.startswith('[Opening') and "?" not in line:
                     self.__openings_names.append(line[len('[Opening "'):-3])
                 elif line.startswith('1. '):
                     if line.find('eval') != -1:
@@ -64,6 +66,7 @@ class PGNReader:
         new_openings_names = []
         new_white_moves = []
         new_black_moves = []
+
         for idx in range(len(self.__openings_names)):
             if self.__openings_names[idx] in filter_openings_names:
                 new_openings_names.append(self.__openings_names[idx])
