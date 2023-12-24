@@ -8,7 +8,7 @@ from presentation.chess_visualizer import ChessVisualizer
 # reading openings names and moves from lichess data #
 ######################################################
 # reader = PGNReader()
-# reader.load_pngs_from_file_and_process('static/database/lichess_pgns/lichess_db_standard_rated_2013-01.pgn')
+# reader.load_pngs_from_file_and_process('static/database/lichess_pgns/lichess_db_standard_rated_2014-01.pgn')
 
 #####################################################
 # encoding unique opening names and saving to file  #
@@ -30,13 +30,13 @@ from presentation.chess_visualizer import ChessVisualizer
 #     ['Italian Game', 'Sicilian Defense'])  # filtering to specific openings only
 # encoded = opening_encoder.get_encoded_openings_names_and_moves(*reader.get_openings_names_and_moves())
 # opening_encoder.dump_to_file(
-#     'static/database/openings/openings_and_moves_lichess_db_standard_rated_2013-01_ITALIAN+SICILIAN', encoded)
+#     'static/database/openings/openings_and_moves_lichess_db_standard_rated_2014-01_ITALIAN+SICILIAN', encoded)
 
 #####################################################
 # loading encoded opening names and moves from file #
 #####################################################
 openings_and_moves_encoded = opening_encoder.load_from_file(
-    'static/database/openings/openings_and_moves_lichess_db_standard_rated_2013-01_ITALIAN+SICILIAN')
+    'static/database/openings/openings_and_moves_lichess_db_standard_rated_2014-01_ITALIAN+SICILIAN')
 openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
     openings_and_moves_encoded)
 
@@ -45,10 +45,9 @@ openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_
 ###################################
 v = ChessVisualizer()
 v.set_visualization_games_database(openings_names, white_moves, black_moves)
-v.toggle_saving_positions_to_file(PositionWriter('italian_sicilian_games.chess'))
-v.run_auto_simulate_no_visualization()
-# v.run()
-
+# v.toggle_saving_positions_to_file(PositionWriter('italian_sicilian_games_more.chess'))
+# v.run_auto_simulate_no_visualization()
+v.run()
 
 ###############################
 # model creating and training #
