@@ -30,13 +30,13 @@ from presentation.chess_visualizer import ChessVisualizer
 #     ['Italian Game', 'Sicilian Defense'])  # filtering to specific openings only
 # encoded = opening_encoder.get_encoded_openings_names_and_moves(*reader.get_openings_names_and_moves())
 # opening_encoder.dump_to_file(
-#     'static/database/openings/openings_and_moves_lichess_db_standard_rated_2014-01_ITALIAN+SICILIAN', encoded)
+#     'static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2014-01_ITALIAN+SICILIAN', encoded)
 
 #####################################################
 # loading encoded opening names and moves from file #
 #####################################################
 openings_and_moves_encoded = opening_encoder.load_from_file(
-    'static/database/openings/openings_and_moves_lichess_db_standard_rated_2014-01_ITALIAN+SICILIAN')
+    'static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2014-01_ITALIAN+SICILIAN')
 openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
     openings_and_moves_encoded)
 

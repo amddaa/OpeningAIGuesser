@@ -7,6 +7,7 @@ class PositionWriter:
         self.__BOARD_SIZE = 8
         self.__required_game_percentage_to_save = 0.5
         self.__filename = filename
+        self.__saving_path = "static/database/saved_positions"
 
     def __str__(self):
         data = ""
@@ -48,7 +49,7 @@ class PositionWriter:
                     board[column][row] = ord(piece.character_representation)
 
     def save_to_file(self):
-        with open(f'static/database/{self.__filename}', 'wb') as file:
+        with open(f'{self.__saving_path}/{self.__filename}', 'wb') as file:
             pickle.dump(self.__database, file)
 
 
@@ -57,6 +58,7 @@ class PositionReader:
         self.__database = None
         self.__filename = filename
         self.__BOARD_SIZE = 8
+        self.__reading_path = "static/database/saved_positions"
 
     def __str__(self):
         data = ""
@@ -72,7 +74,7 @@ class PositionReader:
         return data
 
     def read_from_file(self):
-        with open(f'static/database/{self.__filename}', 'rb') as file:
+        with open(f'{self.__reading_path}/{self.__filename}', 'rb') as file:
             self.__database = pickle.load(file)
 
         return self.__database

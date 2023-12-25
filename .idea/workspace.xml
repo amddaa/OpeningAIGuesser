@@ -7,6 +7,12 @@
     <list default="true" id="46027a93-b386-4707-bf0d-380f65c2cc94" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/position_writer_reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/position_writer_reader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/database/italian_sicilian_games.chess" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/database/openings/openings_and_moves_lichess_db_standard_rated_2013-01" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/database/openings/openings_and_moves_lichess_db_standard_rated_2013-01_EVANS+SICILIAN" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/database/openings/openings_and_moves_lichess_db_standard_rated_2013-01_ITALIAN+SICILIAN" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/database/openings/openings_and_moves_lichess_db_standard_rated_2014-01_ITALIAN+SICILIAN" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,21 +44,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.main.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "/Users/adam/Desktop/OpeningAIGuesser",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "editor.preferences.completion",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/adam/Desktop/OpeningAIGuesser&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.completion&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\OpeningAIGuesser\presentation\pieces" />
@@ -103,7 +109,8 @@
       <option name="presentableId" value="Default" />
       <updated>1690225341536</updated>
       <workItem from="1703345517444" duration="1561000" />
-      <workItem from="1703347549245" duration="18918000" />
+      <workItem from="1703347549245" duration="19011000" />
+      <workItem from="1703516316099" duration="523000" />
     </task>
     <servers />
   </component>
