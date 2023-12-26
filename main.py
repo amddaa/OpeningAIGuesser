@@ -35,19 +35,19 @@ from presentation.chess_visualizer import ChessVisualizer
 #####################################################
 # loading encoded opening names and moves from file #
 #####################################################
-openings_and_moves_encoded = opening_encoder.load_from_file(
-    'static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2014-01_ITALIAN+SICILIAN')
-openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
-    openings_and_moves_encoded)
+# openings_and_moves_encoded = opening_encoder.load_from_file(
+#     'static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2014-01_ITALIAN+SICILIAN')
+# openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
+#     openings_and_moves_encoded)
 
 ###################################
 # simulating read games from PGNS #
 ###################################
-v = ChessVisualizer()
-v.set_visualization_games_database(openings_names, white_moves, black_moves)
+# v = ChessVisualizer()
+# v.set_visualization_games_database(openings_names, white_moves, black_moves)
 # v.toggle_saving_positions_to_file(PositionWriter('italian_sicilian_games_more.chess'))
 # v.run_auto_simulate_no_visualization()
-v.run()
+# v.run()
 
 ###############################
 # model creating and training #
