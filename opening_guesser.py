@@ -6,6 +6,7 @@ from keras.layers import Flatten
 from keras.layers import Embedding
 from keras.layers import Input
 from keras.layers import BatchNormalization
+from keras.layers import Dropout
 from keras.utils import to_categorical
 from keras.models import load_model
 from keras.optimizers import Adam
@@ -75,21 +76,18 @@ class Guesser:
         y_train = np.array(opening_names)
         return len(database), x_train, y_train, x_test, y_test
 
+    def __encode_answer_array(self, answer_plain):
+        encoded = []
+        for name in answer_plain:
+            idx = np.where(self.__unique_opening_names == name)[0]
+            idx = idx[0] if np.any(idx) else 0
+            encode = self.__unique_opening_names_encoded[idx]
+            encoded.append(encode)
+        return encoded
+
     def __encode_answers(self):
-        y_train_encoded = []
-        y_test_encoded = []
-        for name in self.__y_train:
-            idx = np.where(self.__unique_opening_names == name)[0]
-            idx = idx[0] if np.any(idx) else 0
-            encode = self.__unique_opening_names_encoded[idx]
-            y_train_encoded.append(encode)
-
-        for name in self.__y_test:
-            idx = np.where(self.__unique_opening_names == name)[0]
-            idx = idx[0] if np.any(idx) else 0
-            encode = self.__unique_opening_names_encoded[idx]
-            y_test_encoded.append(encode)
-
+        y_train_encoded = self.__encode_answer_array(self.__y_train)
+        y_test_encoded = self.__encode_answer_array(self.__y_test)
         return np.array(y_train_encoded), np.array(y_test_encoded)
 
     def __build_model(self):
@@ -97,14 +95,17 @@ class Guesser:
         model.add(Input(shape=(self.__BOARD_SIZE, self.__BOARD_SIZE), name='input_layer'))
         model.add(BatchNormalization())
         model.add(Flatten())
+        model.add(Dense(128, activation='relu'))
+        model.add(Dropout(0.5))
         model.add(Dense(64, activation='relu'))
-        model.add(Dense(256, activation='relu'))
-        model.add(Dense(1024, activation='relu'))
-        model.add(Dense(2048, activation='relu'))
-        model.add(Dense(max(self.__unique_opening_names_encoded) + 1, activation='softmax'))
+        model.add(Dropout(0.5))
+        model.add(Dense(16, activation='relu'))
+        model.add(Dropout(0.5))
+        model.add(Dense(len(self.__unique_opening_names_encoded), activation='softmax'))
         model.compile(optimizer=Adam(learning_rate=0.001),
                       loss='sparse_categorical_crossentropy',
                       metrics=['accuracy'])
+
         return model
 
     def train(self, batch_size, epochs):

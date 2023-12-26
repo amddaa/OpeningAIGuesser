@@ -15,13 +15,15 @@ from presentation.chess_visualizer import ChessVisualizer
 # it is used to make database of every used opening #
 # #####################################################
 # openings_names = reader.get_openings_names()
+# openings_names = ['Italian Game', 'Sicilian Defense']
 # openings_names_encoded = opening_encoder.get_encoded_unique_openings_names(openings_names)
-# opening_encoder.dump_to_file('static/database/openings/openings_label_encoded_lichess_db_standard_rated_2013-01', openings_names_encoded)
+# opening_encoder.dump_to_file('static/database/openings/openings_label_encoded_ITALIAN+SICILIAN', openings_names_encoded)
 
 ##################################################
 # loading encoded unique opening names from file #
-##################################################
-# openings_names_encoded = opening_encoder.load_from_file('static/database/openings/openings_label_encoded_lichess_db_standard_rated_2013-01')
+##################################################x
+# openings_names_encoded = opening_encoder.load_from_file(
+#     'static/database/openings/openings_label_encoded_ITALIAN+SICILIAN')
 
 #########################################################
 # encoding opening names and moves then saving to file  #
@@ -52,29 +54,33 @@ from presentation.chess_visualizer import ChessVisualizer
 ###############################
 # model creating and training #
 ###############################
-# reader = PositionReader('learning_set_high2.chess')
+# reader = PositionReader('italian_sicilian_games_more.chess')
+# openings_names = ['Italian Game', 'Sicilian Defense']
+# openings_names_encoded = opening_encoder.get_encoded_unique_openings_names(openings_names)
 # guesser = Guesser()
-# guesser.input_database(reader.read_from_file(), names_and_encoded)
+# guesser.input_database(reader.read_from_file(), openings_names_encoded)
 # guesser.create_model()
-# guesser.train(128, 30)
+# guesser.train(128, 500)
 # guesser.evaluate()
-# guesser.save_model('static/models/test.keras')
+# guesser.save_model('static/models/italian_sicilian_test.keras')
 
 ################################
 # model loading and evaluating #
 ################################
-# guesser = Guesser()
-# reader = PositionReader('learning_set_random_low.chess')
-# guesser.input_database(reader.read_from_file(), names_and_encoded)
-# guesser.load_model('static/models/test.keras')
-# guesser.evaluate()
+guesser = Guesser()
+openings_names = ['Italian Game', 'Sicilian Defense']
+openings_names_encoded = opening_encoder.get_encoded_unique_openings_names(openings_names)
+reader = PositionReader('italian_sicilian_games.chess')
+guesser.input_database(reader.read_from_file(), openings_names_encoded)
+guesser.load_model('static/models/italian_sicilian_test.keras')
+guesser.evaluate()
 
 ##################################
 # model usage with visualization #
 ##################################
 # guesser = Guesser()
 # reader = PositionReader('learning_set_random_low.chess')
-# guesser.input_database(reader.read_from_file(), names_and_encoded)
+# guesser.input_database(reader.read_from_file(), openings_names_encoded)
 # guesser.load_model('static/models/test.keras')
 #
 # v = visualizer.ChessVisualizer()
