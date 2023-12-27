@@ -29,12 +29,16 @@ class Guesser:
         self.__train_data_len = None
         self.__BOARD_SIZE = 8
 
-    def input_database(self, database, unique_opening_names_and_encoded):
+    def set_database_for_model(self, database, unique_openings_encoded):
         self.__unique_opening_names, self.__unique_opening_names_encoded = self.__extract_opening_names_and_encoded(
-            unique_opening_names_and_encoded)
+            unique_openings_encoded)
         self.__train_data_len, self.__x_train, self.__y_train, self.__x_test, self.__y_test = self.__prepare_database(
             database)
         self.__y_train_encoded, self.__y_test_encoded = self.__encode_answers()
+
+    def set_answers_for_model_output(self, unique_openings_encoded):
+        self.__unique_opening_names, self.__unique_opening_names_encoded = self.__extract_opening_names_and_encoded(
+            unique_openings_encoded)
 
     def __extract_opening_names_and_encoded(self, unique_opening_names_and_encoded):
         names_list = []
