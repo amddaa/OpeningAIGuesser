@@ -28,8 +28,12 @@ class Knight(Piece):
             if move_to not in [up_left, up_right, down_right, down_left, left_down, left_up, right_down, right_up]:
                 continue
 
-            if ambiguity_help is not None and p.position_notation[0] != ambiguity_help \
-                    and p.position_notation[1] != ambiguity_help and p.position_notation != ambiguity_help:
+            if (
+                ambiguity_help is not None
+                and p.position_notation[0] != ambiguity_help
+                and p.position_notation[1] != ambiguity_help
+                and p.position_notation != ambiguity_help
+            ):
                 continue
 
             return p.position_notation

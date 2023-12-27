@@ -1,13 +1,9 @@
-import sys
-
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Flatten
-from keras.layers import Embedding
 from keras.layers import Input
 from keras.layers import BatchNormalization
 from keras.layers import Dropout
-from keras.utils import to_categorical
 from keras.models import load_model
 from keras.optimizers import Adam
 
@@ -31,14 +27,17 @@ class Guesser:
 
     def set_database_for_model(self, database, unique_openings_encoded):
         self.__unique_opening_names, self.__unique_opening_names_encoded = self.__extract_opening_names_and_encoded(
-            unique_openings_encoded)
+            unique_openings_encoded
+        )
         self.__train_data_len, self.__x_train, self.__y_train, self.__x_test, self.__y_test = self.__prepare_database(
-            database)
+            database
+        )
         self.__y_train_encoded, self.__y_test_encoded = self.__encode_answers()
 
     def set_answers_for_model_output(self, unique_openings_encoded):
         self.__unique_opening_names, self.__unique_opening_names_encoded = self.__extract_opening_names_and_encoded(
-            unique_openings_encoded)
+            unique_openings_encoded
+        )
 
     def __extract_opening_names_and_encoded(self, unique_opening_names_and_encoded):
         names_list = []
@@ -96,19 +95,19 @@ class Guesser:
 
     def __build_model(self):
         model = Sequential()
-        model.add(Input(shape=(self.__BOARD_SIZE, self.__BOARD_SIZE), name='input_layer'))
+        model.add(Input(shape=(self.__BOARD_SIZE, self.__BOARD_SIZE), name="input_layer"))
         model.add(BatchNormalization())
         model.add(Flatten())
-        model.add(Dense(128, activation='relu'))
+        model.add(Dense(128, activation="relu"))
         model.add(Dropout(0.5))
-        model.add(Dense(64, activation='relu'))
+        model.add(Dense(64, activation="relu"))
         model.add(Dropout(0.5))
-        model.add(Dense(16, activation='relu'))
+        model.add(Dense(16, activation="relu"))
         model.add(Dropout(0.5))
-        model.add(Dense(len(self.__unique_opening_names_encoded), activation='softmax'))
-        model.compile(optimizer=Adam(learning_rate=0.001),
-                      loss='sparse_categorical_crossentropy',
-                      metrics=['accuracy'])
+        model.add(Dense(len(self.__unique_opening_names_encoded), activation="softmax"))
+        model.compile(
+            optimizer=Adam(learning_rate=0.001), loss="sparse_categorical_crossentropy", metrics=["accuracy"]
+        )
 
         return model
 
@@ -122,7 +121,7 @@ class Guesser:
     def predict_given(self, x):
         prediction = self.__model.predict(x)
         idx = np.argmax(prediction)
-        print(f'{self.__unique_opening_names[idx]}')
+        print(f"{self.__unique_opening_names[idx]}")
 
     def save_model(self, path):
         self.__model.save(path)

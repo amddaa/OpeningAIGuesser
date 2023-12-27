@@ -23,7 +23,7 @@ def get_decoded_openings_names_and_moves(openings_names_encoded):
 
 def dump_to_file(filepath, data):
     try:
-        with open(filepath, 'wb') as file:
+        with open(filepath, "wb") as file:
             pickle.dump(data, file)
     except FileNotFoundError:
         print(f"Error: File '{filepath}' not found.")
@@ -36,7 +36,7 @@ def dump_to_file(filepath, data):
 def load_from_file(filepath):
     try:
         data = None
-        with open(filepath, 'rb') as file:
+        with open(filepath, "rb") as file:
             data = pickle.load(file)
             return data
     except FileNotFoundError:

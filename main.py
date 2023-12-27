@@ -21,7 +21,7 @@ from presentation.chess_visualizer import ChessVisualizer
 
 ##################################################
 # loading encoded unique opening names from file #
-##################################################x
+##################################################
 # openings_names_encoded = opening_encoder.load_from_file(
 #     'static/database/openings/openings_label_encoded_ITALIAN+SICILIAN')
 
@@ -38,9 +38,11 @@ from presentation.chess_visualizer import ChessVisualizer
 # loading encoded opening names and moves from file #
 #####################################################
 openings_and_moves_encoded = opening_encoder.load_from_file(
-    'static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2014-01_ITALIAN+SICILIAN')
+    "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2014-01_ITALIAN+SICILIAN"
+)
 openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
-    openings_and_moves_encoded)
+    openings_and_moves_encoded
+)
 
 ###################################
 # simulating read games from PGNS #
@@ -81,7 +83,7 @@ openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_
 guesser = Guesser()
 openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
 guesser.set_answers_for_model_output(openings_names_encoded)
-guesser.load_model('static/models/italian_sicilian_test.keras')
+guesser.load_model("static/models/italian_sicilian_test.keras")
 
 v = ChessVisualizer()
 v.add_guesser_init_writer(guesser)

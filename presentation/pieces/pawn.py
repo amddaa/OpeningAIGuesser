@@ -27,12 +27,15 @@ class Pawn(Piece):
             else:
                 row = chr(ord(notation[1]) + diff)
                 notation = notation[:-1] + row
-                notation2 = '00'
+                notation2 = "00"
 
             if notation == move_to or notation2 == move_to:
                 if ambiguity_help is not None:
-                    if p.position_notation[0] != ambiguity_help and p.position_notation[1] != ambiguity_help \
-                            and p.position_notation != ambiguity_help:
+                    if (
+                        p.position_notation[0] != ambiguity_help
+                        and p.position_notation[1] != ambiguity_help
+                        and p.position_notation != ambiguity_help
+                    ):
                         continue
                 return p.position_notation
 
@@ -40,7 +43,7 @@ class Pawn(Piece):
             for p in pieces_arr:
                 notation = p.position_notation
                 diff = 1 if is_white_moving else -1
-                diff2 = diff * 2 if (notation[1] == '2' and diff == 1) or (notation[1] == '7' and diff == -1) else diff
+                diff2 = diff * 2 if (notation[1] == "2" and diff == 1) or (notation[1] == "7" and diff == -1) else diff
 
                 if diff2 == diff:
                     continue
@@ -50,8 +53,11 @@ class Pawn(Piece):
 
                 if notation == move_to:
                     if ambiguity_help is not None:
-                        if p.position_notation[0] != ambiguity_help and p.position_notation[1] != ambiguity_help \
-                                and p.position_notation != ambiguity_help:
+                        if (
+                            p.position_notation[0] != ambiguity_help
+                            and p.position_notation[1] != ambiguity_help
+                            and p.position_notation != ambiguity_help
+                        ):
                             continue
                     return p.position_notation
 

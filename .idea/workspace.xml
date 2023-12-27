@@ -5,9 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46027a93-b386-4707-bf0d-380f65c2cc94" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/presentation/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/presentation/pieces/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/opening_encoder.py" beforeDir="false" afterPath="$PROJECT_DIR$/opening_encoder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/opening_guesser.py" beforeDir="false" afterPath="$PROJECT_DIR$/opening_guesser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgn_reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgn_reader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/position_writer_reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/position_writer_reader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/presentation/chess_board.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/chess_board.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/presentation/chess_visualizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/chess_visualizer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/presentation/pieces/bishop.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/pieces/bishop.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/presentation/pieces/knight.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/pieces/knight.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/presentation/pieces/pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/pieces/pawn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/presentation/pieces/piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/pieces/piece.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/presentation/pieces/queen.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/pieces/queen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/presentation/pieces/rook.py" beforeDir="false" afterPath="$PROJECT_DIR$/presentation/pieces/rook.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,21 +53,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/adam/Desktop/OpeningAIGuesser&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.completion&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.main.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "/Users/adam/Desktop/OpeningAIGuesser",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.black.configuration.BlackFormatterConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\OpeningAIGuesser\presentation\pieces" />
