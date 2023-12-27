@@ -1,14 +1,23 @@
+from __future__ import annotations
+from typing import Optional
+
 from presentation.pieces.piece import Piece
 
 
 class Bishop(Piece):
-    def __init__(self, position_notation, is_white):
+    def __init__(self, position_notation: str, is_white: bool) -> None:
         __name = "BISHOP_WHITE" if is_white else "BISHOP_BLACK"
         super().__init__(position_notation, __name)
         self.width_offset_px = 0.5
 
     @staticmethod
-    def find_possible_move(pieces_arr, move_to, ambiguity_help, pieces_white, pieces_black):
+    def find_possible_move(
+        pieces_arr: list[Bishop],
+        move_to: str,
+        ambiguity_help: str,
+        pieces_white: list[list[Piece]],
+        pieces_black: list[list[Piece]],
+    ) -> Optional[str]:
         from presentation.chess_board import Board
 
         for p in pieces_arr:

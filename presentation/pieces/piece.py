@@ -39,14 +39,14 @@ class Piece:
         self.position_notation = position_notation
         self.character_representation = self.character_dict[piece_name]
         self.image = pygame.image.load(os.path.join("static", "128px", self.filename_dict[piece_name]))
-        self.width_offset_px = 0  # images are not centered, this is used while drawing pieces
+        self.width_offset_px = 0.0  # images are not centered, this is used while drawing pieces
 
     def __str__(self) -> str:
         return self.character_representation
 
-    def convert_position_notation_to_image_position_indices(self) -> tuple[Optional[int], Optional[int]]:
+    def convert_position_notation_to_image_position_indices(self) -> tuple[int, int]:
         if self.position_notation is None:
-            return None, None
+            raise ValueError("Position notation is not set")
 
         row = ord(self.position_notation[0]) - ord("a")
         column = ord("8") - ord(self.position_notation[1])
