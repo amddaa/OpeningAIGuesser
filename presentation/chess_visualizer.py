@@ -1,3 +1,6 @@
+import itertools
+from typing import Optional
+
 import pygame
 import logging
 from itertools import zip_longest
@@ -15,19 +18,19 @@ DEFAULT_SCREEN_HEIGHT = 640
 
 
 class ChessVisualizer:
-    def __init__(self):
+    def __init__(self) -> None:
         self.__simulated_games_database_loop_counter = 0
         self.__is_simulating_next_move = False
-        self.__game_saving_idx = None
-        self.__guesser = None
-        self.__position_writer = None
-        self.__opening_names = None
+        self.__game_saving_idx: Optional[int] = None
+        self.__guesser: Optional[opening_guesser.Guesser] = None
+        self.__position_writer: Optional[position_writer.PositionWriter] = None
+        self.__opening_names: list[str] = []
         self.__simulated_game_idx = 0
         self.__simulated_move_idx = 0
         self.__auto_visualization = False
         self.__last_move_mark_alpha = 180
-        self.__white_moves = None
-        self.__black_moves = None
+        self.__white_moves: list[list[str]] = []
+        self.__black_moves: list[list[str]] = []
         self.__chess_board = Board()
 
         pygame.init()
@@ -39,26 +42,28 @@ class ChessVisualizer:
         logging.basicConfig(level=logging.INFO)
         self.__logger = logging.getLogger(__name__)
 
-    def set_visualization_games_database(self, opening_names, white_moves, black_moves):
+    def set_visualization_games_database(
+        self, opening_names: list[str], white_moves: list[list[str]], black_moves: list[list[str]]
+    ) -> None:
         self.__opening_names = opening_names
         self.__white_moves = white_moves
         self.__black_moves = black_moves
 
-    def toggle_saving_positions_to_file(self, position_writer):
+    def toggle_saving_positions_to_file(self, position_writer: position_writer.PositionWriter) -> None:
         self.__is_saving_positions_to_database = True
         self.__position_writer = position_writer
         self.__game_saving_idx = np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]))
 
-    def add_guesser_init_writer(self, guesser: opening_guesser.Guesser):
+    def add_guesser_init_writer(self, guesser: opening_guesser.Guesser) -> None:
         self.__guesser = guesser
         self.__position_writer = position_writer.PositionWriter("")
 
-    def __save_results_to_file(self):
-        if self.__is_saving_positions_to_database:
+    def __save_results_to_file(self) -> None:
+        if self.__is_saving_positions_to_database and self.__position_writer is not None:
             self.__position_writer.save_to_file()
 
-    def __save_position_to_database_based_on_move_index(self):
-        if self.__is_saving_positions_to_database:
+    def __save_position_to_database_based_on_move_index(self) -> None:
+        if self.__is_saving_positions_to_database and self.__position_writer is not None:
             if self.__game_saving_idx == self.__simulated_move_idx:
                 self.__position_writer.save_position(
                     self.__opening_names[self.__simulated_game_idx],
@@ -68,14 +73,14 @@ class ChessVisualizer:
                 self.__reset_game()
                 self.__game_saving_idx = np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]) - 1)
 
-    def __handle_move_simulation(self):
+    def __handle_move_simulation(self) -> None:
         if self.__auto_visualization:
             self.__simulate_next_move()
         elif self.__is_simulating_next_move:
             self.__simulate_next_move()
             self.__is_simulating_next_move = False
 
-    def run(self):
+    def run(self) -> None:
         self.__resize_images()
         while self.is_running:
             self.__handle_events()
@@ -87,7 +92,7 @@ class ChessVisualizer:
         pygame.quit()
         self.__save_results_to_file()
 
-    def run_auto_simulate_no_visualization(self):
+    def run_auto_simulate_no_visualization(self) -> None:
         self.__auto_visualization = True
         while True:
             self.__handle_move_simulation()
@@ -97,19 +102,19 @@ class ChessVisualizer:
         pygame.quit()
         self.__save_results_to_file()
 
-    def __predict_opening(self):
-        if self.__guesser is None:
+    def __predict_opening(self) -> None:
+        if self.__guesser is None or self.__position_writer is None:
             return
 
         pos = self.__position_writer.get_position_after_ord(
             self.__chess_board.pieces_white, self.__chess_board.pieces_black
         )
-        pos = np.array(pos).astype(int)
-        pos = np.expand_dims(pos, axis=0)
+        pos_np = np.array(pos).astype(int)
+        pos_np = np.expand_dims(pos_np, axis=0)
         self.__logger.info(f"{self.__opening_names[self.__simulated_game_idx]}")
-        self.__guesser.predict_given(pos)
+        self.__guesser.predict_given(pos_np)
 
-    def __handle_events(self):
+    def __handle_events(self) -> None:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.is_running = False
@@ -125,7 +130,7 @@ class ChessVisualizer:
                 if event.key == pygame.K_UP:
                     self.__predict_opening()
 
-    def __resize_images(self):
+    def __resize_images(self) -> None:
         width, height = self.__screen.get_size()
         tile_width_ratio = ceil(width / self.__chess_board.TILES_IN_ROW)
         tile_height_ratio = ceil(height / self.__chess_board.TILES_IN_ROW)
@@ -148,10 +153,10 @@ class ChessVisualizer:
                 for piece in arr_b:
                     piece.image = pygame.transform.smoothscale(piece.image, (tile_width_ratio, tile_height_ratio))
 
-    def __refresh_screen(self):
+    def __refresh_screen(self) -> None:
         self.__screen.fill("yellow")
 
-    def __handle_board_render(self):
+    def __handle_board_render(self) -> None:
         width, height = self.__screen.get_size()
         for row in range(1, self.__chess_board.TILES_IN_ROW + 1):
             for column in range(1, self.__chess_board.TILES_IN_ROW + 1):
@@ -189,7 +194,7 @@ class ChessVisualizer:
                     ),
                 )
 
-    def __handle_all_pieces_render(self):
+    def __handle_all_pieces_render(self) -> None:
         self.__render_pieces(
             zip_longest(self.__chess_board.pawns_white, self.__chess_board.pawns_black, fillvalue=None), 0.8
         )
@@ -209,8 +214,12 @@ class ChessVisualizer:
             zip_longest(self.__chess_board.king_white, self.__chess_board.king_black, fillvalue=None), 0.9
         )
 
-    def __blit_piece(self, piece, overall_scale, width, height):
+    def __blit_piece(self, piece: Piece, overall_scale: float, width: int, height: int) -> None:
         idx_w, idx_h = piece.convert_position_notation_to_image_position_indices()
+        if idx_w is None or idx_h is None:
+            self.__logger.error("Can't blit piece, no position found")
+            return
+
         x = idx_w * width / self.__chess_board.TILES_IN_ROW
         y = idx_h * height / self.__chess_board.TILES_IN_ROW
         img = pygame.transform.smoothscale(
@@ -220,19 +229,19 @@ class ChessVisualizer:
         margin_y = (height / self.__chess_board.TILES_IN_ROW - img.get_height()) / 2.0
         self.__screen.blit(img, (x + margin_x, y + margin_y))
 
-    def __render_pieces(self, pieces_zipped, overall_scale):
+    def __render_pieces(self, pieces_zipped: itertools.zip_longest, overall_scale: float) -> None:
         for w, b in pieces_zipped:
             if w is not None:
                 self.__blit_piece(w, overall_scale, *self.__screen.get_size())
             if b is not None:
                 self.__blit_piece(b, overall_scale, *self.__screen.get_size())
 
-    def __handle_render(self):
+    def __handle_render(self) -> None:
         self.__handle_board_render()
         self.__handle_all_pieces_render()
         pygame.display.flip()
 
-    def __simulate_next_move(self):
+    def __simulate_next_move(self) -> None:
         if self.__chess_board.is_white_moving:
             new_move = self.__white_moves[self.__simulated_game_idx][self.__simulated_move_idx]
         else:
@@ -247,16 +256,16 @@ class ChessVisualizer:
         if should_resize_images:
             self.__resize_images()
 
-    def __log_game_number(self):
+    def __log_game_number(self) -> None:
         simulated_game_percentage = int(self.__simulated_game_idx / (len(self.__opening_names) - 1) * 1000)
         # *1000 -> limiting to 30.0*****%, not only 30.*****%
         if simulated_game_percentage % 100 == 0:
-            simulated_game_percentage = simulated_game_percentage / 10
+            simulated_game_percentage = int(simulated_game_percentage / 10)
             self.__logger.info(
                 f"Game number: {self.__simulated_game_idx}/{len(self.__opening_names) - 1} {simulated_game_percentage}%"
             )
 
-    def __reset_game(self):
+    def __reset_game(self) -> None:
         self.__log_game_number()
         self.__chess_board.reset_game()
 
