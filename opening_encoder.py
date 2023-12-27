@@ -14,13 +14,13 @@ def get_label_encoded_unique_openings_names(opening_names: list[str]) -> list[tu
 
 
 def get_encoded_openings_names_and_moves(
-        openings_names: list[str], white_moves: list[str], black_moves: list[str]
+    openings_names: list[str], white_moves: list[str], black_moves: list[str]
 ) -> list[tuple[str, str, str]]:
     return [(openings_names[idx], white_moves[idx], black_moves[idx]) for idx in range(len(openings_names))]
 
 
 def get_decoded_openings_names_and_moves(
-        openings_names_encoded: list[tuple[list[str], list[str], list[str]]]
+    openings_names_encoded: list[tuple[list[str], list[str], list[str]]]
 ) -> tuple[list[str], list[str], list[str]]:
     openings_names, white_moves, black_moves = zip(*openings_names_encoded)
     return list(openings_names), list(white_moves), list(black_moves)

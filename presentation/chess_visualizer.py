@@ -5,7 +5,7 @@ from math import ceil
 import numpy as np
 
 import opening_guesser
-import position_writer_reader
+import position_writer
 
 from presentation.chess_board import Board, GAME_ANY_ENDING_NOTATION
 from presentation.pieces.piece import Piece
@@ -51,7 +51,7 @@ class ChessVisualizer:
 
     def add_guesser_init_writer(self, guesser: opening_guesser.Guesser):
         self.__guesser = guesser
-        self.__position_writer = position_writer_reader.PositionWriter("")
+        self.__position_writer = position_writer.PositionWriter("")
 
     def __save_results_to_file(self):
         if self.__is_saving_positions_to_database:
@@ -138,7 +138,7 @@ class ChessVisualizer:
         )
 
         for arr_w, arr_b in zip_longest(
-                self.__chess_board.pieces_white, self.__chess_board.pieces_black, fillvalue=None
+            self.__chess_board.pieces_white, self.__chess_board.pieces_black, fillvalue=None
         ):
             if arr_w is not None:
                 for piece in arr_w:
@@ -174,10 +174,10 @@ class ChessVisualizer:
                     )
 
                     if (
-                            (column - 1) == first_row
-                            and (row - 1) == first_column
-                            or (column - 1) == second_row
-                            and (row - 1) == second_column
+                        (column - 1) == first_row
+                        and (row - 1) == first_column
+                        or (column - 1) == second_row
+                        and (row - 1) == second_column
                     ):
                         square_img.set_alpha(self.__last_move_mark_alpha)
 
