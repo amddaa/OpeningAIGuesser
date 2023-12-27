@@ -69,7 +69,7 @@ openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_
 ################################
 # guesser = Guesser()
 # openings_names = ['Italian Game', 'Sicilian Defense']
-# openings_names_encoded = opening_encoder.get_encoded_unique_openings_names(openings_names)
+# openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
 # reader = PositionReader('italian_sicilian_games.chess')
 # guesser.set_database_for_model(reader.read_from_file(), openings_names_encoded)
 # guesser.load_model('static/models/italian_sicilian_test.keras')
@@ -79,7 +79,7 @@ openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_
 # model usage with visualization #
 ##################################
 guesser = Guesser()
-openings_names_encoded = opening_encoder.get_encoded_unique_openings_names(openings_names)
+openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
 guesser.set_answers_for_model_output(openings_names_encoded)
 guesser.load_model('static/models/italian_sicilian_test.keras')
 

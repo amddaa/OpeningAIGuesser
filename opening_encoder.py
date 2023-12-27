@@ -2,7 +2,7 @@ import pickle
 import sys
 
 
-def get_encoded_unique_openings_names(opening_names):
+def get_label_encoded_unique_openings_names(opening_names):
     unique_names = []
     for name in opening_names:
         if name not in unique_names:
