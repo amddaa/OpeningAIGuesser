@@ -1,3 +1,5 @@
+from typing import Optional
+
 import pygame
 import os
 
@@ -33,16 +35,16 @@ class Piece:
         "PAWN_WHITE": "♙",
     }
 
-    def __init__(self, position_notation, piece_name):
+    def __init__(self, position_notation: str, piece_name: str) -> None:
         self.position_notation = position_notation
         self.character_representation = self.character_dict[piece_name]
         self.image = pygame.image.load(os.path.join("static", "128px", self.filename_dict[piece_name]))
         self.width_offset_px = 0  # images are not centered, this is used while drawing pieces
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.character_representation
 
-    def convert_position_notation_to_image_position_indices(self):
+    def convert_position_notation_to_image_position_indices(self) -> tuple[Optional[int], Optional[int]]:
         if self.position_notation is None:
             return None, None
 
@@ -51,7 +53,7 @@ class Piece:
         return row, column
 
     @staticmethod
-    def convert_position_notation_to_image_position_indices_using_args(args):
+    def convert_position_notation_to_image_position_indices_using_args(args: str) -> tuple[int, int]:
         row = ord(args[0]) - ord("a")
         column = ord("8") - ord(args[1])
         return row, column
