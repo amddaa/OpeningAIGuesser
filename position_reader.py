@@ -2,7 +2,7 @@ import pickle
 
 
 class PositionReader:
-    def __init__(self, filename):
+    def __init__(self, filename: str) -> None:
         self.__database: list[tuple[str, list[list[str]]]] = []
         self.__filename = filename
         self.__BOARD_SIZE = 8
