@@ -11,7 +11,7 @@ class PositionWriter:
         self.__saving_path = "static/database/saved_positions"
 
     def save_position(
-            self, opening_name: str, pieces_white: list[list[Piece]], pieces_black: list[list[Piece]]
+        self, opening_name: str, pieces_white: list[list[Piece]], pieces_black: list[list[Piece]]
     ) -> None:
         position = [list(" " for _ in range(self.__BOARD_SIZE)) for _ in range(self.__BOARD_SIZE)]
         self.__save_pieces(pieces_white, position)
@@ -19,7 +19,7 @@ class PositionWriter:
         self.__database.append((opening_name, position))
 
     def get_position_after_ord(
-            self, pieces_white: list[list[Piece]], pieces_black: list[list[Piece]]
+        self, pieces_white: list[list[Piece]], pieces_black: list[list[Piece]]
     ) -> list[list[int]]:
         position = [list(ord(" ") for _ in range(self.__BOARD_SIZE)) for _ in range(self.__BOARD_SIZE)]
         self.__save_pieces_to_int(pieces_white, position)

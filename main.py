@@ -1,5 +1,6 @@
 from pgn_reader import PGNReader
-from position_writer_reader import PositionReader, PositionWriter
+from position_writer import PositionWriter
+from position_reader import PositionReader
 from opening_guesser import Guesser
 import opening_encoder
 from presentation.chess_visualizer import ChessVisualizer
@@ -17,7 +18,9 @@ from presentation.chess_visualizer import ChessVisualizer
 # openings_names = reader.get_openings_names()
 # openings_names = ['Italian Game', 'Sicilian Defense']
 # openings_names_encoded = opening_encoder.get_encoded_unique_openings_names(openings_names)
-# opening_encoder.dump_to_file('static/database/openings/openings_label_encoded_ITALIAN+SICILIAN', openings_names_encoded)
+# opening_encoder.dump_to_file(
+#     "static/database/openings/openings_label_encoded_ITALIAN+SICILIAN", openings_names_encoded
+# )
 
 ##################################################
 # loading encoded unique opening names from file #
@@ -32,7 +35,9 @@ from presentation.chess_visualizer import ChessVisualizer
 #     ['Italian Game', 'Sicilian Defense'])  # filtering to specific openings only
 # encoded = opening_encoder.get_encoded_openings_names_and_moves(*reader.get_openings_names_and_moves())
 # opening_encoder.dump_to_file(
-#     'static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2014-01_ITALIAN+SICILIAN', encoded)
+#     "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2014-01_ITALIAN+SICILIAN",
+#     encoded
+# )
 
 #####################################################
 # loading encoded opening names and moves from file #
@@ -43,7 +48,6 @@ openings_and_moves_encoded = opening_encoder.load_from_file(
 openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
     openings_and_moves_encoded
 )
-
 ###################################
 # simulating read games from PGNS #
 ###################################
@@ -70,7 +74,7 @@ openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_
 # model loading and evaluating #
 ################################
 # guesser = Guesser()
-# openings_names = ['Italian Game', 'Sicilian Defense']
+# openings_names = ["Italian Game", "Sicilian Defense"]
 # openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
 # reader = PositionReader('italian_sicilian_games.chess')
 # guesser.set_database_for_model(reader.read_from_file(), openings_names_encoded)

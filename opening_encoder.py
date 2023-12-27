@@ -20,8 +20,8 @@ def get_encoded_openings_names_and_moves(
 
 
 def get_decoded_openings_names_and_moves(
-    openings_names_encoded: list[tuple[list[str], list[str], list[str]]]
-) -> tuple[list[str], list[str], list[str]]:
+    openings_names_encoded: list[tuple[list[str], list[list[str]], list[list[str]]]]
+) -> tuple[list[str], list[list[str]], list[list[str]]]:
     openings_names, white_moves, black_moves = zip(*openings_names_encoded)
     return list(openings_names), list(white_moves), list(black_moves)
 
