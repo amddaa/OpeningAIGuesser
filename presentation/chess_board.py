@@ -412,7 +412,7 @@ class Board:
                         return True
 
         return False
-    
+
     @staticmethod
     def is_collision_found_with_any_piece_from_given(
             move_from: str, move_to: str, pieces_white: list[list], pieces_black: list[list]
@@ -426,9 +426,9 @@ class Board:
             diag_move = True
 
         for arr_w, arr_b in zip_longest(pieces_white, pieces_black, fillvalue=None):
-            if Board.is_collision_found(arr_w, (r_from, c_from, r_to, c_to), diag_move):
+            if arr_w is not None and Board.is_collision_found(arr_w, (r_from, c_from, r_to, c_to), diag_move):
                 return True
-            if Board.is_collision_found(arr_b, (r_from, c_from, r_to, c_to), diag_move):
+            if arr_b is not None and Board.is_collision_found(arr_b, (r_from, c_from, r_to, c_to), diag_move):
                 return True
 
         return False
