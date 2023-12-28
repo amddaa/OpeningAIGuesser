@@ -266,7 +266,7 @@ class Board:
         return move, move_to, ambiguity_help, promoting_to
 
     def __handle_pawn_move(
-        self, is_taking: bool, move_to: str, ambiguity_help: Optional[str], promoting_to: Optional[str]
+            self, is_taking: bool, move_to: str, ambiguity_help: Optional[str], promoting_to: Optional[str]
     ) -> tuple[bool, list[Pawn], str]:
         is_new_piece_added = False
         pieces_arr = self.__pawns_white if self.__is_white_moving else self.__pawns_black
@@ -378,9 +378,8 @@ class Board:
 
     @staticmethod
     def is_collision_found(
-        pieces_arr: list[Type[Piece]], coordinates: tuple[str, str, str, str], diag_move: bool
+            pieces_arr: list, coordinates: tuple[str, str, str, str], diag_move: bool
     ) -> bool:
-        diag_pos, diff_c, diff_r = "", 0, 0
         r_from, c_from, r_to, c_to = coordinates
         r_first, r_second = ord(r_from), ord(r_to)
         if r_second < r_first:
@@ -389,39 +388,34 @@ class Board:
         if c_second < c_first:
             c_first, c_second = c_second, c_first
 
-        for piece in pieces_arr:
-            row, column = piece.position_notation[1], piece.position_notation[0]
-            if row == r_from and column == c_from:
-                continue
-
-            if r_first <= ord(row) <= r_second and c_first <= ord(column) <= c_second:
-                if row == r_to and column == c_to:
+        if pieces_arr is not None:
+            for piece in pieces_arr:
+                row, column = piece.position_notation[1], piece.position_notation[0]
+                if row == r_from and column == c_from:
                     continue
-                if diag_move:
-                    diag_pos = c_from + r_from
-                    diff_c = (
-                        (ord(c_to) - ord(c_from)) // abs(ord(c_to) - ord(c_from))
-                        if ord(c_to) - ord(c_from) != 0
-                        else 0
-                    )
-                    diff_r = (
-                        (ord(r_to) - ord(r_from)) // abs(ord(c_to) - ord(c_from))
-                        if ord(c_to) - ord(c_from) != 0
-                        else 0
-                    )
 
-                while diag_pos != c_to + r_to:
-                    diag_pos = chr(ord(diag_pos[0]) + diff_c) + chr(ord(diag_pos[1]) + diff_r)
-                    if diag_pos == piece.position_notation:
+                if r_first <= ord(row) <= r_second and c_first <= ord(column) <= c_second:
+                    if row == r_to and column == c_to:
+                        continue
+                    if diag_move:
+                        diag_pos = c_from + r_from
+                        diff_c = (ord(c_to) - ord(c_from)) // abs(ord(c_to) - ord(c_from)) if ord(c_to) - ord(
+                            c_from) != 0 else 0
+                        diff_r = (ord(r_to) - ord(r_from)) // abs(ord(c_to) - ord(c_from)) if ord(c_to) - ord(
+                            c_from) != 0 else 0
+
+                        while diag_pos != c_to + r_to:
+                            diag_pos = chr(ord(diag_pos[0]) + diff_c) + chr(ord(diag_pos[1]) + diff_r)
+                            if diag_pos == piece.position_notation:
+                                return True
+                    else:
                         return True
-            else:
-                return True
 
         return False
-
+    
     @staticmethod
     def is_collision_found_with_any_piece_from_given(
-        move_from: str, move_to: str, pieces_white: list[list[Type[Piece]]], pieces_black: list[list[Type[Piece]]]
+            move_from: str, move_to: str, pieces_white: list[list], pieces_black: list[list]
     ) -> bool:
         r_from, c_from = move_from[1], move_from[0]
         r_to, c_to = move_to[1], move_to[0]
@@ -432,9 +426,9 @@ class Board:
             diag_move = True
 
         for arr_w, arr_b in zip_longest(pieces_white, pieces_black, fillvalue=None):
-            if arr_w is not None and Board.is_collision_found(arr_w, (r_from, c_from, r_to, c_to), diag_move):
+            if Board.is_collision_found(arr_w, (r_from, c_from, r_to, c_to), diag_move):
                 return True
-            if arr_b is not None and Board.is_collision_found(arr_b, (r_from, c_from, r_to, c_to), diag_move):
+            if Board.is_collision_found(arr_b, (r_from, c_from, r_to, c_to), diag_move):
                 return True
 
         return False
