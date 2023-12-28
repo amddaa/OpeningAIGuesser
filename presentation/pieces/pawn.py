@@ -12,7 +12,7 @@ class Pawn(Piece):
 
     @staticmethod
     def find_possible_move(
-        pieces_arr: list[Pawn], is_taking: bool, move_to: str, ambiguity_help: Optional[str], is_white_moving: bool
+            pieces_arr: list[Pawn], is_taking: bool, move_to: str, ambiguity_help: Optional[str], is_white_moving: bool
     ) -> Optional[str]:
         # easy, but not efficient way to avoid edge cases like pawn jumping over other pawn
         # eg 2 white pawns at E2 and E3, if E4 is played pawn from E2 or E3 could go there
@@ -37,9 +37,9 @@ class Pawn(Piece):
             if notation == move_to or notation2 == move_to:
                 if ambiguity_help is not None:
                     if (
-                        p.position_notation[0] != ambiguity_help
-                        and p.position_notation[1] != ambiguity_help
-                        and p.position_notation != ambiguity_help
+                            p.position_notation[0] != ambiguity_help
+                            and p.position_notation[1] != ambiguity_help
+                            and p.position_notation != ambiguity_help
                     ):
                         continue
                 return p.position_notation
@@ -59,9 +59,9 @@ class Pawn(Piece):
                 if notation == move_to:
                     if ambiguity_help is not None:
                         if (
-                            p.position_notation[0] != ambiguity_help
-                            and p.position_notation[1] != ambiguity_help
-                            and p.position_notation != ambiguity_help
+                                p.position_notation[0] != ambiguity_help
+                                and p.position_notation[1] != ambiguity_help
+                                and p.position_notation != ambiguity_help
                         ):
                             continue
                     return p.position_notation

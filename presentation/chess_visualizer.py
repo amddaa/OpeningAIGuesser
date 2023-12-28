@@ -131,6 +131,10 @@ class ChessVisualizer:
                     self.__predict_opening()
 
     def __resize_images(self) -> None:
+        if self.__chess_board.square_black_image is None or self.__chess_board.square_white_image is None:
+            self.__logger.error("Square images are not set, cannot resize images")
+            return
+
         width, height = self.__screen.get_size()
         tile_width_ratio = ceil(width / self.__chess_board.TILES_IN_ROW)
         tile_height_ratio = ceil(height / self.__chess_board.TILES_IN_ROW)
@@ -157,6 +161,10 @@ class ChessVisualizer:
         self.__screen.fill("yellow")
 
     def __handle_board_render(self) -> None:
+        if self.__chess_board.square_black_image is None or self.__chess_board.square_white_image is None:
+            self.__logger.error("Square images are not set, cannot render board")
+            return
+
         width, height = self.__screen.get_size()
         for row in range(1, self.__chess_board.TILES_IN_ROW + 1):
             for column in range(1, self.__chess_board.TILES_IN_ROW + 1):

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional
+from typing import Optional, Type
 
 from presentation.pieces.piece import Piece
 
@@ -14,9 +14,9 @@ class Queen(Piece):
     def find_possible_move(
         pieces_arr: list[Queen],
         move_to: str,
-        ambiguity_help: str,
-        pieces_white: list[list[Piece]],
-        pieces_black: list[list[Piece]],
+        ambiguity_help: Optional[str],
+        pieces_white: list[list[Type[Piece]]],
+        pieces_black: list[list[Type[Piece]]],
     ) -> Optional[str]:
         from presentation.chess_board import Board
 

@@ -33,10 +33,10 @@ class Knight(Piece):
                 continue
 
             if (
-                ambiguity_help is not None
-                and p.position_notation[0] != ambiguity_help
-                and p.position_notation[1] != ambiguity_help
-                and p.position_notation != ambiguity_help
+                    ambiguity_help is not None
+                    and p.position_notation[0] != ambiguity_help
+                    and p.position_notation[1] != ambiguity_help
+                    and p.position_notation != ambiguity_help
             ):
                 continue
 

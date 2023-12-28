@@ -1,4 +1,6 @@
 import pickle
+from typing import Type
+
 from presentation.pieces.piece import Piece
 
 
@@ -11,7 +13,7 @@ class PositionWriter:
         self.__saving_path = "static/database/saved_positions"
 
     def save_position(
-        self, opening_name: str, pieces_white: list[list[Piece]], pieces_black: list[list[Piece]]
+        self, opening_name: str, pieces_white: list[list[Type[Piece]]], pieces_black: list[list[Type[Piece]]]
     ) -> None:
         position = [list(" " for _ in range(self.__BOARD_SIZE)) for _ in range(self.__BOARD_SIZE)]
         self.__save_pieces(pieces_white, position)
@@ -19,7 +21,7 @@ class PositionWriter:
         self.__database.append((opening_name, position))
 
     def get_position_after_ord(
-        self, pieces_white: list[list[Piece]], pieces_black: list[list[Piece]]
+        self, pieces_white: list[list[Type[Piece]]], pieces_black: list[list[Type[Piece]]]
     ) -> list[list[int]]:
         position = [list(ord(" ") for _ in range(self.__BOARD_SIZE)) for _ in range(self.__BOARD_SIZE)]
         self.__save_pieces_to_int(pieces_white, position)
@@ -27,18 +29,24 @@ class PositionWriter:
         return position
 
     @staticmethod
-    def __save_pieces(pieces_array: list[list[Piece]], board: list[list[str]]) -> None:
+    def __save_pieces(pieces_array: list[list[Type[Piece]]], board: list[list[str]]) -> None:
         for arr in pieces_array:
             if arr is not None:
                 for piece in arr:
+                    if not isinstance(piece, Piece):
+                        raise TypeError(f"{piece} must be subclass of Piece")
+
                     row, column = piece.convert_position_notation_to_image_position_indices()
                     board[column][row] = piece.character_representation
 
     @staticmethod
-    def __save_pieces_to_int(pieces_array: list[list[Piece]], board: list[list[int]]) -> None:
+    def __save_pieces_to_int(pieces_array: list[list[Type[Piece]]], board: list[list[int]]) -> None:
         for arr in pieces_array:
             if arr is not None:
                 for piece in arr:
+                    if not isinstance(piece, Piece):
+                        raise TypeError(f"{piece} must be subclass of Piece")
+
                     row, column = piece.convert_position_notation_to_image_position_indices()
                     board[column][row] = ord(piece.character_representation)
 
