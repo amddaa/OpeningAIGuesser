@@ -1,8 +1,8 @@
-from pgn_reader import PGNReader
-from position_writer import PositionWriter
-from position_reader import PositionReader
-from opening_guesser import Guesser
 import opening_encoder
+from opening_guesser import Guesser
+from pgn_reader import PGNReader
+from position_reader import PositionReader
+from position_writer import PositionWriter
 from presentation.chess_visualizer import ChessVisualizer
 
 ######################################################
