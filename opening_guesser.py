@@ -1,17 +1,10 @@
-from typing import Tuple, Any, List
-
-from keras import Sequential
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import Flatten
-from keras.layers import Input
-from keras.layers import BatchNormalization
-from keras.layers import Dropout
-from keras.models import load_model
-from keras.optimizers import Adam
+from typing import Any, List, Tuple
 
 import numpy as np
-from numpy import ndarray, dtype
+from keras.layers import BatchNormalization, Dense, Dropout, Flatten, Input
+from keras.models import Sequential, load_model
+from keras.optimizers import Adam
+from numpy import dtype, ndarray
 
 
 # made for the 8x8 standard chess boards
