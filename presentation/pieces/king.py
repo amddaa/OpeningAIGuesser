@@ -1,13 +1,16 @@
+from __future__ import annotations
+
+from typing import Optional
 from presentation.pieces.piece import Piece
 
 
 class King(Piece):
-    def __init__(self, position_notation, is_white):
+    def __init__(self, position_notation: str, is_white: bool) -> None:
         __name = "KING_WHITE" if is_white else "KING_BLACK"
         super().__init__(position_notation, __name)
 
     @staticmethod
-    def find_possible_move(pieces_arr, move_to):
+    def find_possible_move(pieces_arr: list[King], move_to: str) -> Optional[str]:
         for p in pieces_arr:
             row = p.position_notation[1]
             column = p.position_notation[0]
