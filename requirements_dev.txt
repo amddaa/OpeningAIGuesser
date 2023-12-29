@@ -1,0 +1,13 @@
+# requirements_dev.txt
+
+# Keras
+keras==2.15.0
+
+# NumPy
+numpy==1.26.2
+
+# Pygame
+pygame==2.5.2
+
+# TensorFlow
+tensorflow==2.15.0
