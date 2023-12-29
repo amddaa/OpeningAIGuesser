@@ -42,6 +42,7 @@ repos:
           - --max-line-length=120
           - --ignore-imports=yes
           - -d duplicate-code
+          - --disable=missing-module-docstring,unused-import
 
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.10.0
