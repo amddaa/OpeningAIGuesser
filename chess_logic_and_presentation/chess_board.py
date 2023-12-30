@@ -7,13 +7,13 @@ from typing import Optional, Tuple, Type, TypeVar
 import pygame
 from pygame import Surface
 
-from presentation.pieces.knight import Knight
-from presentation.pieces.king import King
-from presentation.pieces.bishop import Bishop
-from presentation.pieces.pawn import Pawn
-from presentation.pieces.piece import Piece
-from presentation.pieces.queen import Queen
-from presentation.pieces.rook import Rook
+from chess_logic_and_presentation.pieces.bishop import Bishop
+from chess_logic_and_presentation.pieces.king import King
+from chess_logic_and_presentation.pieces.knight import Knight
+from chess_logic_and_presentation.pieces.pawn import Pawn
+from chess_logic_and_presentation.pieces.piece import Piece
+from chess_logic_and_presentation.pieces.queen import Queen
+from chess_logic_and_presentation.pieces.rook import Rook
 
 SQUARE_BLACK_FILENAME = "square gray dark _png_shadow_128px.png"
 SQUARE_WHITE_FILENAME = "square gray light _png_shadow_128px.png"
@@ -266,7 +266,7 @@ class Board:
         return move, move_to, ambiguity_help, promoting_to
 
     def __handle_pawn_move(
-            self, is_taking: bool, move_to: str, ambiguity_help: Optional[str], promoting_to: Optional[str]
+        self, is_taking: bool, move_to: str, ambiguity_help: Optional[str], promoting_to: Optional[str]
     ) -> tuple[bool, list[Pawn], str]:
         is_new_piece_added = False
         pieces_arr = self.__pawns_white if self.__is_white_moving else self.__pawns_black
@@ -377,9 +377,7 @@ class Board:
         return False
 
     @staticmethod
-    def is_collision_found(
-            pieces_arr: list, coordinates: tuple[str, str, str, str], diag_move: bool
-    ) -> bool:
+    def is_collision_found(pieces_arr: list, coordinates: tuple[str, str, str, str], diag_move: bool) -> bool:
         r_from, c_from, r_to, c_to = coordinates
         r_first, r_second = ord(r_from), ord(r_to)
         if r_second < r_first:
@@ -399,10 +397,16 @@ class Board:
                         continue
                     if diag_move:
                         diag_pos = c_from + r_from
-                        diff_c = (ord(c_to) - ord(c_from)) // abs(ord(c_to) - ord(c_from)) if ord(c_to) - ord(
-                            c_from) != 0 else 0
-                        diff_r = (ord(r_to) - ord(r_from)) // abs(ord(c_to) - ord(c_from)) if ord(c_to) - ord(
-                            c_from) != 0 else 0
+                        diff_c = (
+                            (ord(c_to) - ord(c_from)) // abs(ord(c_to) - ord(c_from))
+                            if ord(c_to) - ord(c_from) != 0
+                            else 0
+                        )
+                        diff_r = (
+                            (ord(r_to) - ord(r_from)) // abs(ord(c_to) - ord(c_from))
+                            if ord(c_to) - ord(c_from) != 0
+                            else 0
+                        )
 
                         while diag_pos != c_to + r_to:
                             diag_pos = chr(ord(diag_pos[0]) + diff_c) + chr(ord(diag_pos[1]) + diff_r)
@@ -415,7 +419,7 @@ class Board:
 
     @staticmethod
     def is_collision_found_with_any_piece_from_given(
-            move_from: str, move_to: str, pieces_white: list[list], pieces_black: list[list]
+        move_from: str, move_to: str, pieces_white: list[list], pieces_black: list[list]
     ) -> bool:
         r_from, c_from = move_from[1], move_from[0]
         r_to, c_to = move_to[1], move_to[0]

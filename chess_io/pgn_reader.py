@@ -18,7 +18,7 @@ class PGNReader:
         self.__white_moves = []
         possible_outcomes = ["1-0", "1/2-1/2", "0-1"]
 
-        with open(filepath, "r") as f:
+        with open(filepath) as f:
             for line in f:
                 if line.startswith("[Opening") and "?" not in line:
                     self.__openings_names.append(line[len('[Opening "') : -3])

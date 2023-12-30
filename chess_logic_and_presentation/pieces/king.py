@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from typing import Optional
-from presentation.pieces.piece import Piece
+
+from chess_logic_and_presentation.pieces.piece import Piece
 
 
 class King(Piece):
@@ -10,7 +11,7 @@ class King(Piece):
         super().__init__(position_notation, __name)
 
     @staticmethod
-    def find_possible_move(pieces_arr: list[King], move_to: str) -> Optional[str]:
+    def find_possible_move(pieces_arr: list[King], move_to: str) -> str | None:
         for p in pieces_arr:
             row = p.position_notation[1]
             column = p.position_notation[0]

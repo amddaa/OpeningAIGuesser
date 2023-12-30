@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from presentation.pieces.piece import Piece
+from chess_logic_and_presentation.pieces.piece import Piece
 
 
 class Knight(Piece):
@@ -12,7 +12,7 @@ class Knight(Piece):
         self.width_offset_px = 6
 
     @staticmethod
-    def find_possible_move(pieces_arr: list[Knight], move_to: str, ambiguity_help: Optional[str]) -> Optional[str]:
+    def find_possible_move(pieces_arr: list[Knight], move_to: str, ambiguity_help: str | None) -> str | None:
         for p in pieces_arr:
             row = p.position_notation[1]
             column = p.position_notation[0]
@@ -33,10 +33,10 @@ class Knight(Piece):
                 continue
 
             if (
-                    ambiguity_help is not None
-                    and p.position_notation[0] != ambiguity_help
-                    and p.position_notation[1] != ambiguity_help
-                    and p.position_notation != ambiguity_help
+                ambiguity_help is not None
+                and p.position_notation[0] != ambiguity_help
+                and p.position_notation[1] != ambiguity_help
+                and p.position_notation != ambiguity_help
             ):
                 continue
 
