@@ -1,17 +1,16 @@
 import itertools
-from typing import Optional
-
-import pygame
 import logging
 from itertools import zip_longest
 from math import ceil
+from typing import Optional
+
 import numpy as np
+import pygame
 
-import opening_guesser
-import position_writer
-
-from presentation.chess_board import Board, GAME_ANY_ENDING_NOTATION
-from presentation.pieces.piece import Piece
+from chess_io import position_writer
+from chess_keras import opening_guesser
+from chess_logic_and_presentation.chess_board import GAME_ANY_ENDING_NOTATION, Board
+from chess_logic_and_presentation.pieces.piece import Piece
 
 DEFAULT_SCREEN_WIDTH = 640
 DEFAULT_SCREEN_HEIGHT = 640

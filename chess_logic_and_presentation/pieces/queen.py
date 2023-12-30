@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Optional, Type
 
-from presentation.pieces.piece import Piece
+from chess_logic_and_presentation.pieces.piece import Piece
 
 
 class Queen(Piece):
@@ -14,11 +14,11 @@ class Queen(Piece):
     def find_possible_move(
         pieces_arr: list[Queen],
         move_to: str,
-        ambiguity_help: Optional[str],
-        pieces_white: list[list[Type[Piece]]],
-        pieces_black: list[list[Type[Piece]]],
-    ) -> Optional[str]:
-        from presentation.chess_board import Board
+        ambiguity_help: str | None,
+        pieces_white: list[list[type[Piece]]],
+        pieces_black: list[list[type[Piece]]],
+    ) -> str | None:
+        from chess_logic_and_presentation.chess_board import Board
 
         for p in pieces_arr:
             row = p.position_notation[1]

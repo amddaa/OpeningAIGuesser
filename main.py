@@ -1,9 +1,6 @@
-import opening_encoder
-from opening_guesser import Guesser
-from pgn_reader import PGNReader
-from position_reader import PositionReader
-from position_writer import PositionWriter
-from presentation.chess_visualizer import ChessVisualizer
+from chess_keras import opening_encoder
+from chess_keras.opening_guesser import Guesser
+from chess_logic_and_presentation.chess_visualizer import ChessVisualizer
 
 ######################################################
 # reading openings names and moves from lichess data #
@@ -51,11 +48,11 @@ openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_
 ###################################
 # simulating read games from PGNS #
 ###################################
-# v = ChessVisualizer()
-# v.set_visualization_games_database(openings_names, white_moves, black_moves)
+v = ChessVisualizer()
+v.set_visualization_games_database(openings_names, white_moves, black_moves)
 # v.toggle_saving_positions_to_file(PositionWriter('italian_sicilian_games_more.chess'))
 # v.run_auto_simulate_no_visualization()
-# v.run()
+v.run()
 
 ###############################
 # model creating and training #
@@ -84,12 +81,12 @@ openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_
 ##################################
 # model usage with visualization #
 ##################################
-guesser = Guesser()
-openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
-guesser.set_answers_for_model_output(openings_names_encoded)
-guesser.load_model("static/models/italian_sicilian_test.keras")
-
-v = ChessVisualizer()
-v.add_guesser_init_writer(guesser)
-v.set_visualization_games_database(openings_names, white_moves, black_moves)
-v.run()
+# guesser = Guesser()
+# openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
+# guesser.set_answers_for_model_output(openings_names_encoded)
+# guesser.load_model("static/models/italian_sicilian_test.keras")
+#
+# v = ChessVisualizer()
+# v.add_guesser_init_writer(guesser)
+# v.set_visualization_games_database(openings_names, white_moves, black_moves)
+# v.run()

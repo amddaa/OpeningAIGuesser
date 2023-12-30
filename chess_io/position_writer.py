@@ -1,7 +1,7 @@
 import pickle
 from typing import Type
 
-from presentation.pieces.piece import Piece
+from chess_logic_and_presentation.pieces.piece import Piece
 
 
 class PositionWriter:
@@ -10,7 +10,7 @@ class PositionWriter:
         self.__BOARD_SIZE = 8
         self.__required_game_percentage_to_save = 0.5
         self.__filename = filename
-        self.__saving_path = "static/database/saved_positions"
+        self.__saving_path = "../static/database/saved_positions"
 
     def save_position(
         self, opening_name: str, pieces_white: list[list[Type[Piece]]], pieces_black: list[list[Type[Piece]]]
