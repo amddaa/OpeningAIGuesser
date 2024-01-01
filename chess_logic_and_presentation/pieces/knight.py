@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 from chess_logic_and_presentation.pieces.piece import Piece
 
 
@@ -12,7 +10,13 @@ class Knight(Piece):
         self.width_offset_px = 6
 
     @staticmethod
-    def find_possible_move(pieces_arr: list[Knight], move_to: str, ambiguity_help: str | None) -> str | None:
+    def find_possible_move(
+        pieces_arr: list[Knight],
+        move_to: str,
+        ambiguity_help: str | None,
+        pieces_white: list[list[type[Piece]]],
+        pieces_black: list[list[type[Piece]]],
+    ) -> str | None:
         for p in pieces_arr:
             row = p.position_notation[1]
             column = p.position_notation[0]
@@ -38,6 +42,9 @@ class Knight(Piece):
                 and p.position_notation[1] != ambiguity_help
                 and p.position_notation != ambiguity_help
             ):
+                continue
+
+            if p.is_being_pinned_and_move_forbidden(pieces_white, pieces_black, move_to):
                 continue
 
             return p.position_notation
