@@ -1,6 +1,8 @@
 from chess_io.pgn_reader import PGNReader
+from chess_io.position_reader import PositionReader
 from chess_io.position_writer import PositionWriter
 from chess_keras import opening_encoder
+from chess_keras.opening_embedder import OpeningEmbedder
 from chess_keras.opening_guesser import Guesser
 from chess_logic_and_presentation.chess_visualizer import ChessVisualizer
 
@@ -40,20 +42,20 @@ from chess_logic_and_presentation.chess_visualizer import ChessVisualizer
 #####################################################
 # loading encoded opening names and moves from file #
 #####################################################
-openings_and_moves_encoded = opening_encoder.load_from_file(
-    "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2013-01"
-)
-openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
-    openings_and_moves_encoded
-)
+# openings_and_moves_encoded = opening_encoder.load_from_file(
+#     "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2013-01"
+# )
+# openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
+#     openings_and_moves_encoded
+# )
 ###################################
 # simulating read games from PGNS #
 ###################################
-v = ChessVisualizer()
-v.set_visualization_games_database(openings_names, white_moves, black_moves)
-v.toggle_saving_positions_to_file(PositionWriter("db_standard_rated_2013-01.chess"))
-v.run_auto_simulate_no_visualization()
-# v.run()
+# v = ChessVisualizer()
+# v.set_visualization_games_database(openings_names, white_moves, black_moves)
+# v.toggle_saving_positions_to_file(PositionWriter("db_standard_rated_2013-01.chess"))
+# v.run_auto_simulate_no_visualization()
+# # v.run()
 
 ###############################
 # model creating and training #
@@ -91,3 +93,11 @@ v.run_auto_simulate_no_visualization()
 # v.add_guesser_init_writer(guesser)
 # v.set_visualization_games_database(openings_names, white_moves, black_moves)
 # v.run()
+
+######################
+# embedding openings #
+######################
+reader = PositionReader("db_standard_rated_2013-01.chess")
+oe = OpeningEmbedder(reader.read_from_file())
+oe.train(4, 50)
+oe.evaluate()
