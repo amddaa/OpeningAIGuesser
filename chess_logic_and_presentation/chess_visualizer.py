@@ -278,8 +278,6 @@ class ChessVisualizer:
 
         self.__simulated_move_idx = 0
         self.__simulated_game_idx += 1
-        if self.__simulated_game_idx % 100 == 0:
-            print(self.__simulated_game_idx)
         if self.__simulated_game_idx >= len(self.__opening_names):
             self.__simulated_game_idx = 0
             self.__simulated_games_database_loop_counter += 1

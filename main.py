@@ -33,29 +33,30 @@ from chess_logic_and_presentation.chess_visualizer import ChessVisualizer
 #########################################################
 # reader.filter_games_by_openings_names(
 #     ['Italian Game', 'Sicilian Defense'])  # filtering to specific openings only
+# reader.filter_games_by_top_n_openings(10)
 # encoded = opening_encoder.get_encoded_openings_names_and_moves(*reader.get_openings_names_and_moves())
 # opening_encoder.dump_to_file(
-#     "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2013-01",
+#     "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2013-01_top_10",
 #     encoded
 # )
 
 #####################################################
 # loading encoded opening names and moves from file #
 #####################################################
-# openings_and_moves_encoded = opening_encoder.load_from_file(
-#     "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2013-01"
-# )
-# openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
-#     openings_and_moves_encoded
-# )
+openings_and_moves_encoded = opening_encoder.load_from_file(
+    "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2013-01_top_10"
+)
+openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
+    openings_and_moves_encoded
+)
 ###################################
 # simulating read games from PGNS #
 ###################################
-# v = ChessVisualizer()
-# v.set_visualization_games_database(openings_names, white_moves, black_moves)
-# v.toggle_saving_positions_to_file(PositionWriter("db_standard_rated_2013-01.chess"))
-# v.run_auto_simulate_no_visualization()
-# # v.run()
+v = ChessVisualizer()
+v.set_visualization_games_database(openings_names, white_moves, black_moves)
+v.toggle_saving_positions_to_file(PositionWriter("db_standard_rated_2013-01.chess"))
+v.run_auto_simulate_no_visualization()
+# v.run()
 
 ###############################
 # model creating and training #
@@ -97,7 +98,7 @@ from chess_logic_and_presentation.chess_visualizer import ChessVisualizer
 ######################
 # embedding openings #
 ######################
-reader = PositionReader("db_standard_rated_2013-01.chess")
-oe = OpeningEmbedder(reader.read_from_file())
-oe.train(4, 50)
-oe.evaluate()
+# reader = PositionReader("db_standard_rated_2013-01.chess")
+# oe = OpeningEmbedder(reader.read_from_file())
+# oe.train(128, 200)
+# oe.evaluate()
