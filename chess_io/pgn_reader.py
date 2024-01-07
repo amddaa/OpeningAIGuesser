@@ -1,4 +1,5 @@
 import logging
+from collections import Counter
 
 
 class PGNReader:
@@ -77,3 +78,13 @@ class PGNReader:
         self.__white_moves = new_white_moves
         self.__black_moves = new_black_moves
         self.__logger.info(f"Filtered games using {filter_openings_names} to {len(self.__openings_names)} entries")
+
+    def filter_games_by_top_n_openings(self, n: int) -> None:
+        openings_counter = Counter(self.__openings_names)
+        top_n = openings_counter.most_common(n)
+
+        top_n_openings = []
+        for opening_name, _ in top_n:
+            top_n_openings.append(opening_name)
+
+        self.filter_games_by_openings_names(top_n_openings)

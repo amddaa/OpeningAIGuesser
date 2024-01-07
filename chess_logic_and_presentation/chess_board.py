@@ -2,7 +2,7 @@ import logging
 import os
 from itertools import zip_longest
 from string import ascii_lowercase
-from typing import Optional, Tuple, Type, TypeVar
+from typing import Optional, Tuple
 
 import pygame
 from pygame import Surface
@@ -11,7 +11,6 @@ from chess_logic_and_presentation.pieces.bishop import Bishop
 from chess_logic_and_presentation.pieces.king import King
 from chess_logic_and_presentation.pieces.knight import Knight
 from chess_logic_and_presentation.pieces.pawn import Pawn
-from chess_logic_and_presentation.pieces.piece import Piece
 from chess_logic_and_presentation.pieces.queen import Queen
 from chess_logic_and_presentation.pieces.rook import Rook
 
@@ -194,7 +193,9 @@ class Board:
             elif move[0] == "N":
                 # kNight
                 pieces_arr = self.__knights_white if self.__is_white_moving else self.__knights_black
-                move_from = Knight.find_possible_move(pieces_arr, move_to, ambiguity_help)
+                move_from = Knight.find_possible_move(
+                    pieces_arr, move_to, ambiguity_help, self.__pieces_white, self.__pieces_black
+                )
             elif move[0] == "B":
                 # bishop
                 pieces_arr = self.__bishops_white if self.__is_white_moving else self.__bishops_black
@@ -309,6 +310,8 @@ class Board:
 
         rook_pos = None
         for r in rooks:
+            if r.position_notation[1] != king[0].position_notation[1]:
+                continue
             if move == "O-O-O" and r.position_notation[0] < king[0].position_notation:
                 rook_pos = r
                 break

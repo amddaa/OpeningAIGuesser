@@ -1,4 +1,4 @@
-from typing import Any, List, Tuple
+from typing import Any
 
 import numpy as np
 from keras.layers import BatchNormalization, Dense, Dropout, Flatten, Input
@@ -6,9 +6,11 @@ from keras.models import Sequential, load_model
 from keras.optimizers import Adam
 from numpy import dtype, ndarray
 
+from chess_keras.split_data_into_train_and_test_mixin import SplitDataTrainTestMixin
+
 
 # made for the 8x8 standard chess boards
-class Guesser:
+class Guesser(SplitDataTrainTestMixin):
     def __init__(self) -> None:
         self.__model: Sequential = Sequential()
         self.__unique_opening_names: ndarray[Any, dtype[Any]] = np.array([])
@@ -74,14 +76,7 @@ class Guesser:
                 encoded_pos.append(row_arr)
             positions.append(encoded_pos)
 
-        # splitting data into train and test sets
-        split_idx_left = int(np.random.uniform(0, 0.8) * len(database))
-        split_idx_right = split_idx_left + int(0.2 * len(database))
-        x_test = np.array(positions[split_idx_left:split_idx_right])
-        y_test = np.array(opening_names[split_idx_left:split_idx_right])
-
-        x_train = np.array(positions)
-        y_train = np.array(opening_names)
+        x_train, y_train, x_test, y_test = self.split_to_train_and_test(positions, opening_names, len(database))
         return len(database), x_train, y_train, x_test, y_test
 
     def __encode_answer_array(self, answer_plain: ndarray[Any, dtype[Any]]) -> list[ndarray[Any, dtype[Any]]]:

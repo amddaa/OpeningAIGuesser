@@ -48,10 +48,21 @@ class ChessVisualizer:
         self.__white_moves = white_moves
         self.__black_moves = black_moves
 
-    def toggle_saving_positions_to_file(self, position_writer: position_writer.PositionWriter) -> None:
+    def toggle_saving_positions_to_file(self, given_position_writer: position_writer.PositionWriter) -> None:
         self.__is_saving_positions_to_database = True
-        self.__position_writer = position_writer
-        self.__game_saving_idx = np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]))
+        self.__position_writer = given_position_writer
+        self.__game_saving_idx = self.__generate_game_saving_idx()
+
+    def __generate_game_saving_idx(self) -> int:
+        # Random position from game:
+        # np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]) - 1)
+
+        # n-th move or last:
+        chosen_move_num = 20
+        if len(self.__white_moves[self.__simulated_game_idx]) - 1 >= chosen_move_num:
+            return chosen_move_num
+
+        return len(self.__white_moves[self.__simulated_game_idx]) - 1
 
     def add_guesser_init_writer(self, guesser: opening_guesser.Guesser) -> None:
         self.__guesser = guesser
@@ -70,7 +81,7 @@ class ChessVisualizer:
                     self.__chess_board.pieces_black,
                 )
                 self.__reset_game()
-                self.__game_saving_idx = np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]) - 1)
+                self.__game_saving_idx = self.__generate_game_saving_idx()
 
     def __handle_move_simulation(self) -> None:
         if self.__auto_visualization:

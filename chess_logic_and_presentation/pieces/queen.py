@@ -48,6 +48,9 @@ class Queen(Piece):
                             ):
                                 return p.position_notation
                     else:
+                        if p.is_being_pinned_and_move_forbidden(pieces_white, pieces_black, move_to):
+                            break
+
                         if (
                             Board.is_collision_found_with_any_piece_from_given(
                                 p.position_notation, move_to, pieces_white, pieces_black
