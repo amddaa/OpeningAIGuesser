@@ -1,9 +1,10 @@
 # Cat2Vec
 # based on: https://towardsdatascience.com/deep-embeddings-for-categorical-variables-cat2vec-b05c8ab63ac0
+from collections import Counter
 from itertools import chain
 from typing import Optional
 
-from keras.layers import Concatenate, Dense, Embedding, Flatten, Input
+from keras.layers import Concatenate, Dense, Dropout, Embedding, Flatten, Input
 from keras.models import Model, Sequential
 from keras.src.optimizers import Adam
 
@@ -26,9 +27,15 @@ class OpeningEmbedder(SplitDataTrainTestMixin, OneHotEncodingChessPositionMixin)
         self.__model: Optional[Model] = None
 
         self.__load_database(data)
-        # self.__embedding_size = min(50, int(len(self.__unique_openings_names) + 1 / 2))
-        self.__embedding_size = 3
+        self.__embedding_size = self.__get_embedding_size(True)
         self.__create_model()
+
+    def __get_embedding_size(self, is_3d_visualizing: bool) -> int:
+        if is_3d_visualizing:
+            return 3
+
+        # Proposed by fast.ai, proper way, made to reuse:
+        return min(50, int(len(self.__unique_openings_names) + 1 / 2))
 
     def __load_database(self, data: list[tuple[str, list[list[str]]]]) -> None:
         positions_not_encoded = []
@@ -69,10 +76,18 @@ class OpeningEmbedder(SplitDataTrainTestMixin, OneHotEncodingChessPositionMixin)
         embedding_layer = Embedding(len(self.__unique_openings_names), self.__embedding_size, input_length=768)
         model.add(embedding_layer)
         model.add(Flatten())
-        model.add(Dense(50, activation="relu"))
-        model.add(Dense(15, activation="relu"))
-        model.add(Dense(self.__embedding_size))
-        model.compile(loss="mse", optimizer="adam", metrics=["accuracy"])
+        model.add(Dense(256, activation="relu"))
+        model.add(Dropout(0.3))
+        model.add(Dense(64, activation="relu"))
+        model.add(Dropout(0.3))
+        model.add(Dense(64, activation="relu"))
+        model.add(Dropout(0.3))
+        model.add(Dense(16, activation="relu"))
+        model.add(Dropout(0.3))
+        model.add(Dense(len(self.__unique_openings_names), activation="softmax"))
+        model.compile(
+            optimizer=Adam(learning_rate=0.001), loss="sparse_categorical_crossentropy", metrics=["accuracy"]
+        )
         return model
 
     def train(self, batch_size: int, epochs: int) -> None:
@@ -80,8 +95,8 @@ class OpeningEmbedder(SplitDataTrainTestMixin, OneHotEncodingChessPositionMixin)
             raise ValueError("Model not created.")
 
         self.__model.fit(
-            x=self.__positions_test,
-            y=self.__openings_indices_test,
+            x=self.__positions_train,
+            y=self.__openings_indices_train,
             batch_size=batch_size,
             epochs=epochs,
         )

@@ -11,7 +11,7 @@ from embedding_visualization.embedding_visualizer import EmbeddingVisualizer
 # reading openings names and moves from lichess data #
 ######################################################
 # reader = PGNReader()
-# reader.load_pngs_from_file_and_process('static/database/lichess_pgns/lichess_db_standard_rated_2013-01.pgn')
+# reader.load_pngs_from_file_and_process('static/database/lichess_pgns/lichess_db_standard_rated_2017-01.pgn')
 
 #####################################################
 # encoding unique opening names and saving to file  #
@@ -31,13 +31,16 @@ from embedding_visualization.embedding_visualizer import EmbeddingVisualizer
 
 #########################################################
 # encoding opening names and moves then saving to file  #
-#########################################################
+########################################################
 # reader.filter_games_by_openings_names(
-#     ['Italian Game', 'Sicilian Defense'])  # filtering to specific openings only
-# reader.filter_games_by_top_n_openings(10)
+#     ['Italian Game',
+#      'Russian Game: Urusov Gambit',
+#      'Four Knights Game: Italian Variation',
+#      'Sicilian Defense: French Variation'])  # filtering to specific openings only
+# # reader.filter_games_by_top_n_openings(10)
 # encoded = opening_encoder.get_encoded_openings_names_and_moves(*reader.get_openings_names_and_moves())
 # opening_encoder.dump_to_file(
-#     "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2013-01_top_10",
+#     "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2017-01_chosen",
 #     encoded
 # )
 
@@ -45,7 +48,7 @@ from embedding_visualization.embedding_visualizer import EmbeddingVisualizer
 # loading encoded opening names and moves from file #
 #####################################################
 # openings_and_moves_encoded = opening_encoder.load_from_file(
-#     "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2013-01_top_10"
+#     "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2016-01_chosen"
 # )
 # openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
 #     openings_and_moves_encoded
@@ -55,7 +58,7 @@ from embedding_visualization.embedding_visualizer import EmbeddingVisualizer
 ###################################
 # v = ChessVisualizer()
 # v.set_visualization_games_database(openings_names, white_moves, black_moves)
-# v.toggle_saving_positions_to_file(PositionWriter("db_standard_rated_2013-01_top_10.chess"))
+# v.toggle_saving_positions_to_file(PositionWriter("openings_and_moves_lichess_db_standard_rated_2016-01_chosen.chess"))
 # v.run_auto_simulate_no_visualization()
 # # v.run()
 
@@ -99,9 +102,9 @@ from embedding_visualization.embedding_visualizer import EmbeddingVisualizer
 ######################
 # embedding openings #
 ######################
-reader = PositionReader("italian_sicilian_games_more.chess")
+reader = PositionReader("openings_and_moves_lichess_db_standard_rated_2016-01_chosen.chess")
 oe = OpeningEmbedder(reader.read_from_file())
-oe.train(1, 20)
+oe.train(16, 25)
 oe.evaluate()
 labels, weights = oe.get_embedded_labels_and_weights()
 
