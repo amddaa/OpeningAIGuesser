@@ -102,11 +102,11 @@ from embedding_visualization.embedding_visualizer import EmbeddingVisualizer
 ######################
 # embedding openings #
 ######################
-reader = PositionReader("openings_and_moves_lichess_db_standard_rated_2016-01_chosen.chess")
-oe = OpeningEmbedder(reader.read_from_file())
-oe.train(16, 25)
-oe.evaluate()
-labels, weights = oe.get_embedded_labels_and_weights()
-
-ev = EmbeddingVisualizer(labels, weights)
-ev.visualize()
+# reader = PositionReader("openings_and_moves_lichess_db_standard_rated_2016-01_chosen.chess")
+# oe = OpeningEmbedder(reader.read_from_file())
+# oe.train(16, 25)
+# oe.evaluate()
+# labels, weights = oe.get_embedded_labels_and_weights()
+#
+# ev = EmbeddingVisualizer(labels, weights)
+# ev.visualize()
