@@ -11,7 +11,7 @@ from embedding_visualization.embedding_visualizer import EmbeddingVisualizer
 # reading openings names and moves from lichess data #
 ######################################################
 # reader = PGNReader()
-# reader.load_pngs_from_file_and_process('static/database/lichess_pgns/lichess_db_standard_rated_2017-01.pgn')
+# reader.load_pngs_from_file('static/database/lichess_pgns/lichess_db_standard_rated_2017-01.pgn')
 
 #####################################################
 # encoding unique opening names and saving to file  #

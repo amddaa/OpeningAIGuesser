@@ -1,33 +1,23 @@
-from unittest.mock import mock_open, patch
+import sys
+from unittest.mock import Mock, mock_open, patch
 
 import pytest
 
 from chess_io.pgn_reader import PGNReader
 
 
-def test_load_pngs_from_file_and_process_data_no_eval_get_openings_names(pgn_reader, example_pgn_data_no_eval):
-    with patch("builtins.open", mock_open(read_data=example_pgn_data_no_eval)):
-        pgn_reader.load_pngs_from_file_and_process("dummy_file.pgn")
-
-    assert pgn_reader.get_openings_names() == ["Old Benoni Defense"]
-
-
-def test_load_pngs_from_file_and_process_data_no_eval_get_openings_names_and_moves(
-    pgn_reader, example_pgn_data_no_eval
-):
-    with patch("builtins.open", mock_open(read_data=example_pgn_data_no_eval)):
-        pgn_reader.load_pngs_from_file_and_process("dummy_file.pgn")
-
-    assert pgn_reader.get_openings_names_and_moves() == (
-        ["Old Benoni Defense"],
-        [["d4", "e3", "exd4", "c3", "f4", "Nf3", "Ne5", "Kb3", "0-1"]],
-        [["c5", "cxd4", "d5", "Nc6", "e5", "e4", "f6", "e3"]],
-    )
-
-
 @pytest.fixture
 def pgn_reader():
     return PGNReader()
+
+
+@pytest.fixture
+def pgn_reader_with_openings_names():
+    pgn_reader = PGNReader()
+    pgn_reader.openings_names = ["A", "B", "C", "A", "B", "A", "A"]
+    pgn_reader.black_moves = [["."], ["."], ["."], ["."], ["."], ["."], ["."]]
+    pgn_reader.white_moves = [["."], ["."], ["."], ["."], ["."], ["."], ["."]]
+    return pgn_reader
 
 
 @pytest.fixture
@@ -89,3 +79,91 @@ def example_pgn_data_eval():
 13. b3?? { [%eval -4.14] [%clk 0:00:02] } 13... Nf4? { [%eval -2.73] [%clk 0:00:21] } 0-1
 
 """
+
+
+def test_load_pngs_from_file_and_process_data_no_eval_get_openings_names(pgn_reader, example_pgn_data_no_eval):
+    with patch("builtins.open", mock_open(read_data=example_pgn_data_no_eval)):
+        pgn_reader.load_pngs_from_file("dummy_file.pgn")
+
+    assert pgn_reader.get_openings_names() == ["Old Benoni Defense"]
+
+
+def test_load_pngs_from_file_and_process_data_no_eval_get_openings_names_and_moves(
+    pgn_reader, example_pgn_data_no_eval
+):
+    with patch("builtins.open", mock_open(read_data=example_pgn_data_no_eval)):
+        pgn_reader.load_pngs_from_file("dummy_file.pgn")
+
+    assert pgn_reader.get_openings_names_and_moves() == (
+        ["Old Benoni Defense"],
+        [["d4", "e3", "exd4", "c3", "f4", "Nf3", "Ne5", "Kb3", "0-1"]],
+        [["c5", "cxd4", "d5", "Nc6", "e5", "e4", "f6", "e3"]],
+    )
+
+
+def test_load_pngs_from_file_and_process_data_eval_get_openings_names(pgn_reader, example_pgn_data_eval):
+    with patch("builtins.open", mock_open(read_data=example_pgn_data_eval)):
+        pgn_reader.load_pngs_from_file("dummy_file.pgn")
+
+    # skip reading evaluated games
+    assert pgn_reader.get_openings_names() == []
+
+
+def test_load_pngs_from_file_and_process_data_eval_get_openings_names_and_moves(pgn_reader, example_pgn_data_eval):
+    with patch("builtins.open", mock_open(read_data=example_pgn_data_eval)):
+        pgn_reader.load_pngs_from_file("dummy_file.pgn")
+
+    # skip reading evaluated games
+    assert pgn_reader.get_openings_names_and_moves() == ([], [], [])
+
+
+def test_filter_games_by_openings_names(pgn_reader):
+    pgn_reader.openings_names = [
+        "Old Benoni Defense",
+        "cccc",
+        "Old Cenoni Defense",
+        "Old Benoni",
+        " ",
+        "",
+        "Italian Defense",
+    ]
+    pgn_reader.black_moves = [["True"], ["False"], ["False"], ["False"], ["False"], ["False"], ["True"]]
+    pgn_reader.white_moves = [["True"], ["False"], ["False"], ["False"], ["False"], ["False"], ["True"]]
+
+    pgn_reader.filter_games_by_openings_names(["Old Benoni Defense", "Italian Defense"])
+
+    assert pgn_reader.get_openings_names_and_moves() == (
+        ["Old Benoni Defense", "Italian Defense"],
+        [["True"], ["True"]],
+        [["True"], ["True"]],
+    )
+
+
+def test_filter_games_by_openings_names_empty_pgn_reader(pgn_reader):
+    pgn_reader.filter_games_by_openings_names(["Old Benoni Defense", "Italian Defense"])
+
+    assert pgn_reader.get_openings_names_and_moves() == ([], [], [])
+
+
+def test_filter_games_by_top_1_openings(pgn_reader_with_openings_names):
+    pgn_reader_with_openings_names.filter_games_by_top_n_openings(1)
+
+    assert pgn_reader_with_openings_names.get_openings_names() == ["A", "A", "A", "A"]
+
+
+def test_filter_games_by_top_2_openings(pgn_reader_with_openings_names):
+    pgn_reader_with_openings_names.filter_games_by_top_n_openings(2)
+
+    assert pgn_reader_with_openings_names.get_openings_names() == ["A", "B", "A", "B", "A", "A"]
+
+
+def test_filter_games_by_top_n_openings_n_greater_than_len_openings(pgn_reader_with_openings_names):
+    pgn_reader_with_openings_names.filter_games_by_top_n_openings(sys.maxsize)
+
+    assert pgn_reader_with_openings_names.get_openings_names() == ["A", "B", "C", "A", "B", "A", "A"]
+
+
+def test_filter_games_by_top_n_openings_n_wrong_input(pgn_reader_with_openings_names):
+    pgn_reader_with_openings_names.filter_games_by_top_n_openings(-sys.maxsize)
+
+    assert pgn_reader_with_openings_names.get_openings_names() == ["A", "B", "C", "A", "B", "A", "A"]

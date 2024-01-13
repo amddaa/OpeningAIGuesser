@@ -5,13 +5,43 @@ from collections import Counter
 class PGNReader:
     def __init__(self) -> None:
         self.__openings_names: list[str] = []
-        self.__black_moves: list[list[str]] = []
         self.__white_moves: list[list[str]] = []
+        self.__black_moves: list[list[str]] = []
 
         logging.basicConfig(level=logging.INFO)
         self.__logger = logging.getLogger(__name__)
 
-    def load_pngs_from_file_and_process(self, filepath: str) -> None:
+    @property
+    def openings_names(self) -> list[str]:
+        return self.__openings_names
+
+    @openings_names.setter
+    def openings_names(self, value: list[str]) -> None:
+        self.__openings_names = value
+
+    @property
+    def white_moves(self) -> list[list[str]]:
+        return self.__white_moves
+
+    @white_moves.setter
+    def white_moves(self, value: list[list[str]]) -> None:
+        self.__white_moves = value
+
+    @property
+    def black_moves(self) -> list[list[str]]:
+        return self.__white_moves
+
+    @black_moves.setter
+    def black_moves(self, value: list[list[str]]) -> None:
+        self.__black_moves = value
+
+    def get_openings_names(self) -> list[str]:
+        return self.__openings_names
+
+    def get_openings_names_and_moves(self) -> tuple[list[str], list[list[str]], list[list[str]]]:
+        return self.__openings_names, self.__white_moves, self.__black_moves
+
+    def load_pngs_from_file(self, filepath: str) -> None:
         self.__logger.info(f"Starting loading data from file: {filepath}")
 
         self.__openings_names = []
@@ -57,12 +87,6 @@ class PGNReader:
 
         self.__logger.info(f"Loaded data from file: {filepath}")
 
-    def get_openings_names(self) -> list[str]:
-        return self.__openings_names
-
-    def get_openings_names_and_moves(self) -> tuple[list[str], list[list[str]], list[list[str]]]:
-        return self.__openings_names, self.__white_moves, self.__black_moves
-
     def filter_games_by_openings_names(self, filter_openings_names: list[str]) -> None:
         new_openings_names = []
         new_white_moves = []
@@ -80,6 +104,10 @@ class PGNReader:
         self.__logger.info(f"Filtered games using {filter_openings_names} to {len(self.__openings_names)} entries")
 
     def filter_games_by_top_n_openings(self, n: int) -> None:
+        if n < 1:
+            self.__logger.warning(f"Games were not filtered, wrong arg value: {n}")
+            return
+
         openings_counter = Counter(self.__openings_names)
         top_n = openings_counter.most_common(n)
 
