@@ -11,7 +11,7 @@ from embedding_visualization.embedding_visualizer import EmbeddingVisualizer
 # reading openings names and moves from lichess data #
 ######################################################
 # reader = PGNReader()
-# reader.load_pngs_from_file('static/database/lichess_pgns/lichess_db_standard_rated_2017-01.pgn')
+# reader.load_pngs_from_file('static/database/lichess_pgns/lichess_db_standard_rated_2014-01.pgn')
 
 #####################################################
 # encoding unique opening names and saving to file  #
@@ -40,27 +40,27 @@ from embedding_visualization.embedding_visualizer import EmbeddingVisualizer
 # # reader.filter_games_by_top_n_openings(10)
 # encoded = opening_encoder.get_encoded_openings_names_and_moves(*reader.get_openings_names_and_moves())
 # opening_encoder.dump_to_file(
-#     "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2017-01_chosen",
+#     "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2014-01_chosen",
 #     encoded
 # )
 
 #####################################################
 # loading encoded opening names and moves from file #
 #####################################################
-# openings_and_moves_encoded = opening_encoder.load_from_file(
-#     "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2016-01_chosen"
-# )
-# openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
-#     openings_and_moves_encoded
-# )
+openings_and_moves_encoded = opening_encoder.load_from_file(
+    "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2014-01_chosen"
+)
+openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
+    openings_and_moves_encoded
+)
 ###################################
 # simulating read games from PGNS #
 ###################################
-# v = ChessVisualizer()
-# v.set_visualization_games_database(openings_names, white_moves, black_moves)
-# v.toggle_saving_positions_to_file(PositionWriter("openings_and_moves_lichess_db_standard_rated_2016-01_chosen.chess"))
+v = ChessVisualizer()
+v.set_visualization_games_database(openings_names, white_moves, black_moves)
+# v.toggle_saving_positions_to_file(PositionWriter("lichess_db_standard_rated_2014-01_chosen.chess"))
 # v.run_auto_simulate_no_visualization()
-# # v.run()
+v.run()
 
 ###############################
 # model creating and training #

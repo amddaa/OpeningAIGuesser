@@ -155,3 +155,4 @@ cython_debug/
 .idea/workspace.xml
 .idea/misc.xml
 static/database/
+static/database/*

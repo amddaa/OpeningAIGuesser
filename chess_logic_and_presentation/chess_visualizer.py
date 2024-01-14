@@ -197,10 +197,10 @@ class ChessVisualizer:
                     )
 
                     if (
-                        (column - 1) == first_row
-                        and (row - 1) == first_column
-                        or (column - 1) == second_row
-                        and (row - 1) == second_column
+                        (column - 1) == first_column
+                        and (row - 1) == first_row
+                        or (column - 1) == second_column
+                        and (row - 1) == second_row
                     ):
                         square_img.set_alpha(self.__last_move_mark_alpha)
 
@@ -233,7 +233,7 @@ class ChessVisualizer:
         )
 
     def __blit_piece(self, piece: Piece, overall_scale: float, width: int, height: int) -> None:
-        idx_w, idx_h = piece.convert_position_notation_to_image_position_indices()
+        idx_h, idx_w = piece.convert_position_notation_to_image_position_indices()
         if idx_w is None or idx_h is None:
             self.__logger.error("Can't blit piece, no position found")
             return
