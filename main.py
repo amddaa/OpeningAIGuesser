@@ -59,8 +59,8 @@ openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_
 v = ChessVisualizer()
 v.set_visualization_games_database(openings_names, white_moves, black_moves)
 # v.toggle_saving_positions_to_file(PositionWriter("lichess_db_standard_rated_2014-01_chosen.chess"))
-# v.run_auto_simulate_no_visualization()
-v.run()
+v.run_auto_simulate_no_visualization()
+# v.run()
 
 ###############################
 # model creating and training #

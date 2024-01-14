@@ -103,13 +103,13 @@ class ChessVisualizer:
         self.__save_results_to_file()
 
     def run_auto_simulate_no_visualization(self) -> None:
+        pygame.quit()
         self.__auto_visualization = True
         while True:
             self.__handle_move_simulation()
             self.__save_position_to_database_based_on_move_index()
             if self.__simulated_games_database_loop_counter != 0:
                 break
-        pygame.quit()
         self.__save_results_to_file()
 
     def __predict_opening(self) -> None:
@@ -143,6 +143,9 @@ class ChessVisualizer:
     def __resize_images(self) -> None:
         if self.__chess_board.square_black_image is None or self.__chess_board.square_white_image is None:
             self.__logger.error("Square images are not set, cannot resize images")
+            return
+
+        if self.__auto_visualization:
             return
 
         width, height = self.__screen.get_size()
