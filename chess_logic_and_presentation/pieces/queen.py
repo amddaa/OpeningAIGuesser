@@ -15,8 +15,8 @@ class Queen(Piece):
         pieces_arr: list[Queen],
         move_to: str,
         ambiguity_help: str | None,
-        pieces_white: list[list[type[Piece]]],
-        pieces_black: list[list[type[Piece]]],
+        pieces_white: list[list],
+        pieces_black: list[list],
     ) -> str | None:
         from chess_logic_and_presentation.chess_board import Board
 
