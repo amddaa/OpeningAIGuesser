@@ -13,6 +13,7 @@ from chess_logic_and_presentation.pieces.knight import Knight
 from chess_logic_and_presentation.pieces.pawn import Pawn
 from chess_logic_and_presentation.pieces.queen import Queen
 from chess_logic_and_presentation.pieces.rook import Rook
+from root_dir_mixin import ROOT_DIR
 
 SQUARE_BLACK_FILENAME = "square gray dark _png_shadow_128px.png"
 SQUARE_WHITE_FILENAME = "square gray light _png_shadow_128px.png"
@@ -130,8 +131,8 @@ class Board:
         return self.__pieces_black
 
     def __load_board_tiles_images(self) -> None:
-        self.__square_black_image = pygame.image.load(os.path.join("static", "128px", SQUARE_BLACK_FILENAME))
-        self.__square_white_image = pygame.image.load(os.path.join("static", "128px", SQUARE_WHITE_FILENAME))
+        self.__square_black_image = pygame.image.load(os.path.join(ROOT_DIR, "static", "128px", SQUARE_BLACK_FILENAME))
+        self.__square_white_image = pygame.image.load(os.path.join(ROOT_DIR, "static", "128px", SQUARE_WHITE_FILENAME))
 
     def __create_pieces(self) -> None:
         self.__last_move_from_to = None

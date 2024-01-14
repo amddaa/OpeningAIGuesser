@@ -41,6 +41,9 @@ class ChessVisualizer:
         logging.basicConfig(level=logging.INFO)
         self.__logger = logging.getLogger(__name__)
 
+    def get_visualization_games_database(self) -> tuple[list[str], list[list[str]], list[list[str]]]:
+        return self.__opening_names, self.__white_moves, self.__black_moves
+
     def set_visualization_games_database(
         self, opening_names: list[str], white_moves: list[list[str]], black_moves: list[list[str]]
     ) -> None:
