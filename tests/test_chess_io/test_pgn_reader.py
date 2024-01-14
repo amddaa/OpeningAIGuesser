@@ -145,25 +145,15 @@ def test_filter_games_by_openings_names_empty_pgn_reader(pgn_reader):
     assert pgn_reader.get_openings_names_and_moves() == ([], [], [])
 
 
-def test_filter_games_by_top_1_openings(pgn_reader_with_openings_names):
-    pgn_reader_with_openings_names.filter_games_by_top_n_openings(1)
-
-    assert pgn_reader_with_openings_names.get_openings_names() == ["A", "A", "A", "A"]
-
-
-def test_filter_games_by_top_2_openings(pgn_reader_with_openings_names):
-    pgn_reader_with_openings_names.filter_games_by_top_n_openings(2)
-
-    assert pgn_reader_with_openings_names.get_openings_names() == ["A", "B", "A", "B", "A", "A"]
-
-
-def test_filter_games_by_top_n_openings_n_greater_than_len_openings(pgn_reader_with_openings_names):
-    pgn_reader_with_openings_names.filter_games_by_top_n_openings(sys.maxsize)
-
-    assert pgn_reader_with_openings_names.get_openings_names() == ["A", "B", "C", "A", "B", "A", "A"]
-
-
-def test_filter_games_by_top_n_openings_n_wrong_input(pgn_reader_with_openings_names):
-    pgn_reader_with_openings_names.filter_games_by_top_n_openings(-sys.maxsize)
-
-    assert pgn_reader_with_openings_names.get_openings_names() == ["A", "B", "C", "A", "B", "A", "A"]
+@pytest.mark.parametrize(
+    "n, expected_openings",
+    [
+        (1, ["A", "A", "A", "A"]),
+        (2, ["A", "B", "A", "B", "A", "A"]),
+        (sys.maxsize, ["A", "B", "C", "A", "B", "A", "A"]),
+        (-1, ["A", "B", "C", "A", "B", "A", "A"]),
+    ],
+)
+def test_filter_games_by_top_n_openings(pgn_reader_with_openings_names, n, expected_openings):
+    pgn_reader_with_openings_names.filter_games_by_top_n_openings(n)
+    assert pgn_reader_with_openings_names.get_openings_names() == expected_openings
