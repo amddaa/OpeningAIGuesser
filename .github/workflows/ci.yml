@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.9]
+        python-version: [3.10]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
@@ -28,6 +28,7 @@ jobs:
           python -m pip install black
           python -m pip install flake8
           python -m pip install mypy
+          python -m pip install pytest
       - name: Run black
         run: black .
       - name: Run Flake8
