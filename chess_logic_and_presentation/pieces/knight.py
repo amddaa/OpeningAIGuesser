@@ -14,8 +14,8 @@ class Knight(Piece):
         pieces_arr: list[Knight],
         move_to: str,
         ambiguity_help: str | None,
-        pieces_white: list[list[type[Piece]]],
-        pieces_black: list[list[type[Piece]]],
+        pieces_white: list[list],
+        pieces_black: list[list],
     ) -> str | None:
         for p in pieces_arr:
             row = p.position_notation[1]

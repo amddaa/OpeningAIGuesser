@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import os
-from typing import Optional
 
 import pygame
+
+from root_dir_mixin import ROOT_DIR
 
 
 class Piece:
@@ -41,7 +42,9 @@ class Piece:
         self.position_notation = position_notation
         self.piece_name = piece_name
         self.character_representation = self.character_dict[piece_name]
-        self.image = pygame.image.load(os.path.join("static", "128px", self.filename_dict[piece_name]))
+
+        self.image = pygame.image.load(os.path.join(ROOT_DIR, "static", "128px", self.filename_dict[piece_name]))
+
         self.width_offset_px = 0.0  # images are not centered, this is used while drawing pieces
         self.is_white = True if "WHITE" in piece_name else False
 
@@ -52,14 +55,14 @@ class Piece:
         if self.position_notation is None:
             raise ValueError("Position notation is not set")
 
-        row = ord(self.position_notation[0]) - ord("a")
-        column = ord("8") - ord(self.position_notation[1])
+        column = ord(self.position_notation[0]) - ord("a")
+        row = ord("8") - ord(self.position_notation[1])
         return row, column
 
     @staticmethod
     def convert_position_notation_to_image_position_indices_using_args(args: str) -> tuple[int, int]:
-        row = ord(args[0]) - ord("a")
-        column = ord("8") - ord(args[1])
+        column = ord(args[0]) - ord("a")
+        row = ord("8") - ord(args[1])
         return row, column
 
     def is_being_pinned_and_move_forbidden(
@@ -87,7 +90,7 @@ class Piece:
         row_k, column_k = allied_king.convert_position_notation_to_image_position_indices()
         row_p, column_p = self.convert_position_notation_to_image_position_indices()
         # result is used to determine how to get to the piece from king's field
-        row_diff = row_p - row_k
+        row_diff = row_k - row_p
         column_diff = column_k - column_p
 
         if not Piece.__is_in_kings_sight(row_diff, column_diff):
@@ -106,7 +109,7 @@ class Piece:
         found_our_piece = False
         checked_cell = allied_king.position_notation
         while True:
-            checked_cell = chr(ord(checked_cell[0]) + row_diff) + chr(ord(checked_cell[1]) + column_diff)
+            checked_cell = chr(ord(checked_cell[0]) - column_diff) + chr(ord(checked_cell[1]) + row_diff)
             if not Board.is_notation_in_board(checked_cell):
                 break
 
@@ -184,15 +187,15 @@ class Piece:
         # thus I used already existing variables
 
         row_mt, column_mt = Piece.convert_position_notation_to_image_position_indices_using_args(move_to)
-        row_diff_mt_and_king = int((row_mt - row_k) / abs(row_mt - row_k)) if (row_mt - row_k) != 0 else 0
+        row_diff_mt_and_king = int((row_k - row_mt) / abs(row_k - row_mt)) if (row_k - row_mt) != 0 else 0
         column_diff_mt_and_king = (
             int((column_k - column_mt) / abs(column_k - column_mt)) if (column_k - column_mt) != 0 else 0
         )
 
-        if abs(row_mt - row_k) != abs(column_k - column_mt) and (
+        if abs(row_k - row_mt) != abs(column_k - column_mt) and (
             row_diff_mt_and_king != 0 and column_diff_mt_and_king != 0
         ):
-            # it is a knight move, this rule can't be applied
+            # move not in kings sight
             return False
         elif row_diff == row_diff_mt_and_king and column_diff == column_diff_mt_and_king:
             return True

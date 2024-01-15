@@ -154,4 +154,5 @@ cython_debug/
 .DS_Store
 .idea/workspace.xml
 .idea/misc.xml
-*.pgn
+static/database/
+static/database/*

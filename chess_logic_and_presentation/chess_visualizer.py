@@ -32,6 +32,7 @@ class ChessVisualizer:
         self.__black_moves: list[list[str]] = []
         self.__chess_board = Board()
 
+        self.__is_pygame_used = True
         pygame.init()
         self.__screen = pygame.display.set_mode((DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT), pygame.RESIZABLE)
         self.__clock = pygame.time.Clock()
@@ -40,6 +41,9 @@ class ChessVisualizer:
 
         logging.basicConfig(level=logging.INFO)
         self.__logger = logging.getLogger(__name__)
+
+    def get_visualization_games_database(self) -> tuple[list[str], list[list[str]], list[list[str]]]:
+        return self.__opening_names, self.__white_moves, self.__black_moves
 
     def set_visualization_games_database(
         self, opening_names: list[str], white_moves: list[list[str]], black_moves: list[list[str]]
@@ -103,13 +107,14 @@ class ChessVisualizer:
         self.__save_results_to_file()
 
     def run_auto_simulate_no_visualization(self) -> None:
+        pygame.quit()
         self.__auto_visualization = True
+        self.__is_pygame_used = False
         while True:
             self.__handle_move_simulation()
             self.__save_position_to_database_based_on_move_index()
             if self.__simulated_games_database_loop_counter != 0:
                 break
-        pygame.quit()
         self.__save_results_to_file()
 
     def __predict_opening(self) -> None:
@@ -143,6 +148,9 @@ class ChessVisualizer:
     def __resize_images(self) -> None:
         if self.__chess_board.square_black_image is None or self.__chess_board.square_white_image is None:
             self.__logger.error("Square images are not set, cannot resize images")
+            return
+
+        if not self.__is_pygame_used:
             return
 
         width, height = self.__screen.get_size()
@@ -197,10 +205,10 @@ class ChessVisualizer:
                     )
 
                     if (
-                        (column - 1) == first_row
-                        and (row - 1) == first_column
-                        or (column - 1) == second_row
-                        and (row - 1) == second_column
+                        (column - 1) == first_column
+                        and (row - 1) == first_row
+                        or (column - 1) == second_column
+                        and (row - 1) == second_row
                     ):
                         square_img.set_alpha(self.__last_move_mark_alpha)
 
@@ -233,7 +241,7 @@ class ChessVisualizer:
         )
 
     def __blit_piece(self, piece: Piece, overall_scale: float, width: int, height: int) -> None:
-        idx_w, idx_h = piece.convert_position_notation_to_image_position_indices()
+        idx_h, idx_w = piece.convert_position_notation_to_image_position_indices()
         if idx_w is None or idx_h is None:
             self.__logger.error("Can't blit piece, no position found")
             return
