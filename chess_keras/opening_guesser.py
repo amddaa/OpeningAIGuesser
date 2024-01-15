@@ -13,14 +13,14 @@ from chess_keras.split_data_into_train_and_test_mixin import SplitDataTrainTestM
 class Guesser(SplitDataTrainTestMixin):
     def __init__(self) -> None:
         self.__model: Sequential = Sequential()
-        self.__unique_opening_names: ndarray[Any, dtype[Any]] = np.array([])
-        self.__unique_opening_names_encoded: ndarray[Any, dtype[Any]] = np.array([])
-        self.__y_test_encoded: ndarray[Any, dtype[Any]] = np.array([])
-        self.__y_train_encoded: ndarray[Any, dtype[Any]] = np.array([])
-        self.__y_test: ndarray[Any, dtype[Any]] = np.array([])
-        self.__x_test: ndarray[Any, dtype[Any]] = np.array([])
-        self.__y_train: ndarray[Any, dtype[Any]] = np.array([])
-        self.__x_train: ndarray[Any, dtype[Any]] = np.array([])
+        self.__unique_opening_names: list = []
+        self.__unique_opening_names_encoded: list = []
+        self.__y_test_encoded: list = []
+        self.__y_train_encoded: list = []
+        self.__y_test: list = []
+        self.__x_test: list = []
+        self.__y_train: list = []
+        self.__x_train: list = []
         self.__train_data_len: int = 0
         self.__BOARD_SIZE = 8
 
@@ -42,7 +42,7 @@ class Guesser(SplitDataTrainTestMixin):
 
     def __extract_opening_names_and_encoded(
         self, unique_opening_names_and_encoded: list[tuple[str, int]]
-    ) -> tuple[ndarray[Any, dtype[Any]], ndarray[Any, dtype[Any]]]:
+    ) -> tuple[list, list]:
         names_list = []
         encoded_list = []
 
@@ -51,19 +51,15 @@ class Guesser(SplitDataTrainTestMixin):
             names_list.append(name)
             encoded_list.append(encode)
 
-        names = np.vstack(names_list)
-        encoded = np.vstack(encoded_list)
+        names = list(np.vstack(names_list))
+        encoded = list(np.vstack(encoded_list))
         return names, encoded
 
     def create_model(self) -> None:
         self.__model = self.__build_model()
         self.__model.summary()
 
-    def __prepare_database(
-        self, database: list[tuple[str, list[list[str]]]]
-    ) -> tuple[
-        int, ndarray[Any, dtype[Any]], ndarray[Any, dtype[Any]], ndarray[Any, dtype[Any]], ndarray[Any, dtype[Any]]
-    ]:
+    def __prepare_database(self, database: list[tuple[str, list[list[str]]]]) -> tuple[int, list, list, list, list]:
         opening_names = []
         positions = []
         for entry in database:
@@ -79,7 +75,7 @@ class Guesser(SplitDataTrainTestMixin):
         x_train, y_train, x_test, y_test = self.split_to_train_and_test(positions, opening_names, len(database))
         return len(database), x_train, y_train, x_test, y_test
 
-    def __encode_answer_array(self, answer_plain: ndarray[Any, dtype[Any]]) -> list[ndarray[Any, dtype[Any]]]:
+    def __encode_answer_array(self, answer_plain: list) -> list[list]:
         encoded = []
         for name in answer_plain:
             idx = np.where(self.__unique_opening_names == name)[0]
@@ -88,10 +84,10 @@ class Guesser(SplitDataTrainTestMixin):
             encoded.append(encode)
         return encoded
 
-    def __encode_answers(self) -> tuple[ndarray[Any, dtype[Any]], ndarray[Any, dtype[Any]]]:
+    def __encode_answers(self) -> tuple[list, list]:
         y_train_encoded = self.__encode_answer_array(self.__y_train)
         y_test_encoded = self.__encode_answer_array(self.__y_test)
-        return np.array(y_train_encoded), np.array(y_test_encoded)
+        return list(np.array(y_train_encoded)), list(np.array(y_test_encoded))
 
     def __build_model(self) -> Sequential:
         model = Sequential()

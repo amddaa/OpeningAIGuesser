@@ -23,12 +23,12 @@ class EmbeddingVisualizer:
         x, y, z = zip(*self.__labels_vec)
         ax.scatter(x, y, z)
 
-        for label, x_, y_, z_ in zip(self.__labels, x, y, z):
-            ax.text(x_, y_, z_, label)
+        # TODO: Discouraged, need fix
+        # for label, x_, y_, z_ in zip(self.__labels, x, y, z):
+        #     ax.text(x_, y_, z_, label)
 
         ax.set_xlabel("X axis")
         ax.set_ylabel("Y axis")
-        ax.set_zlabel("Z axis")
         plt.title("Visualization of chess openings in 3D")
         plt.show()
 
