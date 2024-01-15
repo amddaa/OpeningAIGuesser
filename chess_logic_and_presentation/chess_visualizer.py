@@ -32,6 +32,7 @@ class ChessVisualizer:
         self.__black_moves: list[list[str]] = []
         self.__chess_board = Board()
 
+        self.__is_pygame_used = True
         pygame.init()
         self.__screen = pygame.display.set_mode((DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT), pygame.RESIZABLE)
         self.__clock = pygame.time.Clock()
@@ -108,6 +109,7 @@ class ChessVisualizer:
     def run_auto_simulate_no_visualization(self) -> None:
         pygame.quit()
         self.__auto_visualization = True
+        self.__is_pygame_used = False
         while True:
             self.__handle_move_simulation()
             self.__save_position_to_database_based_on_move_index()
@@ -148,7 +150,7 @@ class ChessVisualizer:
             self.__logger.error("Square images are not set, cannot resize images")
             return
 
-        if self.__auto_visualization:
+        if not self.__is_pygame_used:
             return
 
         width, height = self.__screen.get_size()
