@@ -121,13 +121,11 @@ class ChessVisualizer:
         if self.__guesser is None or self.__position_writer is None:
             return
 
-        pos = self.__position_writer.get_position_after_ord(
+        pos = self.__position_writer.get_position_string(
             self.__chess_board.pieces_white, self.__chess_board.pieces_black
         )
-        pos_np = np.array(pos).astype(int)
-        pos_np = np.expand_dims(pos_np, axis=0)
         self.__logger.info(f"{self.__opening_names[self.__simulated_game_idx]}")
-        self.__guesser.predict_given(pos_np.tolist())
+        self.__guesser.predict_given(pos)
 
     def __handle_events(self) -> None:
         for event in pygame.event.get():

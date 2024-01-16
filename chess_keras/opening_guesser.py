@@ -122,7 +122,9 @@ class Guesser(SplitDataTrainTestMixin, OneHotEncodingChessPositionMixin):
         print(f"Test loss: {loss:.4f}, Test accuracy: {accuracy:.4f}")
 
     def predict_given(self, x: list) -> None:
-        prediction = self.__model.predict(x)
+        encoded = self.encode_position_to_one_hot(x)
+        flattened = list(chain.from_iterable(chain.from_iterable(chain.from_iterable(encoded))))
+        prediction = self.__model.predict(np.reshape(flattened, (1, 768)))
         idx = np.argmax(prediction)
         print(f"{self.__unique_opening_names[idx]}")
 

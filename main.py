@@ -47,12 +47,12 @@ from embedding_visualization.embedding_visualizer import EmbeddingVisualizer
 #####################################################
 # loading encoded opening names and moves from file #
 #####################################################
-# openings_and_moves_encoded = opening_encoder.load_from_file(
-#     "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2014-01_chosen"
-# )
-# openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
-#     openings_and_moves_encoded
-# )
+openings_and_moves_encoded = opening_encoder.load_from_file(
+    "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2014-01_ITALIAN+SICILIAN"
+)
+openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
+    openings_and_moves_encoded
+)
 ###################################
 # simulating read games from PGNS #
 ###################################
@@ -65,15 +65,15 @@ from embedding_visualization.embedding_visualizer import EmbeddingVisualizer
 ###############################
 # model creating and training #
 ###############################
-reader = PositionReader("italian_sicilian_games_more.chess")
-openings_names = ["Italian Game", "Sicilian Defense"]
-openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
-guesser = Guesser()
-guesser.set_database_for_model(reader.read_from_file(), openings_names_encoded)
-guesser.create_model()
-guesser.train(16, 10)
-guesser.evaluate()
-guesser.save_model("static/models/test.keras")
+# reader = PositionReader("italian_sicilian_games_more.chess")
+# openings_names = ["Italian Game", "Sicilian Defense"]
+# openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
+# guesser = Guesser()
+# guesser.set_database_for_model(reader.read_from_file(), openings_names_encoded)
+# guesser.create_model()
+# guesser.train(16, 10)
+# guesser.evaluate()
+# guesser.save_model("static/models/test.keras")
 
 ################################
 # model loading and evaluating #
@@ -83,21 +83,21 @@ guesser.save_model("static/models/test.keras")
 # openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
 # reader = PositionReader('italian_sicilian_games.chess')
 # guesser.set_database_for_model(reader.read_from_file(), openings_names_encoded)
-# guesser.load_model('static/models/italian_sicilian_test.keras')
+# guesser.load_model('static/models/test.keras')
 # guesser.evaluate()
 
 ##################################
 # model usage with visualization #
 ##################################
-# guesser = Guesser()
-# openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
-# guesser.set_answers_for_model_output(openings_names_encoded)
-# guesser.load_model("static/models/italian_sicilian_test.keras")
-#
-# v = ChessVisualizer()
-# v.add_guesser_init_writer(guesser)
-# v.set_visualization_games_database(openings_names, white_moves, black_moves)
-# v.run()
+guesser = Guesser()
+openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
+guesser.set_answers_for_model_output(openings_names_encoded)
+guesser.load_model("static/models/test.keras")
+
+v = ChessVisualizer()
+v.add_guesser_init_writer(guesser)
+v.set_visualization_games_database(openings_names, white_moves, black_moves)
+v.run()
 
 ######################
 # embedding openings #
