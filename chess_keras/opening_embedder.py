@@ -1,6 +1,5 @@
 # Cat2Vec
 # based on: https://towardsdatascience.com/deep-embeddings-for-categorical-variables-cat2vec-b05c8ab63ac0
-from collections import Counter
 from itertools import chain
 from typing import Optional
 
@@ -16,6 +15,7 @@ from chess_keras.split_data_into_train_and_test_mixin import SplitDataTrainTestM
 
 class OpeningEmbedder(SplitDataTrainTestMixin, OneHotEncodingChessPositionMixin):
     def __init__(self, data: list[tuple[str, list[list[str]]]]) -> None:
+        super().__init__()
         self.__openings_names: list[str] = []
         self.__openings_indices: list[int] = []
         self.__openings_indices_train: list[int] = []

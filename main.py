@@ -47,33 +47,33 @@ from embedding_visualization.embedding_visualizer import EmbeddingVisualizer
 #####################################################
 # loading encoded opening names and moves from file #
 #####################################################
-openings_and_moves_encoded = opening_encoder.load_from_file(
-    "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2014-01_chosen"
-)
-openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
-    openings_and_moves_encoded
-)
+# openings_and_moves_encoded = opening_encoder.load_from_file(
+#     "static/database/openings_and_moves/openings_and_moves_lichess_db_standard_rated_2014-01_chosen"
+# )
+# openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
+#     openings_and_moves_encoded
+# )
 ###################################
 # simulating read games from PGNS #
 ###################################
-v = ChessVisualizer()
-v.set_visualization_games_database(openings_names, white_moves, black_moves)
-# v.toggle_saving_positions_to_file(PositionWriter("lichess_db_standard_rated_2014-01_chosen.chess"))
-v.run_auto_simulate_no_visualization()
-# v.run()
+# v = ChessVisualizer()
+# v.set_visualization_games_database(openings_names, white_moves, black_moves)
+# # v.toggle_saving_positions_to_file(PositionWriter("lichess_db_standard_rated_2014-01_chosen.chess"))
+# v.run_auto_simulate_no_visualization()
+# # v.run()
 
 ###############################
 # model creating and training #
 ###############################
-# reader = PositionReader('italian_sicilian_games_more.chess')
-# openings_names = ['Italian Game', 'Sicilian Defense']
-# openings_names_encoded = opening_encoder.get_encoded_unique_openings_names(openings_names)
-# guesser = Guesser()
-# guesser.input_database(reader.read_from_file(), openings_names_encoded)
-# guesser.create_model()
-# guesser.train(128, 500)
-# guesser.evaluate()
-# guesser.save_model('static/models/italian_sicilian_test.keras')
+reader = PositionReader("italian_sicilian_games_more.chess")
+openings_names = ["Italian Game", "Sicilian Defense"]
+openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
+guesser = Guesser()
+guesser.set_database_for_model(reader.read_from_file(), openings_names_encoded)
+guesser.create_model()
+guesser.train(16, 10)
+guesser.evaluate()
+guesser.save_model("static/models/test.keras")
 
 ################################
 # model loading and evaluating #
