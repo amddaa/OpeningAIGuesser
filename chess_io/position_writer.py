@@ -1,5 +1,5 @@
 import pickle
-from typing import Type
+from typing import List, Type
 
 from chess_logic_and_presentation.pieces.piece import Piece
 
@@ -21,15 +21,19 @@ class PositionWriter:
         self.__database = value
 
     def save_position(self, opening_name: str, pieces_white: list[list], pieces_black: list[list]) -> None:
-        position = [list(" " for _ in range(self.__BOARD_SIZE)) for _ in range(self.__BOARD_SIZE)]
-        self.save_pieces(pieces_white, position)
-        self.save_pieces(pieces_black, position)
+        position = self.get_position_string(pieces_white, pieces_black)
         self.__database.append((opening_name, position))
 
     def get_position_after_ord(self, pieces_white: list[list], pieces_black: list[list]) -> list[list[int]]:
         position = [list(ord(" ") for _ in range(self.__BOARD_SIZE)) for _ in range(self.__BOARD_SIZE)]
         self.save_pieces_to_int(pieces_white, position)
         self.save_pieces_to_int(pieces_black, position)
+        return position
+
+    def get_position_string(self, pieces_white: list[list], pieces_black: list[list]) -> list[list[str]]:
+        position = [list(" " for _ in range(self.__BOARD_SIZE)) for _ in range(self.__BOARD_SIZE)]
+        self.save_pieces(pieces_white, position)
+        self.save_pieces(pieces_black, position)
         return position
 
     @staticmethod
