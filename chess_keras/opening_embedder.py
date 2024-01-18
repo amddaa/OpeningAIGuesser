@@ -5,7 +5,7 @@ from typing import Optional
 
 from keras.layers import Concatenate, Dense, Dropout, Embedding, Flatten, Input
 from keras.models import Model, Sequential
-from keras.src.optimizers import Adam
+from keras.optimizers import Adam
 
 from chess_keras.one_hot_chess_position_encoding_mixin import (
     OneHotEncodingChessPositionMixin,

@@ -1,10 +1,11 @@
 from itertools import chain
 
 import numpy as np
+import tensorflow as tf
 from keras.layers import BatchNormalization, Dense, Dropout, Flatten, Input
 from keras.models import Sequential, load_model
 from keras.optimizers import Adam
-from scipy.sparse import issparse
+from scipy.sparse import issparse  # fix for hanging model training
 
 from chess_keras.one_hot_chess_position_encoding_mixin import (
     OneHotEncodingChessPositionMixin,
@@ -27,6 +28,16 @@ class Guesser(SplitDataTrainTestMixin, OneHotEncodingChessPositionMixin):
         self.__x_train: list = []
         self.__train_data_len: int = 0
         self.__BOARD_SIZE = 8
+
+    @staticmethod
+    def __set_cpu_for_tensorflow() -> None:
+        print("Available devices:", tf.config.experimental.list_physical_devices())
+
+        # Set device placement to CPU
+        tf.config.set_visible_devices([], "GPU")  # Hide GPUs from TensorFlow
+        tf.config.set_visible_devices(tf.config.list_physical_devices("CPU"), "CPU")  # Show and use CPUs only
+
+        print("Visible devices:", tf.config.get_visible_devices())
 
     def set_database_for_model(
         self, database: list[tuple[str, list[list[str]]]], unique_openings_encoded: list[tuple[str, int]]
@@ -101,9 +112,11 @@ class Guesser(SplitDataTrainTestMixin, OneHotEncodingChessPositionMixin):
         model = Sequential()
         model.add(Input(shape=768, name="input_layer"))
         model.add(BatchNormalization())
-        model.add(Dense(128, activation="relu"))
+        model.add(Dense(256, activation="relu"))
         model.add(Dropout(0.5))
         model.add(Dense(64, activation="relu"))
+        model.add(Dropout(0.5))
+        model.add(Dense(32, activation="relu"))
         model.add(Dropout(0.5))
         model.add(Dense(16, activation="relu"))
         model.add(Dropout(0.5))
