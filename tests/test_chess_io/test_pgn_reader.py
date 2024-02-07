@@ -130,7 +130,7 @@ def test_filter_games_by_openings_names(pgn_reader):
     pgn_reader.black_moves = [["True"], ["False"], ["False"], ["False"], ["False"], ["False"], ["True"]]
     pgn_reader.white_moves = [["True"], ["False"], ["False"], ["False"], ["False"], ["False"], ["True"]]
 
-    pgn_reader.filter_games_by_openings_names(["Old Benoni Defense", "Italian Defense"])
+    pgn_reader.filter_games_by_openings_names_after_loading(["Old Benoni Defense", "Italian Defense"])
 
     assert pgn_reader.get_openings_names_and_moves() == (
         ["Old Benoni Defense", "Italian Defense"],
@@ -140,7 +140,7 @@ def test_filter_games_by_openings_names(pgn_reader):
 
 
 def test_filter_games_by_openings_names_empty_pgn_reader(pgn_reader):
-    pgn_reader.filter_games_by_openings_names(["Old Benoni Defense", "Italian Defense"])
+    pgn_reader.filter_games_by_openings_names_after_loading(["Old Benoni Defense", "Italian Defense"])
 
     assert pgn_reader.get_openings_names_and_moves() == ([], [], [])
 

@@ -6,6 +6,7 @@ class PGNReader:
     def __init__(self) -> None:
         self.__openings_names: list[str] = []
         self.__openings_names_loading_filter: list[str] = []
+        self.__is_opening_name_a_substring = False
         self.__white_moves: list[list[str]] = []
         self.__black_moves: list[list[str]] = []
 
@@ -45,6 +46,18 @@ class PGNReader:
     def set_openings_names_loading_filter(self, filter_openings_names: list[str]) -> None:
         self.__openings_names_loading_filter = filter_openings_names
 
+    def set_is_opening_name_a_substring(self, value: bool) -> None:
+        self.__is_opening_name_a_substring = value
+
+    def __is_opening_in_filter(self, opening: str) -> bool:
+        if self.__is_opening_name_a_substring:
+            for opening_filter in self.__openings_names_loading_filter:
+                if opening_filter in opening:
+                    return True
+            return False
+        else:
+            return opening in self.__openings_names_loading_filter
+
     def load_pngs_from_file(self, filepath: str) -> None:
         self.__logger.info(f"Starting loading data from file: {filepath}")
 
@@ -60,7 +73,7 @@ class PGNReader:
                     opening = line[len('[Opening "') : -3]
                     # if filter not set or filter set and opening in filter
                     if not self.__openings_names_loading_filter or (
-                        self.__openings_names_loading_filter and opening in self.__openings_names_loading_filter
+                        self.__openings_names_loading_filter and self.__is_opening_in_filter(opening)
                     ):
                         self.__openings_names.append(opening)
                         added_opening = True

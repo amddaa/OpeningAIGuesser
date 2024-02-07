@@ -11,13 +11,8 @@ from embedding_visualization.embedding_visualizer import EmbeddingVisualizer
 # reading openings names and moves from lichess data #
 ######################################################
 reader = PGNReader()
-reader.set_openings_names_loading_filter(
-    [
-        "Sicilian Defense",
-        "Scandinavian Defense",
-        "Caro-Kann Defense",
-    ]
-)
+reader.set_openings_names_loading_filter(["King's Indian", "Sicilian Defense", "Slav Defense"])
+reader.set_is_opening_name_a_substring(True)
 reader.load_pngs_from_file("static/database/lichess_pgns/lichess_db_standard_rated_2016-01.pgn")
 
 #####################################################
@@ -47,29 +42,24 @@ reader.load_pngs_from_file("static/database/lichess_pgns/lichess_db_standard_rat
 #     ])  # filtering to specific openings only
 # reader.filter_games_by_top_n_openings(10)
 # encoded = opening_encoder.get_encoded_openings_names_and_moves(*reader.get_openings_names_and_moves())
-# opening_encoder.dump_to_file(
-#     "static/database/openings_and_moves/top10_2016",
-#     encoded
-# )
+# opening_encoder.dump_to_file("static/database/openings_and_moves/KISicSlav_2016", encoded)
 
 #####################################################
 # loading encoded opening names and moves from file #
 ####################################################
-# openings_and_moves_encoded = opening_encoder.load_from_file(
-#     "static/database/openings_and_moves/top10_2016"
-# )
-# openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
-#     openings_and_moves_encoded
-# )
+openings_and_moves_encoded = opening_encoder.load_from_file("static/database/openings_and_moves/KISicSlav_2016")
+openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
+    openings_and_moves_encoded
+)
 
 ###################################
 # simulating read games from PGNS #
 ###################################
-# v = ChessVisualizer()
-# v.set_visualization_games_database(openings_names, white_moves, black_moves)
-# v.toggle_saving_positions_to_file(PositionWriter("top10_2016.chess"))
-# v.run_auto_simulate_no_visualization()
-# # v.run()
+v = ChessVisualizer()
+v.set_visualization_games_database(openings_names, white_moves, black_moves)
+v.toggle_saving_positions_to_file(PositionWriter("KISicSlav_2016.chess"))
+v.run_auto_simulate_no_visualization()
+# v.run()
 
 ###############################
 # model creating and training #
