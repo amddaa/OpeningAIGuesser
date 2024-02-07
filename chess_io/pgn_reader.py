@@ -5,6 +5,7 @@ from collections import Counter
 class PGNReader:
     def __init__(self) -> None:
         self.__openings_names: list[str] = []
+        self.__openings_names_loading_filter: list[str] = []
         self.__white_moves: list[list[str]] = []
         self.__black_moves: list[list[str]] = []
 
@@ -41,6 +42,9 @@ class PGNReader:
     def get_openings_names_and_moves(self) -> tuple[list[str], list[list[str]], list[list[str]]]:
         return self.__openings_names, self.__white_moves, self.__black_moves
 
+    def set_openings_names_loading_filter(self, filter_openings_names: list[str]) -> None:
+        self.__openings_names_loading_filter = filter_openings_names
+
     def load_pngs_from_file(self, filepath: str) -> None:
         self.__logger.info(f"Starting loading data from file: {filepath}")
 
@@ -48,12 +52,19 @@ class PGNReader:
         self.__black_moves = []
         self.__white_moves = []
         possible_outcomes = ["1-0", "1/2-1/2", "0-1"]
+        added_opening = False
 
         with open(filepath) as f:
             for line in f:
                 if line.startswith("[Opening") and "?" not in line:
-                    self.__openings_names.append(line[len('[Opening "') : -3])
-                elif line.startswith("1. "):
+                    opening = line[len('[Opening "') : -3]
+                    # if filter not set or filter set and opening in filter
+                    if self.__openings_names_loading_filter or (
+                        not self.__openings_names_loading_filter and opening in self.__openings_names_loading_filter
+                    ):
+                        self.__openings_names.append(opening)
+                        added_opening = True
+                elif line.startswith("1. ") and added_opening:
                     if line.find("eval") != -1:
                         # Database is large enough.
                         # I don't need to bother reading evaluated games.
@@ -84,10 +95,11 @@ class PGNReader:
 
                     self.__black_moves.append(b)
                     self.__white_moves.append(w)
+                    added_opening = False
 
         self.__logger.info(f"Loaded data from file: {filepath}")
 
-    def filter_games_by_openings_names(self, filter_openings_names: list[str]) -> None:
+    def filter_games_by_openings_names_after_loading(self, filter_openings_names: list[str]) -> None:
         new_openings_names = []
         new_white_moves = []
         new_black_moves = []
@@ -115,4 +127,4 @@ class PGNReader:
         for opening_name, _ in top_n:
             top_n_openings.append(opening_name)
 
-        self.filter_games_by_openings_names(top_n_openings)
+        self.filter_games_by_openings_names_after_loading(top_n_openings)
