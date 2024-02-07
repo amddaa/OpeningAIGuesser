@@ -59,12 +59,13 @@ class PGNReader:
                 if line.startswith("[Opening") and "?" not in line:
                     opening = line[len('[Opening "') : -3]
                     # if filter not set or filter set and opening in filter
-                    if self.__openings_names_loading_filter or (
-                        not self.__openings_names_loading_filter and opening in self.__openings_names_loading_filter
+                    if not self.__openings_names_loading_filter or (
+                        self.__openings_names_loading_filter and opening in self.__openings_names_loading_filter
                     ):
                         self.__openings_names.append(opening)
                         added_opening = True
                 elif line.startswith("1. ") and added_opening:
+                    added_opening = False
                     if line.find("eval") != -1:
                         # Database is large enough.
                         # I don't need to bother reading evaluated games.
@@ -95,9 +96,11 @@ class PGNReader:
 
                     self.__black_moves.append(b)
                     self.__white_moves.append(w)
-                    added_opening = False
 
-        self.__logger.info(f"Loaded data from file: {filepath}")
+        self.__logger.info(
+            f"Loaded data from file: {filepath} - ({len(self.__openings_names)}, {len(self.__white_moves)}"
+            f", {len(self.__black_moves)}) entries "
+        )
 
     def filter_games_by_openings_names_after_loading(self, filter_openings_names: list[str]) -> None:
         new_openings_names = []
@@ -113,7 +116,10 @@ class PGNReader:
         self.__openings_names = new_openings_names
         self.__white_moves = new_white_moves
         self.__black_moves = new_black_moves
-        self.__logger.info(f"Filtered games using {filter_openings_names} to {len(self.__openings_names)} entries")
+        self.__logger.info(
+            f"Filtered games using {filter_openings_names} to ({len(self.__openings_names)}, {len(self.__white_moves)},"
+            f" {len(self.__black_moves)}) entries"
+        )
 
     def filter_games_by_top_n_openings(self, n: int) -> None:
         if n < 1:

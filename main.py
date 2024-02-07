@@ -40,10 +40,11 @@ reader.load_pngs_from_file("static/database/lichess_pgns/lichess_db_standard_rat
 # encoding opening names and moves then saving to file  #
 ########################################################
 # reader.filter_games_by_openings_names_after_loading(
-#     ['Italian Game',
-#      'Russian Game: Urusov Gambit',
-#      'Four Knights Game: Italian Variation',
-#      'Sicilian Defense: French Variation'])  # filtering to specific openings only
+#     [
+#         "Sicilian Defense",
+#         "Scandinavian Defense",
+#         "Caro-Kann Defense",
+#     ])  # filtering to specific openings only
 # reader.filter_games_by_top_n_openings(10)
 # encoded = opening_encoder.get_encoded_openings_names_and_moves(*reader.get_openings_names_and_moves())
 # opening_encoder.dump_to_file(
