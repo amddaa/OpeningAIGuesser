@@ -3,6 +3,7 @@ from itertools import chain
 
 import numpy as np
 import tensorflow as tf
+from keras.callbacks import ModelCheckpoint
 from keras.layers import (
     Add,
     BatchNormalization,
@@ -152,21 +153,40 @@ class Guesser(SplitDataTrainTestMixin, OneHotEncodingChessPositionMixin):
         outputs = Dense(len(self.__unique_opening_names_encoded), activation="softmax")(x)
 
         model = Model(inputs=inputs, outputs=outputs)
+        model.compile(
+            optimizer=Adam(learning_rate=0.001), loss="sparse_categorical_crossentropy", metrics=["accuracy"]
+        )
         return model
 
-    def train(self, batch_size: int, epochs: int) -> None:
-        self.__model.fit(self.__x_train, self.__y_train_encoded, batch_size=batch_size, epochs=epochs, verbose=1)
+    def train(self, batch_size: int, epochs: int, checkpoint_path: str = "") -> None:
+        if checkpoint_path:
+            checkpoint = ModelCheckpoint(
+                filepath=checkpoint_path, monitor="val_accuracy", verbose=1, save_best_only=True, mode="max"
+            )
+
+            callbacks_list = [checkpoint]
+            self.__model.fit(
+                self.__x_train,
+                self.__y_train_encoded,
+                batch_size=batch_size,
+                epochs=epochs,
+                verbose=1,
+                validation_data=(self.__x_test, self.__y_test_encoded),
+                callbacks=callbacks_list,
+            )
+        else:
+            self.__model.fit(self.__x_train, self.__y_train_encoded, batch_size=batch_size, epochs=epochs, verbose=1)
 
     def evaluate(self) -> None:
         loss, accuracy = self.__model.evaluate(self.__x_test, self.__y_test_encoded, verbose=0)
-        print(f"Test loss: {loss:.4f}, Test accuracy: {accuracy:.4f}")
+        self.__logger.info(f"Test loss: {loss:.4f}, Test accuracy: {accuracy:.4f}")
 
     def predict_given(self, x: list) -> None:
         encoded = self.encode_position_to_one_hot(x)
         flattened = list(chain.from_iterable(chain.from_iterable(chain.from_iterable(encoded))))
         prediction = self.__model.predict(np.reshape(flattened, (1, 768)))
         idx = np.argmax(prediction)
-        print(f"{self.__unique_opening_names[idx]}")
+        self.__logger.info(f"{self.__unique_opening_names[idx]}")
 
     def save_model(self, path: str) -> None:
         self.__model.save(path)
