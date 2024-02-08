@@ -49,14 +49,14 @@ class PGNReader:
     def set_is_opening_name_a_substring(self, value: bool) -> None:
         self.__is_opening_name_a_substring = value
 
-    def __is_opening_in_filter(self, opening: str) -> bool:
+    def __is_opening_in_filter_and_get_it(self, opening: str) -> tuple[bool, str]:
         if self.__is_opening_name_a_substring:
             for opening_filter in self.__openings_names_loading_filter:
                 if opening_filter in opening:
-                    return True
-            return False
+                    return True, opening_filter
+            return False, ""
         else:
-            return opening in self.__openings_names_loading_filter
+            return opening in self.__openings_names_loading_filter, ""
 
     def load_pngs_from_file(self, filepath: str) -> None:
         self.__logger.info(f"Starting loading data from file: {filepath}")
@@ -71,12 +71,18 @@ class PGNReader:
             for line in f:
                 if line.startswith("[Opening") and "?" not in line:
                     opening = line[len('[Opening "') : -3]
+
+                    is_in_filter, filtered_opening_name = self.__is_opening_in_filter_and_get_it(opening)
+                    if is_in_filter:
+                        opening = filtered_opening_name
+
                     # if filter not set or filter set and opening in filter
                     if not self.__openings_names_loading_filter or (
-                        self.__openings_names_loading_filter and self.__is_opening_in_filter(opening)
+                        self.__openings_names_loading_filter and is_in_filter
                     ):
                         self.__openings_names.append(opening)
                         added_opening = True
+
                 elif line.startswith("1. ") and added_opening:
                     added_opening = False
                     if line.find("eval") != -1:
