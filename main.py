@@ -10,10 +10,10 @@ from embedding_visualization.embedding_visualizer import EmbeddingVisualizer
 ######################################################
 # reading openings names and moves from lichess data #
 ######################################################
-# reader = PGNReader()
-# reader.set_openings_names_loading_filter(["King's Indian", "Sicilian Defense", "Slav Defense"])
-# reader.set_is_opening_name_a_substring(True)
-# reader.load_pngs_from_file("static/database/lichess_pgns/lichess_db_standard_rated_2014-01.pgn")
+reader = PGNReader()
+reader.set_openings_names_loading_filter(["King's Indian", "Sicilian Defense", "Slav Defense"])
+reader.set_is_opening_name_a_substring(True)
+reader.load_pngs_from_file("static/database/lichess_pgns/lichess_db_standard_rated_2016-01.pgn")
 
 #####################################################
 # encoding unique opening names and saving to file  #
@@ -34,77 +34,78 @@ from embedding_visualization.embedding_visualizer import EmbeddingVisualizer
 #########################################################
 # encoding opening names and moves then saving to file  #
 ########################################################
-# # reader.filter_games_by_openings_names_after_loading(
-# #     [
-# #         "Sicilian Defense",
-# #         "Scandinavian Defense",
-# #         "Caro-Kann Defense",
-# #     ])  # filtering to specific openings only
-# # reader.filter_games_by_top_n_openings(10)
+# reader.filter_games_by_openings_names_after_loading(
+#     [
+#         "Sicilian Defense",
+#         "Scandinavian Defense",
+#         "Caro-Kann Defense",
+#     ])  # filtering to specific openings only
+# reader.filter_games_by_top_n_openings(10)
 # encoded = opening_encoder.get_encoded_openings_names_and_moves(*reader.get_openings_names_and_moves())
-# opening_encoder.dump_to_file("static/database/openings_and_moves/KISicSlav_2014", encoded)
+# opening_encoder.dump_to_file("static/database/openings_and_moves/KISicSlav_2016", encoded)
 
 #####################################################
 # loading encoded opening names and moves from file #
 ####################################################
-# openings_and_moves_encoded = opening_encoder.load_from_file("static/database/openings_and_moves/KISicSlav_2014")
-# openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
-#     openings_and_moves_encoded
-# )
+openings_and_moves_encoded = opening_encoder.load_from_file("static/database/openings_and_moves/KISicSlav_2016")
+openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
+    openings_and_moves_encoded
+)
 
 ###################################
 # simulating read games from PGNS #
 ###################################
-# v = ChessVisualizer()
-# v.set_visualization_games_database(openings_names, white_moves, black_moves)
-# v.toggle_saving_positions_to_file(PositionWriter("KISicSlav_2014.chess"))
-# v.run_auto_simulate_no_visualization()
-# # v.run()
+v = ChessVisualizer()
+v.set_visualization_games_database(openings_names, white_moves, black_moves)
+v.toggle_saving_positions_to_file(PositionWriter("KISicSlav_2016.chess"))
+v.run_auto_simulate_no_visualization()
+# v.run()
 
 ###############################
 # model creating and training #
 ###############################
-# reader = PositionReader("KISicSlav_2016.chess")
-# openings_names = ["King's Indian", "Sicilian Defense", "Slav Defense"]
+# reader = PositionReader("top10_2016.chess")
+# openings_names = [
+#     "Van't Kruijs Opening",
+#     "Modern Defense",
+#     "Scandinavian Defense: Mieses-Kotroc Variation",
+#     "Horwitz Defense",
+#     "Sicilian Defense",
+#     "Scandinavian Defense",
+#     "Caro-Kann Defense",
+#     "French Defense: Knight Variation",
+#     "Sicilian Defense: Bowdler Attack",
+#     "Owen Defense",
+# ]
 # openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
-#
-# # database fix temp (now real opening name is saved, not a substring)
-# db = reader.read_from_file()
-# for i in range(len(db)):
-#     opening, position = db[i]
-#     for n in openings_names:
-#         if n in opening:
-#             opening = n
-#             break
-#     db[i] = opening, position
-#
 # guesser = Guesser()
-# guesser.set_database_for_model(db, openings_names_encoded)
+# guesser.set_database_for_model(reader.read_from_file(), openings_names_encoded)
 # guesser.create_model()
-# guesser.train(512, 50)
+# guesser.train(32, 100)
 # guesser.evaluate()
-# guesser.save_model("static/models/test3.keras")
+# guesser.save_model("static/models/test.keras")
 
 ################################
 # model loading and evaluating #
 ################################
-# TODO zrobic baze w miare rownych 3 openingow i przetestować wtedy 2013 vs 2014 vs 2016?
-guesser = Guesser()
-openings_names = ["King's Indian", "Sicilian Defense", "Slav Defense"]
-openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
-reader = PositionReader("KISicSlav_2016.chess")
-db = reader.read_from_file()
-for i in range(len(db)):
-    opening, position = db[i]
-    for n in openings_names:
-        if n in opening:
-            opening = n
-            break
-    db[i] = opening, position
-
-guesser.set_database_for_model(db, openings_names_encoded)
-guesser.load_model("static/models/test3.keras")
-guesser.evaluate()
+# guesser = Guesser()
+# openings_names = [
+#     "Van't Kruijs Opening",
+#     "Modern Defense",
+#     "Scandinavian Defense: Mieses-Kotroc Variation",
+#     "Horwitz Defense",
+#     "Sicilian Defense",
+#     "Scandinavian Defense",
+#     "Caro-Kann Defense",
+#     "French Defense: Knight Variation",
+#     "Sicilian Defense: Bowdler Attack",
+#     "Owen Defense",
+# ]
+# openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
+# reader = PositionReader("top10_2016.chess")
+# guesser.set_database_for_model(reader.read_from_file(), openings_names_encoded)
+# guesser.load_model("static/models/test.keras")
+# guesser.evaluate()
 
 ##################################
 # model usage with visualization #
