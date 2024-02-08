@@ -1,11 +1,22 @@
+import logging
 from itertools import chain
 
 import numpy as np
 import tensorflow as tf
-from keras.layers import BatchNormalization, Dense, Dropout, Flatten, Input
-from keras.models import Sequential, load_model
+from keras.layers import (
+    Add,
+    BatchNormalization,
+    Conv2D,
+    Dense,
+    Dropout,
+    Flatten,
+    Input,
+    ReLU,
+)
+from keras.models import Functional, Model, Sequential, load_model
 from keras.optimizers import Adam
 from scipy.sparse import issparse  # fix for hanging model training
+from typing_extensions import Any
 
 from chess_keras.one_hot_chess_position_encoding_mixin import (
     OneHotEncodingChessPositionMixin,
@@ -29,15 +40,17 @@ class Guesser(SplitDataTrainTestMixin, OneHotEncodingChessPositionMixin):
         self.__train_data_len: int = 0
         self.__BOARD_SIZE = 8
 
-    @staticmethod
-    def __set_cpu_for_tensorflow() -> None:
-        print("Available devices:", tf.config.experimental.list_physical_devices())
+        logging.basicConfig(level=logging.INFO)
+        self.__logger = logging.getLogger(__name__)
+
+    def __set_cpu_for_tensorflow(self) -> None:
+        self.__logger.info("Available devices:", tf.config.experimental.list_physical_devices())
 
         # Set device placement to CPU
         tf.config.set_visible_devices([], "GPU")  # Hide GPUs from TensorFlow
         tf.config.set_visible_devices(tf.config.list_physical_devices("CPU"), "CPU")  # Show and use CPUs only
 
-        print("Visible devices:", tf.config.get_visible_devices())
+        self.__logger.info("Visible devices:", tf.config.get_visible_devices())
 
     def set_database_for_model(
         self, database: list[tuple[str, list[list[str]]]], unique_openings_encoded: list[tuple[str, int]]
@@ -108,23 +121,37 @@ class Guesser(SplitDataTrainTestMixin, OneHotEncodingChessPositionMixin):
         y_test_encoded = self.__encode_to_answers_indices(self.__y_test)
         return list(y_train_encoded), list(y_test_encoded)
 
-    def __build_model(self) -> Sequential:
-        model = Sequential()
-        model.add(Input(shape=768, name="input_layer"))
-        model.add(BatchNormalization())
-        model.add(Dense(256, activation="relu"))
-        model.add(Dropout(0.5))
-        model.add(Dense(64, activation="relu"))
-        model.add(Dropout(0.5))
-        model.add(Dense(32, activation="relu"))
-        model.add(Dropout(0.5))
-        model.add(Dense(16, activation="relu"))
-        model.add(Dropout(0.5))
-        model.add(Dense(len(self.__unique_opening_names_encoded), activation="softmax"))
-        model.compile(
-            optimizer=Adam(learning_rate=0.001), loss="sparse_categorical_crossentropy", metrics=["accuracy"]
-        )
+    @staticmethod
+    def __residual_block(x: Any, kernel_size: int) -> Any:
+        # https://stackoverflow.com/a/64973085
+        fx = Dense(kernel_size)(x)
+        fx = BatchNormalization()(fx)
+        fx = Dense(kernel_size)(fx)
+        out = Add()([x, fx])
+        out = ReLU()(out)
+        out = BatchNormalization()(out)
+        return out
 
+    def __build_model(self) -> Functional:
+        inputs = Input(shape=(768,), name="input_layer")
+        x = BatchNormalization()(inputs)
+        x = self.__residual_block(x, 768)
+        x = Dropout(0.3)(x)
+        x = Dense(256, activation="relu")(x)
+        x = BatchNormalization()(x)
+        x = self.__residual_block(x, 256)
+        x = Dropout(0.3)(x)
+        x = Dense(64, activation="relu")(x)
+        x = BatchNormalization()(x)
+        x = self.__residual_block(x, 64)
+        x = Dropout(0.3)(x)
+        x = Dense(32, activation="relu")(x)
+        x = Dropout(0.3)(x)
+        x = Dense(16, activation="relu")(x)
+        x = Dropout(0.3)(x)
+        outputs = Dense(len(self.__unique_opening_names_encoded), activation="softmax")(x)
+
+        model = Model(inputs=inputs, outputs=outputs)
         return model
 
     def train(self, batch_size: int, epochs: int) -> None:
