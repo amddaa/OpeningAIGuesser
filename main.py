@@ -13,7 +13,9 @@ from embedding_visualization.embedding_visualizer import EmbeddingVisualizer
 # reader = PGNReader()
 # reader.set_openings_names_loading_filter(["Italian Game", "Caro-Kann Defense", "English Opening"])
 # reader.set_is_opening_name_a_substring(True)
-# reader.load_pngs_from_file("static/database/lichess_pgns/lichess_db_standard_rated_2017-01.pgn")
+# reader.load_pngs_from_file("static/database/lichess_pgns/lichess_db_standard_rated_2017-02.pgn")
+# reader.load_pngs_from_file("static/database/lichess_pgns/lichess_db_standard_rated_2017-03.pgn")
+# reader.load_pngs_from_file("static/database/lichess_pgns/lichess_db_standard_rated_2017-04.pgn")
 
 #####################################################
 # encoding unique opening names and saving to file  #
@@ -42,48 +44,48 @@ from embedding_visualization.embedding_visualizer import EmbeddingVisualizer
 #     ])  # filtering to specific openings only
 # reader.filter_games_by_top_n_openings(10)
 # encoded = opening_encoder.get_encoded_openings_names_and_moves(*reader.get_openings_names_and_moves())
-# opening_encoder.dump_to_file("static/database/openings_and_moves/ItCKEng_2017", encoded)
+# opening_encoder.dump_to_file("static/database/openings_and_moves/ItCKEng_2017_234", encoded)
 
 #####################################################
 # loading encoded opening names and moves from file #
 ####################################################
-# openings_and_moves_encoded = opening_encoder.load_from_file("static/database/openings_and_moves/ItCKEng_2017")
-# openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
-#     openings_and_moves_encoded
-# )
+openings_and_moves_encoded = opening_encoder.load_from_file("static/database/openings_and_moves/ItCKEng_2017_234")
+openings_names, white_moves, black_moves = opening_encoder.get_decoded_openings_names_and_moves(
+    openings_and_moves_encoded
+)
 
 ###################################
 # simulating read games from PGNS #
 ###################################
-# v = ChessVisualizer()
-# v.set_visualization_games_database(openings_names, white_moves, black_moves)
-# v.toggle_saving_positions_to_file(PositionWriter("ItCKEng_2017.chess"))
-# v.run_auto_simulate_no_visualization()
-# # v.run()
+v = ChessVisualizer()
+v.set_visualization_games_database(openings_names, white_moves, black_moves)
+v.toggle_saving_positions_to_file(PositionWriter("ItCKEng_2017_234.chess"), 100000)
+v.run_auto_simulate_no_visualization()
+# v.run()
 
 ###############################
 # model creating and training #
 ###############################
-reader = PositionReader("ItCKEng_2013.chess")
-openings_names = ["Italian Game", "Caro-Kann Defense", "English Opening"]
-openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
-
-# database fix temp (now real opening name is saved, not a substring)
-db = reader.read_from_file()
-# for i in range(len(db)):
-#     opening, position = db[i]
-#     for n in openings_names:
-#         if n in opening:
-#             opening = n
-#             break
-#     db[i] = opening, position
-
-guesser = Guesser()
-guesser.set_database_for_model(db, openings_names_encoded)
-guesser.create_model()
-guesser.train(32, 1, "static/models/checkpoints/test_checkpoint.keras")
-guesser.evaluate()
-guesser.save_model("static/models/test_useless.keras")
+# reader = PositionReader("ItCKEng_2013.chess")
+# openings_names = ["Italian Game", "Caro-Kann Defense", "English Opening"]
+# openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
+#
+# # database fix temp (now real opening name is saved, not a substring)
+# db = reader.read_from_file()
+# # for i in range(len(db)):
+# #     opening, position = db[i]
+# #     for n in openings_names:
+# #         if n in opening:
+# #             opening = n
+# #             break
+# #     db[i] = opening, position
+#
+# guesser = Guesser()
+# guesser.set_database_for_model(db, openings_names_encoded)
+# guesser.create_model()
+# guesser.train(32, 1, "static/models/checkpoints/useless.keras")
+# guesser.evaluate()
+# guesser.save_model("static/models/useless.keras")
 
 ################################
 # model loading and evaluating #
@@ -91,7 +93,7 @@ guesser.save_model("static/models/test_useless.keras")
 # guesser = Guesser()
 # openings_names = ["Italian Game", "Caro-Kann Defense", "English Opening"]
 # openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
-# reader = PositionReader("ItCKEng_2013.chess")
+# reader = PositionReader("ItCKEng_2017.chess")
 # db = reader.read_from_file()
 # # for i in range(len(db)):
 # #     opening, position = db[i]
@@ -102,7 +104,7 @@ guesser.save_model("static/models/test_useless.keras")
 # #     db[i] = opening, position
 #
 # guesser.set_database_for_model(db, openings_names_encoded)
-# guesser.load_model("static/models/test.keras")
+# guesser.load_model("static/models/useless.keras")
 # guesser.evaluate()
 
 ##################################

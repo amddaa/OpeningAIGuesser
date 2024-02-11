@@ -61,9 +61,9 @@ class PGNReader:
     def load_pngs_from_file(self, filepath: str) -> None:
         self.__logger.info(f"Starting loading data from file: {filepath}")
 
-        self.__openings_names = []
-        self.__black_moves = []
-        self.__white_moves = []
+        # self.__openings_names = []
+        # self.__black_moves = []
+        # self.__white_moves = []
         possible_outcomes = ["1-0", "1/2-1/2", "0-1"]
         added_opening = False
 

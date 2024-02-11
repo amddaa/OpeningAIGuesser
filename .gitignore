@@ -156,3 +156,4 @@ cython_debug/
 .idea/misc.xml
 static/database/
 static/database/*
+static/models/
