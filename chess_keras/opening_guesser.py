@@ -148,7 +148,6 @@ class Guesser(SplitDataTrainTestMixin, OneHotEncodingChessPositionMixin):
         outputs = Dense(len(self.__unique_opening_names_encoded), activation="softmax")(x)
 
         model = Model(inputs=inputs, outputs=outputs)
-        #  model.load_weights("static/models/checkpoints/2015.keras")
         model.compile(
             optimizer=Adam(learning_rate=0.001), loss="sparse_categorical_crossentropy", metrics=["accuracy"]
         )
