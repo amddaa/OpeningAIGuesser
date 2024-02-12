@@ -149,10 +149,16 @@ cython_debug/
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
-.idea/workspace.xml
+.idea/
 .DS_Store
-.idea/workspace.xml
-.idea/misc.xml
-static/database/
-static/database/*
+
+#static files
+static/database/lichess_pgns/*.pgn
+static/database/openings/
+static/database/openings_and_moves/
+!static/database/openings_and_moves/ItCKEng_2013
+static/database/saved_positions/*.chess
+!static/database/saved_positions/ItCKEng_2013.chess
+static/models/*.keras
+static/models/checkpoints/*.keras
+!static/models/72_extra.keras

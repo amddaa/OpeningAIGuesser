@@ -20,6 +20,7 @@ class ChessVisualizer:
     def __init__(self) -> None:
         self.__simulated_games_database_loop_counter = 0
         self.__is_simulating_next_move = False
+        self.__is_game_saving_idx_random = True
         self.__game_saving_idx: Optional[int] = None
         self.__guesser: Optional[opening_guesser.Guesser] = None
         self.__position_writer: Optional[position_writer.PositionWriter] = None
@@ -38,6 +39,7 @@ class ChessVisualizer:
         self.__clock = pygame.time.Clock()
         self.is_running = True
         self.__is_saving_positions_to_database = False
+        self.__save_every_n_entries: Optional[int] = None
 
         logging.basicConfig(level=logging.INFO)
         self.__logger = logging.getLogger(__name__)
@@ -52,19 +54,26 @@ class ChessVisualizer:
         self.__white_moves = white_moves
         self.__black_moves = black_moves
 
-    def toggle_saving_positions_to_file(self, given_position_writer: position_writer.PositionWriter) -> None:
+    def toggle_saving_positions_to_file(
+        self, given_position_writer: position_writer.PositionWriter, every_n_entries: Optional[int] = None
+    ) -> None:
         self.__is_saving_positions_to_database = True
         self.__position_writer = given_position_writer
-        self.__game_saving_idx = self.__generate_game_saving_idx()
+        self.__game_saving_idx = self.__generate_game_saving_idx(self.__is_game_saving_idx_random)
+        self.__save_every_n_entries = every_n_entries
 
-    def __generate_game_saving_idx(self) -> int:
+    def __generate_game_saving_idx(self, is_random: bool) -> int:
         # Random position from game:
-        # np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]) - 1)
+        if is_random:
+            if len(self.__white_moves[self.__simulated_game_idx]) == 1:
+                return 0  # ValueError np.random.randint high<=0
 
-        # n-th move or last:
-        chosen_move_num = 20
-        if len(self.__white_moves[self.__simulated_game_idx]) - 1 >= chosen_move_num:
-            return chosen_move_num
+            np.random.randint(0, len(self.__white_moves[self.__simulated_game_idx]) - 1)
+        else:
+            # n-th move or last:
+            chosen_move_num = 20
+            if len(self.__white_moves[self.__simulated_game_idx]) - 1 >= chosen_move_num:
+                return chosen_move_num
 
         return len(self.__white_moves[self.__simulated_game_idx]) - 1
 
@@ -76,6 +85,16 @@ class ChessVisualizer:
         if self.__is_saving_positions_to_database and self.__position_writer is not None:
             self.__position_writer.save_to_file()
 
+    def __save_results_to_file_every_n(self) -> None:
+        if not self.__position_writer:
+            return
+        if not self.__is_saving_positions_to_database:
+            return
+        if not self.__save_every_n_entries:
+            return
+        if self.__simulated_game_idx % self.__save_every_n_entries == 0:
+            self.__position_writer.save_to_file()
+
     def __save_position_to_database_based_on_move_index(self) -> None:
         if self.__is_saving_positions_to_database and self.__position_writer is not None:
             if self.__game_saving_idx == self.__simulated_move_idx:
@@ -85,7 +104,7 @@ class ChessVisualizer:
                     self.__chess_board.pieces_black,
                 )
                 self.__reset_game()
-                self.__game_saving_idx = self.__generate_game_saving_idx()
+                self.__game_saving_idx = self.__generate_game_saving_idx(self.__is_game_saving_idx_random)
 
     def __handle_move_simulation(self) -> None:
         if self.__auto_visualization:
@@ -100,6 +119,7 @@ class ChessVisualizer:
             self.__handle_events()
             self.__handle_move_simulation()
             self.__save_position_to_database_based_on_move_index()
+            self.__save_results_to_file_every_n()
             self.__refresh_screen()
             self.__handle_render()
             self.__clock.tick(60)
@@ -113,6 +133,7 @@ class ChessVisualizer:
         while True:
             self.__handle_move_simulation()
             self.__save_position_to_database_based_on_move_index()
+            self.__save_results_to_file_every_n()
             if self.__simulated_games_database_loop_counter != 0:
                 break
         self.__save_results_to_file()
@@ -121,13 +142,11 @@ class ChessVisualizer:
         if self.__guesser is None or self.__position_writer is None:
             return
 
-        pos = self.__position_writer.get_position_after_ord(
+        pos = self.__position_writer.get_position_string(
             self.__chess_board.pieces_white, self.__chess_board.pieces_black
         )
-        pos_np = np.array(pos).astype(int)
-        pos_np = np.expand_dims(pos_np, axis=0)
         self.__logger.info(f"{self.__opening_names[self.__simulated_game_idx]}")
-        self.__guesser.predict_given(pos_np)
+        self.__guesser.predict_given(pos)
 
     def __handle_events(self) -> None:
         for event in pygame.event.get():

@@ -5,6 +5,8 @@ from collections import Counter
 class PGNReader:
     def __init__(self) -> None:
         self.__openings_names: list[str] = []
+        self.__openings_names_loading_filter: list[str] = []
+        self.__is_opening_name_a_substring = False
         self.__white_moves: list[list[str]] = []
         self.__black_moves: list[list[str]] = []
 
@@ -41,19 +43,48 @@ class PGNReader:
     def get_openings_names_and_moves(self) -> tuple[list[str], list[list[str]], list[list[str]]]:
         return self.__openings_names, self.__white_moves, self.__black_moves
 
+    def set_openings_names_loading_filter(self, filter_openings_names: list[str]) -> None:
+        self.__openings_names_loading_filter = filter_openings_names
+
+    def set_is_opening_name_a_substring(self, value: bool) -> None:
+        self.__is_opening_name_a_substring = value
+
+    def __is_opening_in_filter_and_get_it(self, opening: str) -> tuple[bool, str]:
+        if self.__is_opening_name_a_substring:
+            for opening_filter in self.__openings_names_loading_filter:
+                if opening_filter in opening:
+                    return True, opening_filter
+            return False, ""
+        else:
+            return opening in self.__openings_names_loading_filter, ""
+
     def load_pngs_from_file(self, filepath: str) -> None:
         self.__logger.info(f"Starting loading data from file: {filepath}")
 
-        self.__openings_names = []
-        self.__black_moves = []
-        self.__white_moves = []
+        # self.__openings_names = []
+        # self.__black_moves = []
+        # self.__white_moves = []
         possible_outcomes = ["1-0", "1/2-1/2", "0-1"]
+        added_opening = False
 
         with open(filepath) as f:
             for line in f:
                 if line.startswith("[Opening") and "?" not in line:
-                    self.__openings_names.append(line[len('[Opening "') : -3])
-                elif line.startswith("1. "):
+                    opening = line[len('[Opening "') : -3]
+
+                    is_in_filter, filtered_opening_name = self.__is_opening_in_filter_and_get_it(opening)
+                    if is_in_filter:
+                        opening = filtered_opening_name
+
+                    # if filter not set or filter set and opening in filter
+                    if not self.__openings_names_loading_filter or (
+                        self.__openings_names_loading_filter and is_in_filter
+                    ):
+                        self.__openings_names.append(opening)
+                        added_opening = True
+
+                elif line.startswith("1. ") and added_opening:
+                    added_opening = False
                     if line.find("eval") != -1:
                         # Database is large enough.
                         # I don't need to bother reading evaluated games.
@@ -85,9 +116,12 @@ class PGNReader:
                     self.__black_moves.append(b)
                     self.__white_moves.append(w)
 
-        self.__logger.info(f"Loaded data from file: {filepath}")
+        self.__logger.info(
+            f"Loaded data from file: {filepath} - ({len(self.__openings_names)}, {len(self.__white_moves)}"
+            f", {len(self.__black_moves)}) entries "
+        )
 
-    def filter_games_by_openings_names(self, filter_openings_names: list[str]) -> None:
+    def filter_games_by_openings_names_after_loading(self, filter_openings_names: list[str]) -> None:
         new_openings_names = []
         new_white_moves = []
         new_black_moves = []
@@ -101,7 +135,10 @@ class PGNReader:
         self.__openings_names = new_openings_names
         self.__white_moves = new_white_moves
         self.__black_moves = new_black_moves
-        self.__logger.info(f"Filtered games using {filter_openings_names} to {len(self.__openings_names)} entries")
+        self.__logger.info(
+            f"Filtered games using {filter_openings_names} to ({len(self.__openings_names)}, {len(self.__white_moves)},"
+            f" {len(self.__black_moves)}) entries"
+        )
 
     def filter_games_by_top_n_openings(self, n: int) -> None:
         if n < 1:
@@ -115,4 +152,4 @@ class PGNReader:
         for opening_name, _ in top_n:
             top_n_openings.append(opening_name)
 
-        self.filter_games_by_openings_names(top_n_openings)
+        self.filter_games_by_openings_names_after_loading(top_n_openings)
