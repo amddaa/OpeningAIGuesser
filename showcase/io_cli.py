@@ -50,7 +50,7 @@ class InputOutputCLI:
         print('Welcome to the chess opening guesser AI\nType "help" for a list of commands...')
         self.__print_help()
         while self.__is_running:
-            ans = input().lower()
+            ans = input(">").lower()
             if ans in self.__commands:
                 self.__commands[ans]()
             else:
@@ -69,7 +69,7 @@ class InputOutputCLI:
         print("8.Create and train model based on saved positions")
         print("9.Load and evaluate model based on saved positions")
         print("10.Run chess visualization with model usage")
-        print('Type "exit" to leave...\n')
+        print('Type "exit" to leave\n')
 
     def __exit(self) -> None:
         self.__is_running = False
@@ -220,6 +220,10 @@ class InputOutputCLI:
         self.__guesser.set_answers_for_model_output(openings_names_encoded)
         self.__guesser.load_model(f"{self.__MODEL_PATH}{filename}")
 
+        print(
+            "\nVisualization starting...\nRight arrow - next move, Down arrow - auto next move, "
+            "Up arrow - predict opening"
+        )
         self.__visualizer = ChessVisualizer()
         self.__visualizer.add_guesser_init_writer(self.__guesser)
         self.__visualizer.set_visualization_games_database(
