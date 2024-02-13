@@ -1,6 +1,6 @@
 import pickle
 import sys
-from typing import Any
+from typing import Any, List, Tuple
 
 
 def get_label_encoded_unique_openings_names(opening_names: list[str]) -> list[tuple[str, int]]:
@@ -14,8 +14,8 @@ def get_label_encoded_unique_openings_names(opening_names: list[str]) -> list[tu
 
 
 def get_encoded_openings_names_and_moves(
-    openings_names: list[str], white_moves: list[str], black_moves: list[str]
-) -> list[tuple[str, str, str]]:
+    openings_names: list[str], white_moves: list[list[str]], black_moves: list[list[str]]
+) -> list[tuple[str, list[str], list[str]]]:
     return [(openings_names[idx], white_moves[idx], black_moves[idx]) for idx in range(len(openings_names))]
 
 

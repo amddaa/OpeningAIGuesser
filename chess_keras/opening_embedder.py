@@ -118,3 +118,18 @@ class OpeningEmbedder(SplitDataTrainTestMixin, OneHotEncodingChessPositionMixin)
             raise ValueError("Model not created.")
 
         return self.__unique_openings_names, self.__model.layers[0].get_weights()[0]
+
+
+############################
+# embedding openings usage #
+############################
+# reader = PositionReader(
+#   "static/database/saved_positions/openings_and_moves_lichess_db_standard_rated_2016-01_chosen.chess"
+# )
+# oe = OpeningEmbedder(reader.read_from_file())
+# oe.train(16, 25)
+# oe.evaluate()
+# labels, weights = oe.get_embedded_labels_and_weights()
+#
+# ev = EmbeddingVisualizer(labels, weights)
+# ev.visualize()
