@@ -93,7 +93,7 @@ class InputOutputCLI:
             return
 
         filename = input(
-            f"Provide name for encoded unique opening names file: (file saved at {self.__UNIQUE_OPENINGS_PATH})"
+            f"Provide name for encoded unique opening names file: (file saved at {self.__UNIQUE_OPENINGS_PATH}):"
         )
         openings_names = self.__pgn_reader.get_openings_names()
         openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(openings_names)
@@ -159,7 +159,7 @@ class InputOutputCLI:
             print("Error, games not provided. Load opening names and moves from file first.\n")
             return
 
-        filename = input("Provide name for random positions file:" f" (file saved at {self.__RANDOM_POSITION_PATH})")
+        filename = input("Provide name for random positions file:" f" (file saved at {self.__RANDOM_POSITION_PATH}):")
 
         print("\nVisualization starting...\nRight arrow - next move, Down arrow - auto next move")
         self.__visualizer = ChessVisualizer()
@@ -176,10 +176,10 @@ class InputOutputCLI:
             "Provide name for random positions file:" f" (file saved at {self.__RANDOM_POSITION_PATH}):"
         )
 
-        batch_size = input("Provide batch_size e.g. 32")
-        epochs = input("Provide epochs e.g. 10")
+        batch_size = input("Provide batch_size e.g. 32:")
+        epochs = input("Provide epochs e.g. 10:")
         model_filename = input(
-            "Provide name for saving model checkpoint file and final model:"
+            "Provide name for saving model checkpoint file and final model"
             f" (file saved at {self.__MODEL_CHECKPOINT_PATH} and {self.__MODEL_PATH}):"
         )
 
