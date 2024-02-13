@@ -5,12 +5,11 @@ from chess_logic_and_presentation.pieces.piece import Piece
 
 
 class PositionWriter:
-    def __init__(self, filename: str):
+    def __init__(self, filepath: str):
         self.__database: list[tuple[str, list[list[str]]]] = []
         self.__BOARD_SIZE = 8
         self.__required_game_percentage_to_save = 0.5
-        self.__filename = filename
-        self.__saving_path = "static/database/saved_positions"
+        self.__filepath = filepath
 
     @property
     def database(self) -> list[tuple[str, list[list[str]]]]:
@@ -59,5 +58,5 @@ class PositionWriter:
                     board[column][row] = ord(piece.character_representation)
 
     def save_to_file(self) -> None:
-        with open(f"{self.__saving_path}/{self.__filename}", "wb") as file:
+        with open(f"{self.__filepath}", "wb") as file:
             pickle.dump(self.__database, file)
