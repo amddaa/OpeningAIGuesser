@@ -27,38 +27,32 @@ class InputOutputCLI:
         self.__white_moves: list[list[str]] = []
         self.__black_moves: list[list[str]] = []
 
+        self.__commands = {
+            "help": self.__print_help,
+            "exit": self.__exit,
+            "1": self.__read_opening_names_and_moves_from_lichess_data,
+            "2": self.__encode_unique_opening_names_and_save_them_to_file,
+            "3": self.__load_encoded_unique_opening_names_from_file,
+            "4": self.__encode_opening_names_and_moves_and_save_them_to_file,
+            "5": self.__load_encoded_opening_names_and_moves_from_file,
+            "6": self.__visualize_based_on_opening_names_and_moves,
+            "7": self.__rollout_based_on_opening_names_and_moves_and_save_random_positions_to_file,
+            "8": self.__create_and_train_model_based_on_saved_positions,
+            "9": self.__load_and_evaluate_model_based_on_saved_positions,
+            "10": self.__visualize_with_model,
+        }
+
     def start(self) -> None:
         self.__is_running = True
         self.__run()
 
     def __run(self) -> None:
         print('Welcome to the chess opening guesser AI\nType "help" for a list of commands...')
+        self.__print_help()
         while self.__is_running:
-            ans = input()
-            if ans.lower() == "help":
-                self.__print_help()
-            elif ans.lower() == "exit":
-                self.__is_running = False
-            elif ans.lower() == "1":
-                self.__read_opening_names_and_moves_from_lichess_data()
-            elif ans.lower() == "2":
-                self.__encode_unique_opening_names_and_save_them_to_file()
-            elif ans.lower() == "3":
-                self.__load_encoded_unique_opening_names_from_file()
-            elif ans.lower() == "4":
-                self.__encode_opening_names_and_moves_and_save_them_to_file()
-            elif ans.lower() == "5":
-                self.__load_encoded_opening_names_and_moves_from_file()
-            elif ans.lower() == "6":
-                self.__visualize_based_on_opening_names_and_moves()
-            elif ans.lower() == "7":
-                self.__rollout_based_on_opening_names_and_moves_and_save_random_positions_to_file()
-            elif ans.lower() == "8":
-                self.__create_and_train_model_based_on_saved_positions()
-            elif ans.lower() == "9":
-                self.__load_and_evaluate_model_based_on_saved_positions()
-            elif ans.lower() == "10":
-                self.__visualize_with_model()
+            ans = input().lower()
+            if ans in self.__commands:
+                self.__commands[ans]()
             else:
                 print("Command not found")
 
@@ -76,6 +70,9 @@ class InputOutputCLI:
         print("9.Load and evaluate model based on saved positions")
         print("10.Run chess visualization with model usage")
         print('Type "exit" to leave...\n')
+
+    def __exit(self) -> None:
+        self.__is_running = False
 
     def __read_opening_names_and_moves_from_lichess_data(self) -> None:
         filepath = input(
