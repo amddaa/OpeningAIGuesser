@@ -22,8 +22,8 @@ class InputOutputCLI:
         self.__pgn_reader: Optional[PGNReader] = None
         self.__position_reader: Optional[PositionReader] = None
         self.__visualizer: Optional[ChessVisualizer] = None
-        self.__opening_names = ["Italian Game", "Caro-Kann Defense", "English Opening"]  # TODO
-        self.__opening_names_encoded = None
+        self.__opening_names: list[str] = []
+        self.__opening_names_encoded: list = []
         self.__white_moves: list[list[str]] = []
         self.__black_moves: list[list[str]] = []
 
@@ -83,7 +83,9 @@ class InputOutputCLI:
         )
 
         self.__pgn_reader = PGNReader()
-        self.__pgn_reader.set_openings_names_loading_filter(self.__opening_names)
+
+        # Attention - this filter can be changed
+        self.__pgn_reader.set_openings_names_loading_filter(["Italian Game", "Caro-Kann Defense", "English Opening"])
         self.__pgn_reader.set_is_opening_name_a_substring(True)
         self.__pgn_reader.load_pngs_from_file(f"{self.__LICHESS_PGNS_PATH}{filepath}")
 
@@ -172,6 +174,10 @@ class InputOutputCLI:
         self.__visualizer.run_auto_simulate_no_visualization()
 
     def __create_and_train_model_based_on_saved_positions(self) -> None:
+        if not self.__opening_names_encoded:
+            print("Error, provide encoded openings names first.\n")
+            return
+
         positions_filename = input(
             "Provide name for random positions file:" f" (file saved at {self.__RANDOM_POSITION_PATH}):"
         )
@@ -184,9 +190,9 @@ class InputOutputCLI:
         )
 
         self.__position_reader = PositionReader(f"{self.__RANDOM_POSITION_PATH}{positions_filename}")
-        openings_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(self.__opening_names)
+        # self.__opening_names_encoded = opening_encoder.get_label_encoded_unique_openings_names(self.__opening_names)
         guesser = Guesser()
-        guesser.set_database_for_model(self.__position_reader.read_from_file(), openings_names_encoded)
+        guesser.set_database_for_model(self.__position_reader.read_from_file(), self.__opening_names_encoded)
         guesser.create_model()
         guesser.train(int(batch_size), int(epochs), f"{self.__MODEL_CHECKPOINT_PATH}{model_filename}")
         guesser.evaluate()

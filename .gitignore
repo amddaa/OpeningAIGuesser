@@ -155,8 +155,9 @@ cython_debug/
 #static files
 static/database/lichess_pgns/*.pgn
 static/database/openings/
+!static/database/openings/ItCKEng.o
 static/database/openings_and_moves/
-!static/database/openings_and_moves/ItCKEng_2013
+!static/database/openings_and_moves/ItCKEng_2013.om
 static/database/saved_positions/*.chess
 !static/database/saved_positions/ItCKEng_2013.chess
 static/models/*.keras
